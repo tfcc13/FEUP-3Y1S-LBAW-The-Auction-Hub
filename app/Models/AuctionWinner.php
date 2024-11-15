@@ -9,6 +9,8 @@ class AuctionWinner extends Model
 {
     use HasFactory;
 
+    protected $primaryKey = null;
+    public $incrementing = false;
     public $timestamps = false;
 
     protected $fillable = [
@@ -26,5 +28,4 @@ class AuctionWinner extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
-
 }
