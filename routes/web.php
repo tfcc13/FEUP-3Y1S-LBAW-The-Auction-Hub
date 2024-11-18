@@ -20,7 +20,7 @@ use App\Http\Controllers\HomeController;
 
 // Home
 Route::redirect('/', '/login');
-Route::get('/home', [HomeController::class, 'index'])->name('home')->middleware('auth');
+Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 
 // Authentication
