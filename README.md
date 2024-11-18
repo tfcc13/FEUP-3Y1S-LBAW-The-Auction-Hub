@@ -1,6 +1,11 @@
 # lbaw24136
 
+## Windows Admin CMD - Find and kill process in port 8000
 
+```bash
+netstat -aof | findstr :8000
+taskkill /F /PID 5552
+```
 
 ## Getting started
 
