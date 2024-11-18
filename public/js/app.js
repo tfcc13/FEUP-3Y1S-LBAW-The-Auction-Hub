@@ -177,5 +177,38 @@ function addEventListeners() {
     return new_item;
   }
   
+  // Carousel functionality
+  let currentSlide = 0;
+  const carousel = document.getElementById('carousel');
+  
+  function updateCarousel() {
+    const inner = document.getElementById('carousel-inner');
+    inner.style.transform = `translateX(-${currentSlide * 100}%)`;
+    
+    // Update dots
+    document.querySelectorAll('.carousel-dot').forEach((dot, index) => {
+        if (index === currentSlide) {
+            dot.classList.add('bg-black');
+            dot.classList.remove('bg-gray-300');
+        } else {
+            dot.classList.remove('bg-black');
+            dot.classList.add('bg-gray-300');
+        }
+    });
+  }
+  
+  function moveSlide(direction) {
+    const slides = document.querySelectorAll('.carousel-slide');
+    currentSlide = (currentSlide + direction + slides.length) % slides.length;
+    updateCarousel();
+  }
+  
+  function goToSlide(index) {
+    currentSlide = index;
+    updateCarousel();
+  }
+  
+  setInterval(() => moveSlide(1), 7500);
+  
   addEventListeners();
   
