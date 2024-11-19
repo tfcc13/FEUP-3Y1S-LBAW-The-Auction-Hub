@@ -37,7 +37,7 @@ class HomeController extends Controller
             ->take(4)
             ->get();
 
-        $slides = $featuredAuctions->map(function($auction) {
+        $carouselItems = $featuredAuctions->map(function($auction) {
             return [
                 'title' => $auction->title,
                 'description' => $auction->description,
@@ -47,8 +47,8 @@ class HomeController extends Controller
         })->toArray();
         */
 
-        // Mock slides data for now
-        $slides = [
+        // Mock carouselItems data for now
+        $carouselItems = [
             [
                 'title' => 'Vintage Rolex Submariner',
                 'description' => 'Rare 1960s Rolex Submariner in excellent condition. Original parts with documented history.',
@@ -75,7 +75,7 @@ class HomeController extends Controller
             ],
         ];
 
-        return view('home.home', compact('categories', 'slides'));
+        return view('home.home', compact('categories', 'carouselItems'));
     }
 
     private function createMockCategory($name)
