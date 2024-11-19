@@ -6,7 +6,7 @@
 
 <style>
     .slider-container {
-        width: 95%;
+        width: 97%;
         height: 350px;
         position: relative;
         overflow: hidden;
