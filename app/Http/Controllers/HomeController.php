@@ -75,7 +75,147 @@ class HomeController extends Controller
             ],
         ];
 
-        return view('home.home', compact('categories', 'carouselItems'));
+        // Database implementation for slideItems (for later):
+        /*
+        $featuredAuctionIds = $featuredAuctions->pluck('id');
+        
+        $slideItems = Auction::where('state', '!=', 'canceled')
+            ->whereNotIn('id', $featuredAuctionIds)
+            ->with(['auctionImages' => function($query) {
+                $query->first();
+            }])
+            ->orderBy('created_at', 'desc')
+            ->take(20)
+            ->get()
+            ->map(function($auction) {
+                return [
+                    'title' => $auction->title,
+                    'current_bid' => $auction->current_bid,
+                    'buttonAction' => '',
+                    'imageUrl' => $auction->auctionImages->first()->path ?? '/images/placeholder.jpg'
+                ];
+            })->toArray();
+        */
+
+        // Mock slideItems data for now
+        $slideItems = [
+            [
+                'title' => 'Vintage Omega Speedmaster',
+                'current_bid' => 4500,
+                'buttonAction' => '',
+                'imageUrl' => '/images/auctions/watch2.jpg'
+            ],
+            [
+                'title' => '2015 Porsche 911 GT3',
+                'current_bid' => 125000,
+                'buttonAction' => '',
+                'imageUrl' => '/images/auctions/car2.jpg'
+            ],
+            [
+                'title' => 'Sapphire and Diamond Necklace',
+                'current_bid' => 8900,
+                'buttonAction' => '',
+                'imageUrl' => '/images/auctions/jewelry2.jpg'
+            ],
+            [
+                'title' => 'Vintage Rolex Submariner',
+                'current_bid' => 3200,
+                'buttonAction' => '',
+                'imageUrl' => '/images/auctions/watch3.jpg'
+            ],
+            [
+                'title' => '1962 Ferrari 250 GT California',
+                'current_bid' => 950000,
+                'buttonAction' => '',
+                'imageUrl' => '/images/auctions/car3.jpg'
+            ],
+            [
+                'title' => 'Diamond and Ruby Necklace',
+                'current_bid' => 12000,
+                'buttonAction' => '',
+                'imageUrl' => '/images/auctions/jewelry3.jpg'
+            ],
+            [
+                'title' => 'Michael Jordan Game-Worn Jersey',
+                'current_bid' => 100000,
+                'buttonAction' => '',
+                'imageUrl' => '/images/auctions/sports1.jpg'
+            ],
+            [
+                'title' => 'Picasso Original Painting',
+                'current_bid' => 500000,
+                'buttonAction' => '',
+                'imageUrl' => '/images/auctions/art1.jpg'
+            ],
+            [
+                'title' => 'Antique Chinese Vase',
+                'current_bid' => 8000,
+                'buttonAction' => '',
+                'imageUrl' => '/images/auctions/antiques1.jpg'
+            ],
+            [
+                'title' => 'Rare Coin Collection',
+                'current_bid' => 15000,
+                'buttonAction' => '',
+                'imageUrl' => '/images/auctions/coins1.jpg'
+            ],
+            [
+                'title' => 'Limited Edition iPhone',
+                'current_bid' => 2000,
+                'buttonAction' => '',
+                'imageUrl' => '/images/auctions/electronics1.jpg'
+            ],
+            [
+                'title' => 'Vintage Omega Seamaster',
+                'current_bid' => 2800,
+                'buttonAction' => '',
+                'imageUrl' => '/images/auctions/watch4.jpg'
+            ],
+            [
+                'title' => '2018 Lamborghini Huracan',
+                'current_bid' => 180000,
+                'buttonAction' => '',
+                'imageUrl' => '/images/auctions/car4.jpg'
+            ],
+            [
+                'title' => 'Sapphire and Emerald Ring',
+                'current_bid' => 10000,
+                'buttonAction' => '',
+                'imageUrl' => '/images/auctions/jewelry4.jpg'
+            ],
+            [
+                'title' => 'Babe Ruth Autographed Baseball',
+                'current_bid' => 50000,
+                'buttonAction' => '',
+                'imageUrl' => '/images/auctions/sports2.jpg'
+            ],
+            [
+                'title' => 'Warhol Original Print',
+                'current_bid' => 300000,
+                'buttonAction' => '',
+                'imageUrl' => '/images/auctions/art2.jpg'
+            ],
+            [
+                'title' => 'Antique Victorian Chair',
+                'current_bid' => 5000,
+                'buttonAction' => '',
+                'imageUrl' => '/images/auctions/antiques2.jpg'
+            ],
+            [
+                'title' => 'Gold Coin Collection',
+                'current_bid' => 20000,
+                'buttonAction' => '',
+                'imageUrl' => '/images/auctions/coins2.jpg'
+            ],
+            [
+                'title' => 'Limited Edition MacBook',
+                'current_bid' => 3000,
+                'buttonAction' => '',
+                'imageUrl' => '/images/auctions/electronics2.jpg'
+            ]
+        ];
+
+        return view('home.home', compact('categories', 'carouselItems', 'slideItems'));
     }
 
     private function createMockCategory($name)
