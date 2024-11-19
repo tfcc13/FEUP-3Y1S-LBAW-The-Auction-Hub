@@ -31,6 +31,7 @@ export default class Carousel {
             } else {
                 dot.classList.remove('bg-[#135d3b]');
                 dot.classList.add('bg-gray-200');
+                dot.blur();
             }
         });
     }
