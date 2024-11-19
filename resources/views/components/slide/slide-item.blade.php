@@ -2,7 +2,7 @@
 
 <div class="flex-shrink-0 w-[400px]">
     <div class="flex flex-col space-y-2 items-start bg-white rounded-lg shadow-md p-4">
-        <img src="{{ $imageUrl }}" alt="{{ $title }}" class="w-full h-[200px] object-cover rounded-lg">
+        <img src="{{ $imageUrl }}" alt="{{ $title }}" class="w-full h-[200px] object-cover rounded-lg select-none" draggable="false">
         <h5 class="text-gray-800 font-medium">{{ $title }}</h5>
         <div class="h-6"></div>
         <div class="flex justify-between items-baseline w-full">
