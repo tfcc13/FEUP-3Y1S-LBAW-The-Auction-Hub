@@ -53,25 +53,25 @@ class HomeController extends Controller
                 'title' => 'Vintage Rolex Submariner',
                 'description' => 'Rare 1960s Rolex Submariner in excellent condition. Original parts with documented history.',
                 'buttonAction' => '',
-                'imageUrl' => '/images/auctions/watch1.jpg'
+                'imageUrl' => '/images/submariner_4_3.jpg'
             ],
             [
                 'title' => '1969 Ford Mustang',
                 'description' => 'Classic American muscle car, fully restored with original V8 engine.',
                 'buttonAction' => '',
-                'imageUrl' => '/images/auctions/car1.jpg'
+                'imageUrl' => '/images/gt4_5_4.jpg'
             ],
             [
                 'title' => 'Diamond Engagement Ring',
                 'description' => '2.5 carat diamond ring with platinum band, certified by GIA.',
                 'buttonAction' => '',
-                'imageUrl' => '/images/auctions/jewelry1.jpg'
+                'imageUrl' => '/images/gt4_16_9.jpg'
             ],
             [
                 'title' => 'First Edition Harry Potter',
                 'description' => 'First edition, first printing of Harry Potter and the Philosopher\'s Stone.',
                 'buttonAction' => '',
-                'imageUrl' => '/images/auctions/book1.jpg'
+                'imageUrl' => '/images/presidencial_1_1.jpg'
             ],
         ];
 
@@ -103,37 +103,37 @@ class HomeController extends Controller
                 'title' => 'Vintage Omega Speedmaster',
                 'current_bid' => 4500,
                 'buttonAction' => '',
-                'imageUrl' => '/images/auctions/watch2.jpg'
+                'imageUrl' => '/images/submariner_4_3.jpg'
             ],
             [
                 'title' => '2015 Porsche 911 GT3',
                 'current_bid' => 125000,
                 'buttonAction' => '',
-                'imageUrl' => '/images/auctions/car2.jpg'
+                'imageUrl' => '/images/gt4_4_3.jpg'
+            ],
+            [
+                'title' => '2015 Porsche 911 GT3',
+                'current_bid' => 125000,
+                'buttonAction' => '',
+                'imageUrl' => '/images/gt4_5_4.jpg'
             ],
             [
                 'title' => 'Sapphire and Diamond Necklace',
                 'current_bid' => 8900,
                 'buttonAction' => '',
-                'imageUrl' => '/images/auctions/jewelry2.jpg'
+                'imageUrl' => '/images/gt4_16_9.jpg'
             ],
             [
                 'title' => 'Vintage Rolex Submariner',
                 'current_bid' => 3200,
                 'buttonAction' => '',
-                'imageUrl' => '/images/auctions/watch3.jpg'
-            ],
-            [
-                'title' => '1962 Ferrari 250 GT California',
-                'current_bid' => 950000,
-                'buttonAction' => '',
-                'imageUrl' => '/images/auctions/car3.jpg'
+                'imageUrl' => '/images/patek_vertical.jpg'
             ],
             [
                 'title' => 'Diamond and Ruby Necklace',
                 'current_bid' => 12000,
                 'buttonAction' => '',
-                'imageUrl' => '/images/auctions/jewelry3.jpg'
+                'imageUrl' => '/images/presidencial_1_1.jpg'
             ],
             [
                 'title' => 'Michael Jordan Game-Worn Jersey',
