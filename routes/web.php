@@ -19,7 +19,7 @@ use App\Http\Controllers\HomeController;
 */
 
 // Home
-Route::redirect('/', '/login');
+Route::redirect('/', '/home');
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 
