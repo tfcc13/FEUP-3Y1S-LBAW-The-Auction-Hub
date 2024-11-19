@@ -21,7 +21,7 @@ class HomeController extends Controller
             $this->createMockCategory('Art'),
             $this->createMockCategory('Antiques'),
             $this->createMockCategory('Coins & Paper Money'),
-            $this->createMockCategory('Electronics'),
+            $this->createMockCategory('Electronics')
         ]);
 
         // Database implementation for later:

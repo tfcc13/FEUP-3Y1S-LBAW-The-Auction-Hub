@@ -21,6 +21,7 @@
     </script>
     <script type="text/javascript" src={{ url('js/app.js') }} defer>
     </script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 </head>
 
 <body>
@@ -35,6 +36,7 @@
             @yield('content')
         </section>
     </main>
+    @stack('scripts')
 </body>
 
 </html>

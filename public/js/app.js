@@ -204,11 +204,8 @@ function addEventListeners() {
   }
   
   function goToSlide(index) {
-    currentSlide = parseInt(index);
+    currentSlide = index;
     updateCarousel();
-    
-    // Remove focus from the clicked button
-    document.activeElement.blur();
   }
   
   setInterval(() => moveSlide(1), 7500);
