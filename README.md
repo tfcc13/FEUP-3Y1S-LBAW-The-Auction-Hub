@@ -4,7 +4,7 @@
 
 ```bash
 netstat -aof | findstr :8000
-taskkill /F /PID 5552
+taskkill /F /PID {PID}
 ```
 
 ## Getting started
