@@ -188,11 +188,11 @@ function addEventListeners() {
     // Update dots
     document.querySelectorAll('.carousel-dot').forEach((dot, index) => {
         if (index === currentSlide) {
-            dot.classList.add('bg-black');
-            dot.classList.remove('bg-gray-300');
+            dot.classList.add('bg-[#135d3b]');
+            dot.classList.remove('bg-gray-200');
         } else {
-            dot.classList.remove('bg-black');
-            dot.classList.add('bg-gray-300');
+            dot.classList.remove('bg-[#135d3b]');
+            dot.classList.add('bg-gray-200');
         }
     });
   }
@@ -204,8 +204,11 @@ function addEventListeners() {
   }
   
   function goToSlide(index) {
-    currentSlide = index;
+    currentSlide = parseInt(index);
     updateCarousel();
+    
+    // Remove focus from the clicked button
+    document.activeElement.blur();
   }
   
   setInterval(() => moveSlide(1), 7500);
