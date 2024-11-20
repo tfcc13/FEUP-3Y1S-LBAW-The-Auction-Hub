@@ -1,6 +1,6 @@
 @props(['items'])
 
-<div class="flex flex-col items-center w-full space-y-16 overflow-x-hidden" id="carousel">
+<div class="flex flex-col items-center w-full space-y-16 overflow-x-hidden h-[70vh]" id="carousel">
     <div class="flex transition-all duration-300" id="carousel-inner">
         @foreach ($items as $item)
             <div class="w-full flex-shrink-0">
