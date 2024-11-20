@@ -1,19 +1,28 @@
 @props(['title', 'description', 'buttonAction', 'imageUrl'])
 
-<div class="grid grid-cols-2 gap-8 items-center carousel-slide px-8">
-    <div class="space-y-6">
-        <h2 class="text-4xl font-bold text-black">{{ $title }}</h2>
-        <p class="text-gray-600 text-3xl">{{ $description }}</p>
-        <button
-            onclick="{{ $buttonAction }}"
-            class="text-white px-6 py-2 rounded border-none bg-[#135d3b] hover:bg-[#135d3b]/75 transition-colors flex items-center active:scale-95">
-            View Auction
-        </button>
+<div class="grid grid-cols-2 gap-8 items-center carousel-slide px-8" id="carouselSlide">
+    <div class="flex flex-col justify-between h-full p-28">
+        <h2 class="text-7xl font-bold text-black">{{ $title }}</h2>
+        <div class="space-y-12">
+            <p class="text-gray-600 text-3xl">{{ $description }}</p>
+            <button onclick="{{ $buttonAction }}"
+                class="text-white px-6 py-2 rounded border-none bg-[#135d3b] hover:bg-[#135d3b]/75 transition-colors flex items-center active:scale-95">
+                View Auction
+            </button>
+        </div>
     </div>
-    <div class="border rounded-lg overflow-hidden">
-        <img
-            src="{{ $imageUrl }}"
-            alt="{{ $title }}"
-            class="w-full h-auto object-cover" />
+    <div class="flex justify-center items-center">
+        <img src="{{ $imageUrl }}" alt="{{ $title }}" class="aspect-[4/3] object-cover rounded-xl"
+            draggable="false" onload="adjustImageFit(this)" />
     </div>
 </div>
+
+<script>
+    function adjustImageFit(img) {
+        if (img.naturalHeight > img.naturalWidth) {
+            img.style.objectFit = 'scale-down';
+        } else {
+            img.style.objectFit = 'cover';
+        }
+    }
+</script>

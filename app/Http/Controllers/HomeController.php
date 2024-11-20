@@ -73,6 +73,12 @@ class HomeController extends Controller
                 'buttonAction' => '',
                 'imageUrl' => '/images/presidencial_1_1.jpg'
             ],
+            [
+                'title' => 'First Edition Harry Potter',
+                'description' => 'First edition, first printing of Harry Potter and the Philosopher\'s Stone.',
+                'buttonAction' => '',
+                'imageUrl' => '/images/patek_vertical.jpg'
+            ],
         ];
 
         // Database implementation for slideItems (for later):
