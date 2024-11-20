@@ -3,7 +3,7 @@
 <div class="flex-shrink-0 w-[400px]">
     <div class="flex flex-col space-y-8 items-start bg-white rounded-lg shadow-md p-4 select-none">
         <img src="{{ $imageUrl }}" alt="{{ $title }}" class="w-full aspect-[4/3] object-cover rounded-xl select-none" draggable="false" onload="adjustImageFit(this)">
-        <h5 class="text-gray-800 font-semibold select-none">{{ $title }}</h5>
+        <h5 class="text-gray-800 font-semibold select-none line-clamp-1">{{ $title }}</h5>
         <div class="flex justify-between items-center w-full">
             <span class="text-gray-600 text-3xl font-semibold select-none">${{ number_format($currentBid) }}</span>
             <button

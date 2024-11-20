@@ -51,15 +51,9 @@ class HomeController extends Controller
         $carouselItems = [
             [
                 'title' => 'Vintage Rolex Submariner',
-                'description' => 'Rare 1960s Rolex Submariner in excellent condition. Original parts with documented history.',
+                'description' => 'Rare 1960s Rolex Submariner in excellent condition. Original parts with documented history.Rare 1960s Rolex Submariner in excellent condition. Original parts with documented history.Rare 1960s Rolex Submariner in excellent condition. Original parts with documented history.Rare 1960s Rolex Submariner in excellent condition. Original parts with documented history.Rare 1960s Rolex Submariner in excellent condition. Original parts with documented history.Rare 1960s Rolex Submariner in excellent condition. Original parts with documented history.',
                 'buttonAction' => '',
                 'imageUrl' => '/images/submariner_4_3.jpg'
-            ],
-            [
-                'title' => '1969 Ford Mustang',
-                'description' => 'Classic American muscle car, fully restored with original V8 engine.',
-                'buttonAction' => '',
-                'imageUrl' => '/images/gt4_5_4.jpg'
             ],
             [
                 'title' => 'Diamond Engagement Ring',
@@ -106,7 +100,7 @@ class HomeController extends Controller
         // Mock slideItems data for now
         $slideItems = [
             [
-                'title' => 'Vintage Omega Speedmaster',
+                'title' => 'Vintage Omega',
                 'current_bid' => 4500,
                 'buttonAction' => '',
                 'imageUrl' => '/images/submariner_4_3.jpg'
@@ -170,54 +164,6 @@ class HomeController extends Controller
                 'current_bid' => 2000,
                 'buttonAction' => '',
                 'imageUrl' => '/images/auctions/electronics1.jpg'
-            ],
-            [
-                'title' => 'Vintage Omega Seamaster',
-                'current_bid' => 2800,
-                'buttonAction' => '',
-                'imageUrl' => '/images/auctions/watch4.jpg'
-            ],
-            [
-                'title' => '2018 Lamborghini Huracan',
-                'current_bid' => 180000,
-                'buttonAction' => '',
-                'imageUrl' => '/images/auctions/car4.jpg'
-            ],
-            [
-                'title' => 'Sapphire and Emerald Ring',
-                'current_bid' => 10000,
-                'buttonAction' => '',
-                'imageUrl' => '/images/auctions/jewelry4.jpg'
-            ],
-            [
-                'title' => 'Babe Ruth Autographed Baseball',
-                'current_bid' => 50000,
-                'buttonAction' => '',
-                'imageUrl' => '/images/auctions/sports2.jpg'
-            ],
-            [
-                'title' => 'Warhol Original Print',
-                'current_bid' => 300000,
-                'buttonAction' => '',
-                'imageUrl' => '/images/auctions/art2.jpg'
-            ],
-            [
-                'title' => 'Antique Victorian Chair',
-                'current_bid' => 5000,
-                'buttonAction' => '',
-                'imageUrl' => '/images/auctions/antiques2.jpg'
-            ],
-            [
-                'title' => 'Gold Coin Collection',
-                'current_bid' => 20000,
-                'buttonAction' => '',
-                'imageUrl' => '/images/auctions/coins2.jpg'
-            ],
-            [
-                'title' => 'Limited Edition MacBook',
-                'current_bid' => 3000,
-                'buttonAction' => '',
-                'imageUrl' => '/images/auctions/electronics2.jpg'
             ]
         ];
 
