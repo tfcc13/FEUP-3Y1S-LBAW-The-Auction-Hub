@@ -224,7 +224,7 @@ CREATE TABLE notification (
     view_status BOOLEAN DEFAULT FALSE NOT NULL,
     user_id INT REFERENCES users(id) ON DELETE CASCADE,
     bid_id INT REFERENCES bid(id) ON DELETE CASCADE,
-    report_user_id INT REFERENCES user(id) ON DELETE CASCADE,
+    report_user_id INT REFERENCES users(id) ON DELETE CASCADE,
     auction_id INT,
     CONSTRAINT fk_report FOREIGN KEY (report_user_id, auction_id) REFERENCES report(user_id, auction_id) ON DELETE CASCADE,
     CONSTRAINT only_one_reference CHECK (
