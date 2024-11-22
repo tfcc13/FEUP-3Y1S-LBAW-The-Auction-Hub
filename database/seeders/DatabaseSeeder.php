@@ -17,5 +17,11 @@ class DatabaseSeeder extends Seeder
         $sql = file_get_contents($path);
         DB::unprepared($sql);
         $this->command->info('Database seeded!');
+
+
+        $pop_path = base_path('database/populate.sql');
+        $pop_sql = file_get_contents($pop_path);
+        DB::unprepared($pop_sql);
+        $this->command->info('Database populated!');
     }
 }
