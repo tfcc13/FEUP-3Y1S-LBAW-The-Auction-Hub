@@ -124,7 +124,8 @@ CREATE TABLE users (
     credit_balance DECIMAL(12, 2) DEFAULT 0.00 NOT NULL,
     is_admin BOOLEAN DEFAULT FALSE,
     state user_state NOT NULL DEFAULT 'Active',
-    rating FLOAT CHECK (rating >= 1 AND rating <= 5) DEFAULT NULL
+    rating FLOAT CHECK (rating >= 1 AND rating <= 5) DEFAULT NULL,
+    remember_token VARCHAR(255) DEFAULT NULL -- Column for storing the remember token
 );
 
 -- Address Table
