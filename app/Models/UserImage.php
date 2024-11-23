@@ -14,7 +14,6 @@ class UserImage extends Model
 
     protected $fillable = [
         'path',
-        'user_id',
     ];
 
     public function user()
