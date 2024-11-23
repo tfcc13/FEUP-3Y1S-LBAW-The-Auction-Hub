@@ -26,10 +26,10 @@
 
 <body>
     <main>
-        <header>
+        <header class="m-0 p-0 pb-4">
           @include('layouts.navbarAuth')
         </header>
-        <section id="content">
+        <section id="content" class="flex">
             @yield('content')
         </section>
     </main>
