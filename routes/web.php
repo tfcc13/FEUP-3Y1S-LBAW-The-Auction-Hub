@@ -23,17 +23,18 @@ Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 // Authentication
 Route::controller(LoginController::class)->group(function () {
-  Route::get('/login', 'showLoginForm')->name('login');
-  Route::post('/login', 'authenticate');
-  Route::get('/logout', 'logout')->name('logout');
+    Route::get('/login', 'showLoginForm')->name('login');
+    Route::post('/login', 'authenticate');
+    Route::get('/logout', 'logout')->name('logout');
 });
 
 Route::controller(RegisterController::class)->group(function () {
-  Route::get('/register', 'showRegistrationForm')->name('register');
-  Route::post('/register', 'register');
+    Route::get('/register', 'showRegistrationForm')->name('register');
+    Route::post('/register', 'register');
 });
 
 // Auctions
 Route::prefix('auctions')->group(function () {
-  Route::get('search', [AuctionController::class, 'search'])->name('auctions.search');
+    Route::get('search/json', [AuctionController::class, 'search'])->name('auctions.search');
+    Route::get('search', [AuctionController::class, 'searchView'])->name('auctions.search.view');
 });

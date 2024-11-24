@@ -7,48 +7,89 @@ use Illuminate\Http\Request;
 
 class AuctionController extends Controller
 {
-public function search(Request $request)
-{
-    try {
-        // Retrieve the search term from the request
-        $searchTerm = $request->input('search');
+    public function search(Request $request)
+    {
+        try {
+            // Retrieve the search term from the request
+            $searchTerm = $request->input('search');
 
-        // Check if the search term is provided
-        if (!$searchTerm || empty($searchTerm)) {
+            // Check if the search term is provided
+            if (!$searchTerm || empty($searchTerm)) {
+                return response()->json([
+                    'error' => 'Search term is required.'
+                ], 400);  // Bad Request
+            }
+
+            // Ensure the search term is a string
+            if (!is_string($searchTerm)) {
+                return response()->json([
+                    'error' => 'Search term must be a valid string.'
+                ], 400);  // Bad Request
+            }
+
+            // Perform the full-text search using the scopeSearch method
+            $auctions = Auction::search($searchTerm)->get();
+
+            // Check if results are empty
+            if ($auctions->isEmpty()) {
+                return response()->json([
+                    'message' => 'No results found for the search term.',
+                    'data' => []
+                ], 404);  // Not Found
+            }
+
+            // Return the search results as JSON
             return response()->json([
-                'error' => 'Search term is required.'
-            ], 400); // Bad Request
-        }
-
-        // Ensure the search term is a string
-        if (!is_string($searchTerm)) {
+                'message' => 'Search successful.',
+                'data' => $auctions
+            ], 200);  // OK
+        } catch (\Exception $e) {
+            // Handle unexpected errors
             return response()->json([
-                'error' => 'Search term must be a valid string.'
-            ], 400); // Bad Request
+                'error' => 'An unexpected error occurred.',
+                'details' => $e->getMessage()
+            ], 500);  // Internal Server Error
         }
-
-        // Perform the full-text search using the scopeSearch method
-        $auctions = Auction::search($searchTerm)->get();
-
-        // Check if results are empty
-        if ($auctions->isEmpty()) {
-            return response()->json([
-                'message' => 'No results found for the search term.',
-                'data' => []
-            ], 404); // Not Found
-        }
-
-        // Return the search results as JSON
-        return response()->json([
-            'message' => 'Search successful.',
-            'data' => $auctions
-        ], 200); // OK
-    } catch (\Exception $e) {
-        // Handle unexpected errors
-        return response()->json([
-            'error' => 'An unexpected error occurred.',
-            'details' => $e->getMessage()
-        ], 500); // Internal Server Error
     }
-}
+
+    public function searchView(Request $request)
+    {
+        try {
+            // Retrieve the search term from the request
+            $searchTerm = $request->input('search');
+
+            // Call the search function and get the response
+            $response = $this->search($request);
+
+            // Decode the JSON response
+            $responseData = json_decode($response->getContent(), true);
+
+            // Handle errors or empty results
+            if (isset($responseData['error'])) {
+                return view('search.auction')->with([
+                    'error' => $responseData['error'],
+                ]);
+            }
+
+            if (empty($responseData['data'])) {
+                return view('search.auction')->with([
+                    'message' => 'No results found for the search term.',
+                    'auctions' => [],
+                    'searchTerm' => $searchTerm,
+                ]);
+            }
+
+            // Pass data to the view
+            return view('search.auction')->with([
+                'auctions' => $responseData['data'],
+                'searchTerm' => $searchTerm,
+            ]);
+        } catch (\Exception $e) {
+            // Handle unexpected errors
+            return view('search.auction')->with([
+                'error' => 'An unexpected error occurred.',
+                'details' => $e->getMessage(),
+            ]);
+        }
+    }
 }
