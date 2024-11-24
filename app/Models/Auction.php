@@ -7,37 +7,45 @@ use Illuminate\Database\Eloquent\Model;
 
 class Auction extends Model
 {
-    use HasFactory;
+  use HasFactory;
 
-    protected $timestamps = false;
+  public $timestamps = false;
+  protected $table = 'auction';
 
-    protected $fillable = [
-        'title',
-        'description',
-        'start_price',
-        'category_id',
-    ];
+  protected $fillable = [
+    'title',
+    'description',
+    'start_price',
+    'category_id',
+  ];
 
-    protected $guarded = [
-        'id',
-        'owner_id',
-        'state',
-        'end_date',
-        'start_date',
-    ];
+  protected $guarded = [
+    'id',
+    'owner_id',
+    'state',
+    'end_date',
+    'start_date',
+  ];
 
-    public function user()
-    {
-        return $this->belongsTo(User::class, 'owner_id');
-    }
+  public function user()
+  {
+    return $this->belongsTo(User::class, 'owner_id');
+  }
 
-    public function category()
-    {
-        return $this->belongsTo(Category::class);
-    }
+  public function category()
+  {
+    return $this->belongsTo(Category::class);
+  }
 
-    public function categoryName()
-    {
-        return $this->category->name ?? null;
-    }
+  public function categoryName()
+  {
+    return $this->category->name ?? null;
+  }
+
+  // function used to retrieve the results from a full text search
+  public function scopeSearch($query, $searchTerm)
+  {
+    // This function will apply the full-text search query to the database
+    return $query->whereRaw("ts_vectors @@ plainto_tsquery('english', ?)", [$searchTerm]);
+  }
 }
