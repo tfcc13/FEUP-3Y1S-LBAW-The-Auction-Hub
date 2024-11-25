@@ -10,7 +10,14 @@
       </svg>
     </button>
     <div class="sd:w-full md:w-1/4 lg:w-1/4 mx-2 hidden md:block">
-      <input type="text" id="search-navbar" class="block w-full pt-9 px-4 text-3xl text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search...">
+      <form action="{{ url('/auctions/search') }}" method="GET">
+        <input
+          type="text"
+          id="search-navbar"
+          name="search"
+          class="block w-full pt-9 px-4 text-3xl text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          placeholder="Search...">
+      </form>
     </div>
     <div class="hidden w-full md:block md:w-auto" id="navbar-default">
       <ul class="font-medium flex flex-col p-4 md:p-0 sm:mr-8 mt-4 md:flex-row md:space-x-8 rtl:space-x-reverse">
