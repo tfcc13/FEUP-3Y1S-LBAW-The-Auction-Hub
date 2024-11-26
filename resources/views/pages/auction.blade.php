@@ -1,6 +1,19 @@
 @extends('layouts.app')
 
 @section('content')
+@if(session('success'))
+    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+        {{ session('success') }}
+    </div>
+@endif
+
+@if($errors->any())
+    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+        @foreach ($errors->all() as $error)
+            <p>{{ $error }}</p>
+        @endforeach
+    </div>
+@endif
 <body class="bg-gray-100">
     <!-- Auction Images Section -->
     <div class="auction-images">
@@ -103,6 +116,34 @@
                     <p>No bids placed yet.</p>
                 @endif
             </div>
+            
+            <div class="bg-white shadow-md rounded p-6 mt-6">
+                <h2 class="text-xl font-semibold text-gray-800">Place a Bid</h2>
+
+                <form class="flex flex-col" method="POST" action="{{route('auction.bid', $auction->id) }}">
+                @csrf
+                    <input type="hidden" name="auction_id" value="{{ $auction->id }}">
+
+                    <div class="mb-4">
+                        <label for="amount" class="block text-gray-700 font-semibold mb-2">Your Bid Amount:</label>
+                        <input 
+                            type="number" 
+                            id="amount" 
+                            name="amount" 
+                            step="0.01" 
+                            min="{{ $auction->start_price }}" 
+                            class="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            required>
+                    </div>
+
+                    <button type="submit" 
+                            class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                        Place Bid
+                    </button>
+                </form>
+            </div>
+
+
             @endauth
         </div>
     </div>

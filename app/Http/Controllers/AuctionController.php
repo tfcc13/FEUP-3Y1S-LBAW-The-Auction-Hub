@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Auction;
+use App\Models\Bid;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class AuctionController extends Controller
 {
@@ -98,5 +101,64 @@ class AuctionController extends Controller
                 'details' => $e->getMessage(),
             ]);
         }
+    }
+
+    public function bidAuction(Request $request, $id)
+    {
+        Auth::check();
+        
+       $validatedData =  $request->validate([
+            'amount' => 'required|numeric|min:0',
+        ]);
+
+        $auction = Auction::findOrFail($id); 
+
+        // Ensure the bid is higher than the current highest bid or the start price
+        $highestBid = $auction->bids()->max('amount');
+        $minimumBid = $highestBid ? $highestBid + 1 : $auction->start_price;
+        // Check if the bid amount is valid
+        if ($validatedData['amount'] < $minimumBid) {
+            return redirect()->back()->withErrors(['amount' => 'Your bid must be at least $' . $minimumBid]);
+        }
+
+        // Ensure the user does not already have the highest bid
+        $currentHighestBid = $auction->bids()->where('amount', $highestBid)->first();
+        if ($currentHighestBid && $currentHighestBid->user_id == Auth::id()) {
+            return redirect()->back()->withErrors(['amount' => 'You already own the highest bid.']);
+        }
+
+        if (!Auth::check()) {
+    return redirect()->route('login')->with('error', 'You must be logged in to place a bid.');
+}
+        try {
+            DB::beginTransaction();
+    
+            $bid = new Bid([
+                'auction_id' => $validatedData['auction_id'],
+                'user_id' => Auth::user()->id,
+                'amount' => $validatedData['amount'],
+                'bid_date' => now(),
+            ]);
+            $bid->save();
+    
+            Auction::where('id', $auction_id)
+            ->update(['current_bid' => DB::raw($validatedData['amount'])]);
+
+
+            // Update the current bid in the auction table (optional)
+            $auction->current_bid = $validatedData['amount'];
+            $auction->save();
+    
+            DB::commit();
+
+            $auction = $auction->fresh();
+
+    
+            return redirect()->back()->with('success', 'Your bid has been placed successfully!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', 'An error occurred while placing your bid: ' . $e->getMessage());
+        }
+        return redirect()->back()->with('success', 'Your bid has been placed successfully!');
     }
 }

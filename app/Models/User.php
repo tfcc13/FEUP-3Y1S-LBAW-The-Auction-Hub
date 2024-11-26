@@ -64,4 +64,9 @@ class User extends Authenticatable  // implements MustVerifyEmail
   {
     return $this->hasOne(UserImage::class);  // Use hasMany() if a user can have multiple images
   }
+
+  public function ownsBids()
+  {
+      return $this->hasMany(Bid::class, 'user_id')->orderBy('time', 'desc');
+  }
 }

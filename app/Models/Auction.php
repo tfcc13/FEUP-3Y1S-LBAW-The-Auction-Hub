@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Auction extends Model
 {
@@ -16,6 +17,7 @@ class Auction extends Model
     'title',
     'description',
     'start_price',
+    'current_bid',
     'category_id',
   ];
 
@@ -46,6 +48,7 @@ class Auction extends Model
   {
     return $this->category->name ?? null;
   }
+
 
   public function auctionWinner()
   {
