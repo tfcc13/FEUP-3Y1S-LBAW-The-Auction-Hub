@@ -36,7 +36,7 @@ class HomeController extends Controller
                 return [
                     'title' => $auction->title,
                     'description' => $auction->description,
-                    'buttonAction' => '',
+                    'buttonAction' => url('/auctions/auction/' . $auction->id),
                     'imageUrl' => $auction->primaryImage(true)
                 ];
             })->toArray();
@@ -65,7 +65,7 @@ class HomeController extends Controller
                     return [
                         'title' => $auction->title,
                         'current_bid' => $auction->current_bid ?? $auction->start_price,
-                        'buttonAction' => '',
+                        'buttonAction' => url('/auctions/auction/' . $auction->id),
                         'imageUrl' => $auction->primaryImage(true)
                     ];
                 })->toArray();

@@ -7,7 +7,7 @@
         </header>
         <div class="space-y-12">
             <p class="text-gray-600 text-3-5xl line-clamp-3">{{ $description }}</p>
-            <button onclick="{{ $buttonAction }}"
+            <button onclick="window.location.href='{{ $buttonAction }}'"
                 class="text-white text-2xl px-8 py-5 rounded-lg border-none bg-[#135d3b] hover:bg-[#135d3b]/75 transition-colors flex items-center active:scale-95"
                 aria-label="View auction details">
                 View Auction
