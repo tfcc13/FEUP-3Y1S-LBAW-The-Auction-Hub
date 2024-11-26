@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Auction;
+use App\Models\Category;
 use App\Models\Bid;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -161,4 +162,35 @@ class AuctionController extends Controller
         }
         return redirect()->back()->with('success', 'Your bid has been placed successfully!');
     }
+
+    public function createAuction() {
+        $categories = Category::all();
+        return view('pages.create_auction', compact('categories'));
+    }
+
+    public function submitAuction(Request $request){
+        // Validate the form data
+    $validatedData = $request->validate([
+        'title' => 'required|string|max:255',
+        'description' => 'required|string',
+        'start_price' => 'required|numeric|min:0',
+        'category_id' => 'required|exists:category,id', 
+    ]);
+
+    try {
+        // Create a new auction
+        $auction = new Auction();
+        $auction->title = $validatedData['title'];
+        $auction->description = $validatedData['description'];
+        $auction->start_price = $validatedData['start_price'];
+        $auction->category_id = $validatedData['category_id'];  
+        $auction->owner_id = Auth::id();
+        $auction->save();
+
+        return redirect()->route('auctions.show', $auction->id)->with('success', 'Auction created successfully!');
+    } catch (\Exception $e) {
+        return redirect()->route('auctions.create_auction')->with('error', 'An error occurred while creating the auction: ' . $e->getMessage());
+    }
+    }
+
 }
