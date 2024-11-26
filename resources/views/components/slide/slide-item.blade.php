@@ -12,7 +12,7 @@
         </header>
         <footer class="flex justify-between items-center w-full">
             <span class="text-gray-600 text-3xl font-semibold select-none" aria-label="Current bid amount">
-                ${{ number_format($currentBid) }}
+                ${{ number_format($currentBid, 2) }}
             </span>
             <button
                 class="text-white px-6 py-2 rounded border-none bg-[#135d3b] hover:bg-[#135d3b]/75 transition-colors flex items-center active:scale-95 select-none"

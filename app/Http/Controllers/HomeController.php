@@ -64,7 +64,7 @@ class HomeController extends Controller
                 ->map(function ($auction) {
                     return [
                         'title' => $auction->title,
-                        'current_bid' => $auction->current_bid ?? $auction->start_price,
+                        'current_bid' => $auction->bids->first()->amount ?? $auction->start_price,
                         'buttonAction' => url('/auctions/auction/' . $auction->id),
                         'imageUrl' => $auction->primaryImage(true)
                     ];
