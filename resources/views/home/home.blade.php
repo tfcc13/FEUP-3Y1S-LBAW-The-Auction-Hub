@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="flex flex-col items-center px-4 py-8 space-y-8">
+    <main class="flex flex-col items-center px-4 py-8 space-y-8">
         <!-- Categories section -->
         <x-categories.categories :categories="$categories" />
 
@@ -16,5 +16,5 @@
                 <x-slide.slide-item :title="$item['title']" :currentBid="$item['current_bid']" :imageUrl="$item['imageUrl']" :buttonAction="$item['buttonAction']" />
             @endforeach
         </x-slide.slide>
-    </div>
+    </main>
 @endsection
