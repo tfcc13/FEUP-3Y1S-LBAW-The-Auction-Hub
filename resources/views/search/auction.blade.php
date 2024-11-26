@@ -2,18 +2,6 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="auction-images">
-    @if($auction->images->isNotEmpty())
-        <h2>Images:</h2>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            @foreach($auction->images as $image)
-                <img src="{{ asset('storage/' . $image->path) }}" alt="Auction Image" class="w-full h-auto">
-            @endforeach
-        </div>
-    @else
-        <p>No images available for this auction.</p>
-    @endif
-</div>
 
 <div class="container mx-auto py-6">
     <h1 class="text-3xl font-bold mb-6">Search Results</h1>
