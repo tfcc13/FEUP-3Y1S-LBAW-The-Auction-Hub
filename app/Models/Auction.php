@@ -26,7 +26,7 @@ class Auction extends Model
     'end_date',
     'start_date',
   ];
-  
+
   protected $casts = [
     'start_date' => 'datetime',
     'end_date' => 'datetime',
@@ -52,9 +52,15 @@ class Auction extends Model
     return $this->hasOne(AuctionWinner::class, 'auction_id');
   }
 
+  public function bids(){
+    return $this->hasMany(Bid::class, 'auction_id')->orderBy('bid_date','desc');
+  }
+
   public function images() {
     return $this->hasMany(AuctionImage::class, 'auction_id');
   }
+
+
   public function primaryImage()
   {
       return $this->images()->first()->path ?? 'images/defaults/default-auction.jpg';

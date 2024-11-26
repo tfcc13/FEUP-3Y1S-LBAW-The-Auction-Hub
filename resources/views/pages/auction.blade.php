@@ -5,7 +5,6 @@
     <!-- Auction Images Section -->
     <div class="auction-images">
         @if($auction->images->isNotEmpty())
-            <h2>Images:</h2>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 @foreach($auction->images as $image)
                     <img 
@@ -15,7 +14,10 @@
                 @endforeach
             </div>
         @else
-            <p>No images available for this auction.</p>
+            <img 
+            src="{{ asset('/images/defaults/default-auction.jpg') }}" 
+            alt="{{ $auction->title }}" 
+            class="w-80 h-auto lazyload mx-auto">
         @endif
     </div>
     
@@ -52,6 +54,25 @@
                 <span class="auction-status" hidden>{{ $auction->state }}</span>
             </div>
         </div>
+
+
+        <!-- Bidding List Section -->
+        @if($auction->bids->isNotEmpty())
+        <div class="bg-white shadow-md rounded p-6 mt-6">
+            <h2 class="text-xl font-bold text-gray-800 mb-4">Bidding History</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                @foreach($auction->bids as $bid)
+                    <div class="bg-gray-50 p-4 rounded shadow">
+                        <p><strong>Bidder:</strong> {{ $bid->user->name }}</p>
+                        <p><strong>Bid Amount:</strong> ${{ number_format($bid->amount, 2) }}</p>
+                        <p><strong>Bid Date:</strong> {{ $bid->bid_date->format('d M Y, H:i') }}</p>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+        @else
+            <p>No bids placed yet.</p>
+        @endif
     </div>
 </body>
 @endsection
