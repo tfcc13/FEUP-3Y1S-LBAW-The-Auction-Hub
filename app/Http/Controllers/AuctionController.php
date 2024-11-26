@@ -7,6 +7,13 @@ use Illuminate\Http\Request;
 
 class AuctionController extends Controller
 {
+
+    public function showAuction($auction_id) 
+    {
+        $auction  = Auction::with('category')->findOrFail($auction_id);
+        return view('pages.auction', ['auction' => $auction]);
+    }
+
     public function search(Request $request)
     {
         try {

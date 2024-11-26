@@ -34,7 +34,7 @@ class Auction extends Model
 
   public function category()
   {
-    return $this->belongsTo(Category::class);
+    return $this->belongsTo(Category::class, 'category_id');
   }
 
   public function categoryName()
@@ -42,6 +42,10 @@ class Auction extends Model
     return $this->category->name ?? null;
   }
 
+  public function auctionWinner()
+  {
+    return $this->hasOne(AuctionWinner::class, 'auction_id');
+  }
   // function used to retrieve the results from a full text search
   public function scopeSearch($query, $searchTerm)
   {
