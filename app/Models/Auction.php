@@ -26,6 +26,11 @@ class Auction extends Model
     'end_date',
     'start_date',
   ];
+  
+  protected $casts = [
+    'start_date' => 'datetime',
+    'end_date' => 'datetime',
+];
 
   public function user()
   {
@@ -45,6 +50,14 @@ class Auction extends Model
   public function auctionWinner()
   {
     return $this->hasOne(AuctionWinner::class, 'auction_id');
+  }
+
+  public function images() {
+    return $this->hasMany(AuctionImage::class, 'auction_id');
+  }
+  public function primaryImage()
+  {
+      return $this->images()->first()->path ?? 'images/defaults/default-auction.jpg';
   }
   // function used to retrieve the results from a full text search
   public function scopeSearch($query, $searchTerm)

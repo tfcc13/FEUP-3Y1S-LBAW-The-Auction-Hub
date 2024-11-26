@@ -9,13 +9,14 @@ class AuctionImage extends Model
 {
     use HasFactory;
 
-  protected $timestamps = false;
+  public $timestamps = false;
+  protected $table = 'auction_image';
   protected $fillable = [
-    'path'
+    'path', 'auction_id'
   ];
   
   public function auction(){
-    return $this->belongsTo(Auction::class);
+    return $this->belongsTo(Auction::class, 'auction_id');
     
   }
 }

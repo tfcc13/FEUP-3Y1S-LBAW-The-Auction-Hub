@@ -84,6 +84,7 @@ DROP TRIGGER IF EXISTS prevent_admin_bid_trigger ON bid;
 DROP TRIGGER IF EXISTS prevent_admin_auction_creation_trigger ON auction;
 DROP TRIGGER IF EXISTS auction_end_balance_update_trigger ON auction;
 DROP TRIGGER IF EXISTS anonymize_user_and_address_trigger ON users;
+DROP TRIGGER IF EXISTS trigger_set_default_end_date ON auction;
 
 
 
@@ -809,4 +810,19 @@ BEFORE UPDATE ON users
 FOR EACH ROW
 EXECUTE FUNCTION anonymize_user_and_address();
 
+--TRIGGER 20
+CREATE OR REPLACE FUNCTION set_default_end_date()
+RETURNS TRIGGER AS $$
+BEGIN
+    -- If end_date is not provided, set it to 30 days after start_date
+    IF NEW.end_date IS NULL THEN
+        NEW.end_date := NEW.start_date + INTERVAL '30 days';
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
 
+CREATE TRIGGER trigger_set_default_end_date
+BEFORE INSERT ON auction
+FOR EACH ROW
+EXECUTE FUNCTION set_default_end_date();
