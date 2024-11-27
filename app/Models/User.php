@@ -2,34 +2,33 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail; used to send an email verification to the user
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-// Added to define Eloquent relationships.
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class User extends Authenticatable  // implements MustVerifyEmail
+class User extends Authenticatable
 {
-  use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable;
 
-  // Don't add create and update timestamps in database.
-  public $timestamps = false;
+    // Don't add create and update timestamps in database.
+    public $timestamps = false;
 
-  /**
-   * The attributes that are mass assignable.
-   *
-   * @var array<int, string>
-   */
-  protected $fillable = [
-    'name',
-    'username',
-    'email',
-    'password',
-    'birth_date',
-    'rating'
-  ];
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $fillable = [
+        'name',
+        'username',
+        'email',
+        'password',
+        'birth_date',
+        'rating',
+        'description' 
+    ];
 
   /**
    * The attributes that should be hidden for serialization.

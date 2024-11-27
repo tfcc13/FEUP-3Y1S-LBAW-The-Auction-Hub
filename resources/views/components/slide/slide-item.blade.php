@@ -1,10 +1,10 @@
-@props(['title', 'currentBid', 'imageUrl', 'buttonAction'])
+@props(['title', 'currentBid', 'imageUrl', 'buttonAction', 'size' => 'w-[400px]', 'height' => 'h-[280px]'])
 
-<article class="flex-shrink-0 w-[400px]" role="listitem">
+<article class="flex-shrink-0 {{ $size }} {{ $height }}" role="listitem">
     <section class="flex flex-col space-y-4 items-start bg-white rounded-lg shadow-md p-4 select-none">
-        <figure class="w-full">
+        <figure class="{{ $height }}" style="position: relative; overflow: hidden;">
             <img src="{{ $imageUrl }}" alt="Auction item: {{ $title }}"
-                class="w-full aspect-[4/3] object-cover rounded-xl select-none" draggable="false"
+                class=" {{ $height }} w-full rounded-xl select-none" draggable="false"
                 onload="adjustImageFit(this)" loading="lazy">
         </figure>
         <header>
@@ -26,10 +26,17 @@
 
 <script>
     function adjustImageFit(img) {
+        // Ensure the image keeps the aspect ratio correct
+        const aspectRatio = img.naturalWidth / img.naturalHeight;
+
         if (img.naturalHeight > img.naturalWidth) {
             img.style.objectFit = 'scale-down';
         } else {
-            img.style.objectFit = 'cover';
+            img.style.objectFit = 'fill';
         }
+
+        // Maintain aspect ratio by adjusting the height
+        img.style.height = 'auto';
+        img.style.aspectRatio = aspectRatio;
     }
 </script>
