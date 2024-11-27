@@ -147,7 +147,7 @@
 
             @endauth
         </div>
-        @if(Auth::check() && Auth::id() === $auction->owner_id && $auction->state === 'Active')
+        @if(Auth::check() && Auth::id() === $auction->owner_id && $auction->state === 'Ongoing')
 
                 <form method="POST" action="{{ route('auction.cancel_auction', $auction->id) }}" class="mt-6">
                     @csrf
