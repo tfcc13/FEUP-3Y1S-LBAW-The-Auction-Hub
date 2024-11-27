@@ -271,4 +271,30 @@ class AuctionController extends Controller
         }
     }
 
+    public function deleteAuction($auction_id)
+    {
+        $auction = Auction::findOrFail($auction_id);
+
+       
+        if (Auth::user()->id !== $auction->owner_id) {
+            return redirect()->back()->with('error', 'You are not authorized to delete this auction.');
+        }
+
+  
+        if ($auction->bids()->count() > 0) {
+            return redirect()->back()->with('error', 'Cannot delete an auction with bids.');
+        }
+
+        try {
+            DB::beginTransaction();
+            $auction->delete(); 
+            DB::commit();
+
+            return redirect()->route('home')->with('success', 'Auction deleted successfully.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Failed to delete the auction: ' . $e->getMessage());
+        }
+    }
+
 }

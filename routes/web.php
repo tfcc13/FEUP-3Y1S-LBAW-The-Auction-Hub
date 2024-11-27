@@ -45,4 +45,5 @@ Route::prefix('auctions')->group(function () {
     Route::post('/auction/{id}/cancel_auction',  [AuctionController::class, 'cancelAuction'])->name('auction.cancel_auction');
     Route::get('/auction/{id}/edit', [AuctionController::class, 'editAuction'])->name('auction.edit_auction');
     Route::put('/auction/{id}', [AuctionController::class, 'update'])->name('auction.update');
+    Route::delete('/auction/{id}/delete', [AuctionController::class, 'deleteAuction'])->name('auction.delete')->middleware('auth');
 });

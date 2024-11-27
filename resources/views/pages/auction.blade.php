@@ -147,8 +147,12 @@
 
             @endauth
         </div>
-        @if(Auth::check() && Auth::id() === $auction->owner_id && $auction->state === 'Ongoing')
-
+        @if(Auth::check() && Auth::id() === $auction->owner_id)
+                
+                <a href="{{ route('auction.edit_auction', $auction->id) }}" class="ml-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                        Edit Auction
+                </a>
+                @if($auction->state === 'Ongoing')
                 <form method="POST" action="{{ route('auction.cancel_auction', $auction->id) }}" class="mt-6">
                     @csrf
                     <button type="submit" 
@@ -156,10 +160,15 @@
                         Cancel Auction
                     </button>
                 </form>
-        
-                <a href="{{ route('auction.edit_auction', $auction->id) }}" class="ml-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-                        Edit Auction
-                </a>
+                @endif
+                <form method="POST" action="{{ route('auction.delete', $auction->id) }}" class="mt-6">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" 
+                            class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">
+                        Delete Auction
+                    </button>
+                </form>
         @endif
         
     </div>
