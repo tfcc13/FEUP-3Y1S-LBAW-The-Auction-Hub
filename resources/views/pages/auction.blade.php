@@ -132,7 +132,7 @@
                             id="amount" 
                             name="amount" 
                             step="0.01" 
-                            min="{{ $auction->start_price }}" 
+                            min="{{ $auction->bids->max('amount') ? $auction->bids->max('amount') + 1 : $auction->start_price }}"
                             class="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                             required>
                     </div>

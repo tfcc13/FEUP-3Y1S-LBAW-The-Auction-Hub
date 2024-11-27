@@ -463,8 +463,11 @@ EXECUTE FUNCTION prevent_banned_user_bid();
 
 
 -- TRIGGER06
-CREATE FUNCTION prevent_auction_edit_after_bid() RETURNS TRIGGER AS $$
+/* CREATE FUNCTION prevent_auction_edit_after_bid() RETURNS TRIGGER AS $$
 BEGIN
+    IF (TG_OP = 'UPDATE') AND (NEW.current_bid != OLD.current_bid) THEN
+        RETURN NEW;
+    END IF;
     IF EXISTS (SELECT 1 FROM bid WHERE auction_id = NEW.id) THEN
         RAISE EXCEPTION 'Auction cannot be edited or canceled after a bid has been placed';
     END IF;
@@ -475,7 +478,7 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER prevent_auction_edit_after_bid_trigger
 BEFORE UPDATE ON auction
 FOR EACH ROW
-EXECUTE FUNCTION prevent_auction_edit_after_bid();
+EXECUTE FUNCTION prevent_auction_edit_after_bid(); */
 
 
 -- TRIGGER07
@@ -511,7 +514,7 @@ FOR EACH ROW
 EXECUTE FUNCTION prevent_owner_follow();
 
 -- TRIGGER09
-CREATE FUNCTION ensure_bid_after_curr_bid() RETURNS TRIGGER AS $$
+/* CREATE FUNCTION ensure_bid_after_curr_bid() RETURNS TRIGGER AS $$
 BEGIN
     IF NEW.bid_date <= (SELECT MAX(bid_date) FROM bid WHERE auction_id = NEW.auction_id) THEN
         RAISE EXCEPTION 'New bid must be after the current bid timestamp';
@@ -524,7 +527,7 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER ensure_bid_after_curr_bid_trigger
 BEFORE INSERT ON bid
 FOR EACH ROW
-EXECUTE FUNCTION ensure_bid_after_curr_bid();
+EXECUTE FUNCTION ensure_bid_after_curr_bid(); */
 
 
 -- TRIGGER10
@@ -725,10 +728,10 @@ BEFORE INSERT ON bid
 FOR EACH ROW
 EXECUTE FUNCTION prevent_admin_actions();
 
-CREATE TRIGGER prevent_admin_auction_creation_trigger
+/* CREATE TRIGGER prevent_admin_auction_creation_trigger
 BEFORE INSERT ON auction
 FOR EACH ROW
-EXECUTE FUNCTION prevent_admin_actions();
+EXECUTE FUNCTION prevent_admin_actions(); */
 
 
 -- TRIGGER18

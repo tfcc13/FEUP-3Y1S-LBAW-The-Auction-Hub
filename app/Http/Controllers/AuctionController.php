@@ -106,13 +106,22 @@ class AuctionController extends Controller
 
     public function bidAuction(Request $request, $id)
     {
-        Auth::check();
+        
+
+        if (!Auth::check()) {
+            return redirect()->route('login')->with('error', 'You must be logged in to place a bid.');
+        }
         
        $validatedData =  $request->validate([
-            'amount' => 'required|numeric|min:0',
+            'amount' => 'required|numeric|min:1001',
         ]);
-
+        
         $auction = Auction::findOrFail($id); 
+        
+        if ($auction->state !== 'Ongoing') {
+            return redirect()->back()->withErrors(['amount' => 'Bidding is closed for this auction.']);
+        }
+
 
         // Ensure the bid is higher than the current highest bid or the start price
         $highestBid = $auction->bids()->max('amount');
@@ -127,40 +136,34 @@ class AuctionController extends Controller
         if ($currentHighestBid && $currentHighestBid->user_id == Auth::id()) {
             return redirect()->back()->withErrors(['amount' => 'You already own the highest bid.']);
         }
-
-        if (!Auth::check()) {
-    return redirect()->route('login')->with('error', 'You must be logged in to place a bid.');
-}
+        
         try {
             DB::beginTransaction();
     
             $bid = new Bid([
-                'auction_id' => $validatedData['auction_id'],
-                'user_id' => Auth::user()->id,
+                'auction_id' => $auction->id,
+                'user_id' => Auth::id(),
                 'amount' => $validatedData['amount'],
                 'bid_date' => now(),
             ]);
             $bid->save();
-    
-            Auction::where('id', $auction_id)
-            ->update(['current_bid' => DB::raw($validatedData['amount'])]);
-
-
-            // Update the current bid in the auction table (optional)
+        
+            // Update the auction's current bid
             $auction->current_bid = $validatedData['amount'];
             $auction->save();
-    
+
             DB::commit();
 
-            $auction = $auction->fresh();
-
-    
+            $auction = $auction->fresh(); 
+            //dd($e->getMessage(), $e->getTrace());
             return redirect()->back()->with('success', 'Your bid has been placed successfully!');
         } catch (\Exception $e) {
+            //dd($request->all());
+            //dd($e->getMessage(), $e->getTrace());
             DB::rollBack();
             return redirect()->back()->with('error', 'An error occurred while placing your bid: ' . $e->getMessage());
         }
-        return redirect()->back()->with('success', 'Your bid has been placed successfully!');
+        
     }
 
     public function createAuction() {
@@ -248,9 +251,11 @@ class AuctionController extends Controller
         // are both of them needed ?
         $this->authorize('update', $auction);
         
-        if (Auth::user()->id !== $auction->owner_id) {
+
+        // not neeeded it redirects to a 403 page because of the auction policy
+/*         if (Auth::user()->id !== $auction->owner_id) {
             return redirect()->back()->with('message', 'You do not have permission to edit this auction.');
-        }
+        } */
 
         $validatedData = $request->validate([
             'title' => 'required|string|max:255',
@@ -275,11 +280,11 @@ class AuctionController extends Controller
     {
         $auction = Auction::findOrFail($auction_id);
 
-       
-        if (Auth::user()->id !== $auction->owner_id) {
+        $this->authorize('delete', $auction);
+/*         if (Auth::user()->id !== $auction->owner_id) {
             return redirect()->back()->with('error', 'You are not authorized to delete this auction.');
         }
-
+ */
   
         if ($auction->bids()->count() > 0) {
             return redirect()->back()->with('error', 'Cannot delete an auction with bids.');

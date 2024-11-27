@@ -11,6 +11,11 @@ class AuctionPolicy
     {
         return $user->id === $auction->owner_id;
     }
+
+    public function delete(User $user, Auction $auction)
+    {
+        return $user->id === $auction->owner_id && $auction->bids()->count() === 0;
+    }
 }
 
 
