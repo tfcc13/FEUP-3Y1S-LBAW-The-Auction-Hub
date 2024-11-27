@@ -1,6 +1,6 @@
 -- Populate users
 INSERT INTO users (email, username, name, password, birth_date, credit_balance, is_admin, state, rating) VALUES
-('john.doe@example.com', 'johndoe', 'John Doe', '$2y$10$qBWFclogKC0peD99lO4kr.ywXky.Fv0qDxLqWKM1dGJwJbnLc9gh.', '1990-01-01', 50000, FALSE, 'Active', 4),
+('john.doe@example.com', 'johndoe', 'John Doe', '$2y$10$sUY.kxsoyTrNZwLh6zrJn.HQ1ckKdnjbrngQvS3Z.65fxW/aYy8Yq', '1990-01-01', 50000, FALSE, 'Active', 4),
 ('jane.smith@example.com', 'janesmith', 'Jane Smith', 'hashedpassword123', '1985-05-15', 50000, FALSE, 'Active', 5),
 ('deleted.user@example.com', 'deleteduser', 'Deleted User', 'hashedpassword123', '1975-08-22', 50000, FALSE, 'Deleted', 1),
 ('alice.johnson@example.com', 'alicej', 'Alice Johnson', 'hashedpassword123', '1992-03-20', 75500, FALSE, 'Active', 3),
