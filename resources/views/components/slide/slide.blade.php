@@ -1,8 +1,8 @@
-<div class="slider-container">
-    <div class="inner-slider">
+<section class="slider-container" aria-label="Auction items slider">
+    <main class="inner-slider" role="region" aria-roledescription="slider">
         {{ $slot }}
-    </div>
-</div>
+    </main>
+</section>
 
 <style>
     .slider-container {

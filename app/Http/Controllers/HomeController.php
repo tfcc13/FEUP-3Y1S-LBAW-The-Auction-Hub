@@ -2,178 +2,80 @@
 
 namespace App\Http\Controllers;
 
-// use App\Models\Category;
-// use App\Models\Auction;
-
+use App\Models\Category;
+use App\Models\Auction;
 use Illuminate\Database\Eloquent\Collection;
+use Exception;
+use Illuminate\Support\Facades\Log;
 use stdClass;
 
 class HomeController extends Controller
 {
     public function index()
     {
-        $categories = collect([
-            $this->createMockCategory('Watches'),
-            $this->createMockCategory('Vehicles'),
-            $this->createMockCategory('Jewelry'),
-            $this->createMockCategory('Collectibles'),
-            $this->createMockCategory('Sports Memorabilia'),
-            $this->createMockCategory('Art'),
-            $this->createMockCategory('Antiques'),
-            $this->createMockCategory('Coins & Paper Money'),
-            $this->createMockCategory('Electronics')
-        ]);
+        try {
+            // Get real categories from database
+            $categories = Category::all();
+            Log::info('Categories fetched successfully: ' . $categories->count());
+        } catch (Exception $e) {
+            Log::error('Failed to fetch categories: ' . $e->getMessage());
+            $categories = collect([]);
+        }
 
-        // Database implementation for later:
-        /*
-        $featuredAuctions = Auction::where('state', '!=', 'canceled')
-            ->select('auctions.*')
-            ->join('categories', 'auctions.category_id', '=', 'categories.id')
-            ->with(['category', 'auctionImages' => function($query) {
-                $query->first();
-            }])
-            ->groupBy('categories.id')
-            ->orderBy('created_at', 'desc')
-            ->take(4)
-            ->get();
+        try {
+            // Get featured auctions - one from each category
+            $featuredAuctions = Auction::query()
+                ->select('auction.*')
+                ->where('auction.state', '!=', Auction::STATE_CANCELED)
+                ->with(['category', 'images'])
+                ->orderBy('auction.start_date', 'desc')
+                ->take(4)
+                ->get();
 
-        $carouselItems = $featuredAuctions->map(function($auction) {
-            return [
-                'title' => $auction->title,
-                'description' => $auction->description,
-                'buttonAction' => '',
-                'imageUrl' => $auction->auctionImages->first()->path ?? '/images/placeholder.jpg'
-            ];
-        })->toArray();
-        */
-
-        // Mock carouselItems data for now
-        $carouselItems = [
-            [
-                'title' => 'Vintage Rolex Submariner',
-                'description' => 'Rare 1960s Rolex Submariner in excellent condition. Original parts with documented history.Rare 1960s Rolex Submariner in excellent condition. Original parts with documented history.Rare 1960s Rolex Submariner in excellent condition. Original parts with documented history.Rare 1960s Rolex Submariner in excellent condition. Original parts with documented history.Rare 1960s Rolex Submariner in excellent condition. Original parts with documented history.Rare 1960s Rolex Submariner in excellent condition. Original parts with documented history.',
-                'buttonAction' => '',
-                'imageUrl' => '/images/submariner_4_3.jpg'
-            ],
-            [
-                'title' => 'Diamond Engagement Ring',
-                'description' => '2.5 carat diamond ring with platinum band, certified by GIA.',
-                'buttonAction' => '',
-                'imageUrl' => '/images/gt4_16_9.jpg'
-            ],
-            [
-                'title' => 'First Edition Harry Potter',
-                'description' => 'First edition, first printing of Harry Potter and the Philosopher\'s Stone.',
-                'buttonAction' => '',
-                'imageUrl' => '/images/presidencial_1_1.jpg'
-            ],
-            [
-                'title' => 'First Edition Harry Potter',
-                'description' => 'First edition, first printing of Harry Potter and the Philosopher\'s Stone.',
-                'buttonAction' => '',
-                'imageUrl' => '/images/patek_vertical.jpg'
-            ],
-        ];
-
-        // Database implementation for slideItems (for later):
-        /*
-        $featuredAuctionIds = $featuredAuctions->pluck('id');
-        
-        $slideItems = Auction::where('state', '!=', 'canceled')
-            ->whereNotIn('id', $featuredAuctionIds)
-            ->with(['auctionImages' => function($query) {
-                $query->first();
-            }])
-            ->orderBy('created_at', 'desc')
-            ->take(20)
-            ->get()
-            ->map(function($auction) {
+            $carouselItems = $featuredAuctions->map(function ($auction) {
                 return [
                     'title' => $auction->title,
-                    'current_bid' => $auction->current_bid,
-                    'buttonAction' => '',
-                    'imageUrl' => $auction->auctionImages->first()->path ?? '/images/placeholder.jpg'
+                    'description' => $auction->description,
+                    'buttonAction' => url('/auctions/auction/' . $auction->id),
+                    'imageUrl' => $auction->primaryImage(true)
                 ];
             })->toArray();
-        */
 
-        // Mock slideItems data for now
-        $slideItems = [
-            [
-                'title' => 'Vintage Omega',
-                'current_bid' => 4500,
-                'buttonAction' => '',
-                'imageUrl' => '/images/submariner_4_3.jpg'
-            ],
-            [
-                'title' => '2015 Porsche 911 GT3',
-                'current_bid' => 125000,
-                'buttonAction' => '',
-                'imageUrl' => '/images/gt4_4_3.jpg'
-            ],
-            [
-                'title' => '2015 Porsche 911 GT3',
-                'current_bid' => 125000,
-                'buttonAction' => '',
-                'imageUrl' => '/images/gt4_5_4.jpg'
-            ],
-            [
-                'title' => 'Sapphire and Diamond Necklace',
-                'current_bid' => 8900,
-                'buttonAction' => '',
-                'imageUrl' => '/images/gt4_16_9.jpg'
-            ],
-            [
-                'title' => 'Vintage Rolex Submariner',
-                'current_bid' => 3200,
-                'buttonAction' => '',
-                'imageUrl' => '/images/patek_vertical.jpg'
-            ],
-            [
-                'title' => 'Diamond and Ruby Necklace',
-                'current_bid' => 12000,
-                'buttonAction' => '',
-                'imageUrl' => '/images/presidencial_1_1.jpg'
-            ],
-            [
-                'title' => 'Michael Jordan Game-Worn Jersey',
-                'current_bid' => 100000,
-                'buttonAction' => '',
-                'imageUrl' => '/images/auctions/sports1.jpg'
-            ],
-            [
-                'title' => 'Picasso Original Painting',
-                'current_bid' => 500000,
-                'buttonAction' => '',
-                'imageUrl' => '/images/auctions/art1.jpg'
-            ],
-            [
-                'title' => 'Antique Chinese Vase',
-                'current_bid' => 8000,
-                'buttonAction' => '',
-                'imageUrl' => '/images/auctions/antiques1.jpg'
-            ],
-            [
-                'title' => 'Rare Coin Collection',
-                'current_bid' => 15000,
-                'buttonAction' => '',
-                'imageUrl' => '/images/auctions/coins1.jpg'
-            ],
-            [
-                'title' => 'Limited Edition iPhone',
-                'current_bid' => 2000,
-                'buttonAction' => '',
-                'imageUrl' => '/images/auctions/electronics1.jpg'
-            ]
-        ];
+            Log::info('Featured auctions fetched successfully: ' . $featuredAuctions->count());
+            Log::info('Featured auctions: ' . json_encode($featuredAuctions));
+            Log::info('Carousel items: ' . json_encode($carouselItems));
+        } catch (Exception $e) {
+            Log::error('Failed to fetch featured auctions: ' . $e->getMessage());
+            $carouselItems = [];
+            $featuredAuctions = collect([]);
+        }
+
+        try {
+            // Get slide items with error prevention
+            $featuredAuctionIds = $featuredAuctions->pluck('id');
+
+            $slideItems = Auction::query()
+                ->where('state', '!=', Auction::STATE_CANCELED)
+                ->whereNotIn('id', $featuredAuctionIds)
+                ->with(['images'])
+                ->orderBy('start_date', 'desc')
+                ->take(20)
+                ->get()
+                ->map(function ($auction) {
+                    return [
+                        'title' => $auction->title,
+                        'current_bid' => $auction->bids->first()->amount ?? $auction->start_price,
+                        'buttonAction' => url('/auctions/auction/' . $auction->id),
+                        'imageUrl' => $auction->primaryImage(true)
+                    ];
+                })->toArray();
+
+            Log::info('Slide items fetched successfully: ' . count($slideItems));
+        } catch (Exception $e) {
+            Log::error('Failed to fetch slide items: ' . $e->getMessage());
+            $slideItems = [];
+        }
 
         return view('home.home', compact('categories', 'carouselItems', 'slideItems'));
-    }
-
-    private function createMockCategory($name)
-    {
-        $category = new stdClass();
-        $category->name = $name;
-        return $category;
     }
 }

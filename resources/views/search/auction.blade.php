@@ -23,7 +23,7 @@
                     <div class="p-6">
                         <h2 class="text-2xl font-bold text-gray-800 mb-3">{{ $auction['title'] }}</h2>
                         <p class="text-gray-600 mb-4">{{ Str::limit($auction['description'], 100) }}</p>
-                        <a href="{{ url('/auctions/' . $auction['id']) }}" 
+                        <a href="{{ url('/auctions/auction/' . $auction['id']) }}" 
                            class="inline-block px-4 py-2 text-white sm:text-base rounded-md bg-[#135d3b] hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                            View Auction
                         </a>

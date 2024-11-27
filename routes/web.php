@@ -6,6 +6,7 @@ use App\Http\Controllers\AuctionController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 
+
 /*
  * |--------------------------------------------------------------------------
  * | Web Routes
@@ -37,4 +38,9 @@ Route::controller(RegisterController::class)->group(function () {
 Route::prefix('auctions')->group(function () {
     Route::get('search/json', [AuctionController::class, 'search'])->name('auctions.search');
     Route::get('search', [AuctionController::class, 'searchView'])->name('auctions.search.view');
+    Route::get('/auction/{id}',[AuctionController::class, 'showAuction'])->name('auctions.show');
+    Route::post('/auction/{id}/bid', [AuctionController::class, 'bidAuction'])->name('auction.bid');
+    Route::get('/create_auction', [AuctionController::class, 'createAuction'])->name('auctions.create_auction'); 
+    Route::post('/submit_auction', [AuctionController::class, 'submitAuction'])->name('auctions.submit_auction');
+    Route::post('/auction/{id}/cancel_auction',  [AuctionController::class, 'cancelAuction'])->name('auction.cancel_auction');
 });
