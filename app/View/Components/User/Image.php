@@ -9,17 +9,23 @@ use Closure;
 
 class Image extends Component
 {
-    private $userImagePath;
+    public ?string $userImagePath;
+    public string $classes;
 
     /**
      * Create a new component instance.
+     *
+     * @param string $class
      */
-    public function __construct()
+    public function __construct(string $class = '')
     {
-        //
+        // Dynamically retrieve the user's image path if authenticated
         $this->userImagePath = Auth::check()
             ? optional(Auth::user()->userImage)->path
             : null;
+
+        // Use the provided class entirely if supplied, otherwise fallback to default
+        $this->classes = $class ?: 'w-20 h-20 rounded-full';
     }
 
     /**
@@ -29,6 +35,7 @@ class Image extends Component
     {
         return view('components.user.image', [
             'userImagePath' => $this->userImagePath,
+            'classes' => $this->classes,
         ]);
     }
 }
