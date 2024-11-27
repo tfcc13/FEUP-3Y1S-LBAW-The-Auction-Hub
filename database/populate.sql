@@ -49,11 +49,8 @@ INSERT INTO address (street, city, district, zip_code, country, user_id) VALUES
 
 -- Populate Categories
 INSERT INTO category (name) VALUES
-('Electronics'), ('Art'), ('Vehicles'), ('Collectibles'), ('Jewelry'),
-('Sports Memorabilia'), ('Antiques'), ('Books'), ('Fashion'), ('Home & Garden'),
-('Toys & Games'), ('Musical Instruments'), ('Cameras & Photo'), ('Coins & Paper Money'), ('Stamps'),
-('Pottery & Glass'), ('Computers/Tablets & Networking'), ('Video Games & Consoles'), ('DVDs & Movies'), ('Music'),
-('Watches');
+('Watches'), ('Vehicles'), ('Jewelry'), ('Collectibles'), ('Sports Memorabilia'),
+('Art'), ('Antiques'), ('Coins & Paper Money'), ('Electronics');
 
 -- Populate Auctions
 INSERT INTO auction (title, description, start_price, current_bid, start_date, end_date, state, owner_id, category_id) VALUES

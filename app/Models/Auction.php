@@ -13,6 +13,10 @@ class Auction extends Model
   public $timestamps = false;
   protected $table = 'auction';
 
+  const STATE_ONGOING = 'Ongoing';
+  const STATE_RESUMED = 'Resumed';
+  const STATE_CANCELED = 'Canceled';
+
   protected $fillable = [
     'title',
     'description',
@@ -37,7 +41,7 @@ class Auction extends Model
   protected $casts = [
     'start_date' => 'datetime',
     'end_date' => 'datetime',
-];
+  ];
 
   public function user()
   {
@@ -60,18 +64,22 @@ class Auction extends Model
     return $this->hasOne(AuctionWinner::class, 'auction_id');
   }
 
-  public function bids(){
-    return $this->hasMany(Bid::class, 'auction_id')->orderBy('bid_date','desc');
+  public function bids()
+  {
+    return $this->hasMany(Bid::class, 'auction_id')->orderBy('bid_date', 'desc');
   }
 
-  public function images() {
+  public function images()
+  {
     return $this->hasMany(AuctionImage::class, 'auction_id');
   }
 
 
-  public function primaryImage()
+  public function primaryImage($default = false)
   {
-      return $this->images()->first()->path ?? 'images/defaults/default-auction.jpg';
+    if ($default) return 'images/defaults/default-auction.jpg';
+
+    return $this->images()->first()->path ?? 'images/defaults/default-auction.jpg';
   }
   // function used to retrieve the results from a full text search
   public function scopeSearch($query, $searchTerm)
