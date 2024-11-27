@@ -2,6 +2,7 @@
 @extends('layouts.app')
 
 @section('content')
+
 <div class="container mx-auto py-6">
     <h1 class="text-3xl font-bold mb-6">Search Results</h1>
 
@@ -20,7 +21,7 @@
                 <div class="border rounded-lg shadow-lg p-4 bg-white">
                     <h2 class="text-xl font-bold mb-2">{{ $auction['title'] }}</h2>
                     <p class="text-gray-600">{{ $auction['description'] }}</p>
-                    <a href="{{ url('/auctions/' . $auction['id']) }}" class="text-blue-500 hover:underline mt-4 inline-block">View Auction</a>
+                    <a href="{{ url('/auctions/auction/' . $auction['id']) }}" class="text-blue-500 hover:underline mt-4 inline-block">View Auction</a>
                 </div>
             @endforeach
         </div>

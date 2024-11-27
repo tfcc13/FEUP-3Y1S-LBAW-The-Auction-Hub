@@ -28,6 +28,7 @@ class User extends Authenticatable  // implements MustVerifyEmail
     'email',
     'password',
     'birth_date',
+    'rating'
   ];
 
   /**
@@ -48,13 +49,24 @@ class User extends Authenticatable  // implements MustVerifyEmail
     'password' => 'hashed',
   ];
 
-  public function follow()
+  public function followsAuction()
   {
-    return $this->hasMany(Auction::class);
+    return $this->belongsToMany(Auction::class, 'follows', 'user_id', 'auction_id');
+  } 
+
+
+  public function ownAuction()
+  {
+    return $this->hasMany(Auction::class, 'owner_id')->orderBy('state','asc');
   }
 
   public function userImage()
   {
     return $this->hasOne(UserImage::class);  // Use hasMany() if a user can have multiple images
+  }
+
+  public function ownsBids()
+  {
+      return $this->hasMany(Bid::class, 'user_id')->orderBy('time', 'desc');
   }
 }

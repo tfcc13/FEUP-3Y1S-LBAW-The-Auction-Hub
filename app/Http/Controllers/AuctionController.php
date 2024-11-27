@@ -3,10 +3,21 @@
 namespace App\Http\Controllers;
 
 use App\Models\Auction;
+use App\Models\Category;
+use App\Models\Bid;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class AuctionController extends Controller
 {
+
+    public function showAuction($auction_id) 
+    {
+        $auction  = Auction::with('category')->findOrFail($auction_id);
+        return view('pages.auction', ['auction' => $auction]);
+    }
+
     public function search(Request $request)
     {
         try {
@@ -92,4 +103,128 @@ class AuctionController extends Controller
             ]);
         }
     }
+
+    public function bidAuction(Request $request, $id)
+    {
+        Auth::check();
+        
+       $validatedData =  $request->validate([
+            'amount' => 'required|numeric|min:0',
+        ]);
+
+        $auction = Auction::findOrFail($id); 
+
+        // Ensure the bid is higher than the current highest bid or the start price
+        $highestBid = $auction->bids()->max('amount');
+        $minimumBid = $highestBid ? $highestBid + 1 : $auction->start_price;
+        // Check if the bid amount is valid
+        if ($validatedData['amount'] < $minimumBid) {
+            return redirect()->back()->withErrors(['amount' => 'Your bid must be at least $' . $minimumBid]);
+        }
+
+        // Ensure the user does not already have the highest bid
+        $currentHighestBid = $auction->bids()->where('amount', $highestBid)->first();
+        if ($currentHighestBid && $currentHighestBid->user_id == Auth::id()) {
+            return redirect()->back()->withErrors(['amount' => 'You already own the highest bid.']);
+        }
+
+        if (!Auth::check()) {
+    return redirect()->route('login')->with('error', 'You must be logged in to place a bid.');
+}
+        try {
+            DB::beginTransaction();
+    
+            $bid = new Bid([
+                'auction_id' => $validatedData['auction_id'],
+                'user_id' => Auth::user()->id,
+                'amount' => $validatedData['amount'],
+                'bid_date' => now(),
+            ]);
+            $bid->save();
+    
+            Auction::where('id', $auction_id)
+            ->update(['current_bid' => DB::raw($validatedData['amount'])]);
+
+
+            // Update the current bid in the auction table (optional)
+            $auction->current_bid = $validatedData['amount'];
+            $auction->save();
+    
+            DB::commit();
+
+            $auction = $auction->fresh();
+
+    
+            return redirect()->back()->with('success', 'Your bid has been placed successfully!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', 'An error occurred while placing your bid: ' . $e->getMessage());
+        }
+        return redirect()->back()->with('success', 'Your bid has been placed successfully!');
+    }
+
+    public function createAuction() {
+        Auth::check();
+        $categories = Category::all();
+        return view('pages.create_auction', compact('categories'));
+    }
+
+    public function submitAuction(Request $request){
+        // Validate the form data
+    $validatedData = $request->validate([
+        'title' => 'required|string|max:255',
+        'description' => 'required|string',
+        'start_price' => 'required|numeric|min:0',
+        'category_id' => 'required|exists:category,id', 
+    ]);
+
+    try {
+        DB::beginTransaction();
+        // Create a new auction
+        $auction = new Auction();
+        $auction->title = $validatedData['title'];
+        $auction->description = $validatedData['description'];
+        $auction->start_price = $validatedData['start_price'];
+        $auction->category_id = $validatedData['category_id'];  
+        $auction->owner_id = Auth::id();
+        $auction->save();
+        DB::commit();
+
+
+        return redirect()->route('auctions.show', $auction->id)->with('success', 'Auction created successfully!');
+    } catch (\Exception $e) {
+        return redirect()->route('auctions.create_auction')->with('error', 'An error occurred while creating the auction: ' . $e->getMessage());
+    }
+    }
+
+    public function cancelAuction($auction_id){
+
+
+        $auction = Auction::findOrFail($auction_id);
+
+        if (Auth::user()->id !== $auction->owner_id) {
+            return redirect()->back()->with('message', 'Cant cancel it because you dont own it.');
+        }
+
+        $bids= $auction->bids()->count();
+        if ($bids > 0) {
+            return redirect()->back()->with('message', 'Cannot cancel an auction with bids.');
+        }
+
+        try {
+            DB::beginTransaction();
+                $auction->update([
+                    'state' => 'Canceled',
+                    'end_date' => now(),
+            ]);
+                
+            DB::commit();
+            return redirect()->back()->with('message', 'Auction canceled successfully.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with('error', 'Database operation failed: ' . $e->getMessage());
+        }
+
+    }
+
 }

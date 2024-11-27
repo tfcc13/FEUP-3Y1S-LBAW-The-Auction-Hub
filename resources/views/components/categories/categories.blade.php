@@ -24,34 +24,39 @@
     $hasUnmappedCategories = $unmappedCategories->isNotEmpty();
 @endphp
 
-<div class="flex items-center justify-between w-full px-52">
-    @foreach ($mappedCategories as $category)
-        <x-categories.category-item
-            :text="$category->name"
-            :icon="$iconMap[$category->name]"
-            {{-- :onclick="$searchCategory($text)"  --}}
-        />
-    @endforeach
+<nav aria-label="Product Categories" class="w-full px-52">
+    <div class="flex items-center justify-between w-full" role="list">
+        @foreach ($mappedCategories as $category)
+            <x-categories.category-item
+                :text="$category->name"
+                :icon="$iconMap[$category->name]"
+                {{-- :onclick="$searchCategory($text)"  --}}
+            />
+        @endforeach
 
-    @if ($hasUnmappedCategories)
-        <x-popup.popup position="bottom" :offset="-27">
-            <x-slot:trigger>
-                <x-categories.category-item
-                    text="More"
-                    icon="more_horiz"
-                    onClick="togglePopup(this)" />
-            </x-slot>
-            
-            <x-slot:content>
-                <div class="space-y-4">
-                    @foreach ($unmappedCategories as $category)
-                        <div class="flex items-center gap-3 p-2 hover:bg-gray-100 rounded-md cursor-pointer">
-                            <span class="material-symbols-outlined">category</span>
-                            <span>{{ $category->name }}</span>
-                        </div>
-                    @endforeach
-                </div>
-            </x-slot>
-        </x-popup>
-    @endif
-</div>
+        @if ($hasUnmappedCategories)
+            <x-popup.popup position="bottom" :offset="-27">
+                <x-slot:trigger>
+                    <x-categories.category-item
+                        text="More Categories"
+                        icon="more_horiz"
+                        onClick="togglePopup(this)" />
+                </x-slot>
+                
+                <x-slot:content>
+                    <div class="space-y-4" role="list">
+                        @foreach ($unmappedCategories as $category)
+                            <div 
+                                class="flex items-center gap-3 p-2 hover:bg-gray-100 rounded-md cursor-pointer" 
+                                role="listitem"
+                                tabindex="0">
+                                <span class="material-symbols-outlined" aria-hidden="true">category</span>
+                                <span>{{ $category->name }}</span>
+                            </div>
+                        @endforeach
+                    </div>
+                </x-slot>
+            </x-popup>
+        @endif
+    </div>
+</nav>
