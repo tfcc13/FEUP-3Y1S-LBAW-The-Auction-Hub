@@ -18,16 +18,21 @@ class Auction extends Model
     'description',
     'start_price',
     'current_bid',
+    'start_date',
+    'end_date',
+    'state',
+    'owner_id',
     'category_id',
+    
   ];
-
+/* 
   protected $guarded = [
     'id',
     'owner_id',
     'state',
     'end_date',
     'start_date',
-  ];
+  ]; */
 
   protected $casts = [
     'start_date' => 'datetime',

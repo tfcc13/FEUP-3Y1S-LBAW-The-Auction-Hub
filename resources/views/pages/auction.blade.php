@@ -15,6 +15,7 @@
     </div>
 @endif
 <body class="bg-gray-100">
+    
     <!-- Auction Images Section -->
     <div class="auction-images">
         @if($auction->images->isNotEmpty())
@@ -146,6 +147,16 @@
 
             @endauth
         </div>
+        @if(Auth::check() && Auth::id() === $auction->owner_id && $auction->state === 'Active')
+
+                <form method="POST" action="{{ route('auction.cancel_auction', $auction->id) }}" class="mt-6">
+                    @csrf
+                    <button type="submit" 
+                        class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
+                        Cancel Auction
+                    </button>
+                </form>
+        @endif
     </div>
 
 </body>

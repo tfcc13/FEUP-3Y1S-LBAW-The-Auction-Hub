@@ -164,6 +164,7 @@ class AuctionController extends Controller
     }
 
     public function createAuction() {
+        Auth::check();
         $categories = Category::all();
         return view('pages.create_auction', compact('categories'));
     }
@@ -178,6 +179,7 @@ class AuctionController extends Controller
     ]);
 
     try {
+        DB::beginTransaction();
         // Create a new auction
         $auction = new Auction();
         $auction->title = $validatedData['title'];
@@ -186,11 +188,43 @@ class AuctionController extends Controller
         $auction->category_id = $validatedData['category_id'];  
         $auction->owner_id = Auth::id();
         $auction->save();
+        DB::commit();
+
 
         return redirect()->route('auctions.show', $auction->id)->with('success', 'Auction created successfully!');
     } catch (\Exception $e) {
         return redirect()->route('auctions.create_auction')->with('error', 'An error occurred while creating the auction: ' . $e->getMessage());
     }
+    }
+
+    public function cancelAuction($auction_id){
+
+
+        $auction = Auction::findOrFail($auction_id);
+
+        if (Auth::user()->id !== $auction->owner_id) {
+            return redirect()->back()->with('message', 'Cant cancel it because you dont own it.');
+        }
+
+        $bids= $auction->bids()->count();
+        if ($bids > 0) {
+            return redirect()->back()->with('message', 'Cannot cancel an auction with bids.');
+        }
+
+        try {
+            DB::beginTransaction();
+                $auction->update([
+                    'state' => 'Canceled',
+                    'end_date' => now(),
+            ]);
+                
+            DB::commit();
+            return redirect()->back()->with('message', 'Auction canceled successfully.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with('error', 'Database operation failed: ' . $e->getMessage());
+        }
+
     }
 
 }
