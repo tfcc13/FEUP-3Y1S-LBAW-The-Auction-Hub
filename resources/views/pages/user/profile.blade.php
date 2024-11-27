@@ -12,14 +12,7 @@
         <!-- User Profile Picture -->
         <div class="flex items-center justify-center h-48 mb-4 rounded overflow-hidden">
           <div class="w-48 h-48">
-            @if(auth()->user()->userImage)
-            <img src="{{ asset('storage/' . auth()->user()->userImage->path) }}"
-              alt="{{ auth()->user()->name }}"
-              class="h-full w-full object-cover">
-            @else
-            <!-- Placeholder using the component -->
             <x-user.image class="h-full w-full object-fill rounded"></x-user>
-              @endif
           </div>
         </div>
 
@@ -55,13 +48,22 @@
     <div class="md:col-span-3 lg:col-span-4 border dark:border-gray-700">
       <!-- Auctions Zone -->
       <div class="mt-6">
-        <!-- You can replace this section with dynamic auction content -->
+        <!-- User's Auctions -->
         <div class="bg-white shadow-lg rounded-lg p-6">
-          <h4 class="text-lg font-semibold mb-4">Current Auctions</h4>
+          <h4 class="text-lg font-semibold mb-4">Your Auctions</h4>
           <ul>
-            <li class="mb-2 text-gray-700">Auction Item 1: <span class="text-green-600">Active</span></li>
-            <li class="mb-2 text-gray-700">Auction Item 2: <span class="text-yellow-600">Upcoming</span></li>
-            <li class="mb-2 text-gray-700">Auction Item 3: <span class="text-red-600">Closed</span></li>
+            @forelse (auth()->user()->ownAuction as $auction)
+            <li class="mb-2 text-gray-700">
+              <a href="{{ route('auctions.show', $auction->id) }}" class="text-blue-600 hover:underline">
+                {{ $auction->title }}
+              </a>
+              <span class="ml-2 text-sm text-gray-500">
+                ({{ $auction->state }})
+              </span>
+            </li>
+            @empty
+            <li class="text-gray-500">You don't own any auctions yet.</li>
+            @endforelse
           </ul>
         </div>
       </div>

@@ -1,6 +1,6 @@
 @if ($userImagePath)
     <img class="{{ $classes }}"
-         src="{{ asset('storage/' . $userImagePath) }}"
+         src="{{ asset('' . $userImagePath) }}"
          alt="User Image">
 @else
     <img class="{{ $classes }}"
