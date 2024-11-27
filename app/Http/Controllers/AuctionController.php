@@ -227,4 +227,48 @@ class AuctionController extends Controller
 
     }
 
+    public function editAuction($auction_id)
+    {   
+        $categories = Category::all(); 
+        $auction = Auction::findOrFail($auction_id);
+
+        if (Auth::user()->id !== $auction->owner_id) {
+            return redirect()->back()->with('message', 'You do not have permission to edit this auction.');
+        }
+
+        $this->authorize('update', $auction);
+
+        return view('pages.edit_auction', compact('auction','categories'));
+    }
+
+    public function update(Request $request, $auction_id)
+    {
+        $auction = Auction::findOrFail($auction_id);
+
+        // are both of them needed ?
+        $this->authorize('update', $auction);
+        
+        if (Auth::user()->id !== $auction->owner_id) {
+            return redirect()->back()->with('message', 'You do not have permission to edit this auction.');
+        }
+
+        $validatedData = $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'category_id' => 'required|exists:category,id',
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+            $auction->update($validatedData);
+
+            DB::commit();
+            return redirect()->route('auctions.show', $auction->id)->with('success', 'Auction updated successfully!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with('error', 'An error occurred while updating the auction: ' . $e->getMessage());
+        }
+    }
+
 }

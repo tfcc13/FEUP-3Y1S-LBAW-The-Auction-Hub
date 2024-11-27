@@ -156,7 +156,12 @@
                         Cancel Auction
                     </button>
                 </form>
+        
+                <a href="{{ route('auction.edit_auction', $auction->id) }}" class="ml-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                        Edit Auction
+                </a>
         @endif
+        
     </div>
 
 </body>

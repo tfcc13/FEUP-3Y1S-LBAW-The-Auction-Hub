@@ -21,7 +21,7 @@ INSERT INTO users (email, username, name, password, birth_date, credit_balance, 
 ('peter.brown@example.com', 'peterb', 'Peter Brown', 'hashedpassword123', '1994-01-20', 65000, FALSE, 'Active', 3),
 ('quinn.foster@example.com', 'quinnf', 'Quinn Foster', 'hashedpassword123', '1989-08-08', 75000, FALSE, 'Active', 4),
 ('admin@lbaw24.com', 'admin', 'Admin', 'adminhashedpassword123','1989-04-10', 0, TRUE, 'Active', NULL),
-('lbaw@lbaw.com','lbaw','lbaw','$2y$10$RTQg99nD/kjmAI7b6l187.FLnoVh3uAT/m87ERCu0tT3TkgThesFm','1980-04-10',1000000,False,'Active',1);
+('lbaw@lbaw.com','lbaw','lbaw','$2y$10$RTQg99nD/kjmAI7b6l187.FLnoVh3uAT/m87ERCu0tT3TkgThesFm','1980-04-10',1000000,FALSE,'Active',1);
 
 
 -- Populate addresses
