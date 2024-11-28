@@ -5,5 +5,5 @@
 @endsection
 
 @section('right')
-@include('components.user.dashboardRight')
+@include('components.user.profileRight')
 @endsection

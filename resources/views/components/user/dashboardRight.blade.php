@@ -1,4 +1,3 @@
-
 <div class="mt-6">
   <div class="bg-white shadow-lg rounded-lg p-2">
     <h4 class="text-lg font-semibold mb-4">Your Auctions</h4>
@@ -11,8 +10,8 @@
         :imageUrl="asset('' . $auction->primaryImage())"
         :buttonAction="route('auctions.show', $auction->id)"
         size="w-[300px]"
-        height="h-[200px]" />
-      @endforeach
+        height="h-[200px]"
+        :isOwner="true" />       @endforeach
     </x-slide.slide>
   </div>
 </div>
