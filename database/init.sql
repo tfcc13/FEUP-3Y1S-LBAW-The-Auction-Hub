@@ -201,7 +201,7 @@ CREATE TABLE bid (
 -- Reports Table
 CREATE TABLE report (
     user_id INT REFERENCES users(id) ON UPDATE CASCADE NOT NULL,
-    auction_id INT REFERENCES auction(id) ON UPDATE CASCADE NOT NULL,
+    auction_id INT NOT NULL REFERENCES auction(id) ON UPDATE CASCADE ON DELETE CASCADE,
     description TEXT NOT NULL,
     view_status BOOLEAN DEFAULT FALSE NOT NULL,
     state report_state NOT NULL DEFAULT 'Pending',
@@ -212,7 +212,7 @@ CREATE TABLE report (
 
 -- AuctionWinner Table
 CREATE TABLE auction_winner (
-    auction_id INT REFERENCES auction(id) ON UPDATE CASCADE NOT NULL,
+    auction_id INT REFERENCES auction(id) ON UPDATE CASCADE on Delete Cascade not null,
     user_id INT REFERENCES users(id) ON UPDATE CASCADE NOT NULL,
     rating INT CHECK (rating BETWEEN 1 AND 5 OR NULL) DEFAULT NULL,
     PRIMARY KEY (auction_id, user_id)
@@ -228,7 +228,7 @@ CREATE TABLE notification (
     user_id INT REFERENCES users(id) ON DELETE CASCADE,
     bid_id INT REFERENCES bid(id) ON DELETE CASCADE,
     report_user_id INT REFERENCES users(id) ON DELETE CASCADE,
-    auction_id INT,
+    auction_id INT REFERENCES auction(id) on update CASCADE on delete cascade,
     CONSTRAINT fk_report FOREIGN KEY (report_user_id, auction_id) REFERENCES report(user_id, auction_id) ON DELETE CASCADE,
     CONSTRAINT only_one_reference CHECK (
         ((bid_id IS NOT NULL)::int + 

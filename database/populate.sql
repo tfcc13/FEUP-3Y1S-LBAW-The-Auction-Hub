@@ -113,7 +113,7 @@ INSERT INTO follows_auction (user_id, auction_id) VALUES
 
 -- Populate bids
 INSERT INTO bid (amount, bid_date, auction_id, user_id) VALUES
-(5500, '2024-10-10 10:30:00', 1, 2),
+--(5500, '2024-10-10 10:30:00', 1, 2),
 (2200, '2024-10-16 13:00:00', 2, 1),
 (3200, '2024-10-21 10:15:00', 3, 5),
 (10500, '2024-10-26 15:30:00', 4, 6),
