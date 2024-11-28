@@ -1,0 +1,445 @@
+openapi: 3.0.0
+
+info:
+  version: '1.0'
+  title: 'The Auction Hub Web API'
+  description: 'Web Resources Specification (A7) for The Auction Hub'
+  
+servers:
+- url: http://lbaw.fe.up.pt
+  description: Production Server
+  
+externalDocs:
+  description: Find more info here.
+  url: https://gitlab.up.pt/lbaw/lbaw2425/lbaw24136/-/wikis/eap
+  
+tags:
+  - name: 'M01: Authentication'
+  - name: 'M02: Users'
+  - name: 'M03: Auctions'
+  - name: 'M04: Search'
+
+
+paths:
+  /login:
+    get:
+      operationId: R101
+      summary: 'R101: Login Form'
+      description: 'Provide login form. Access: GST'
+      tags:
+        - 'M01: Authentication'
+      responses:
+        '200':
+          description: 'Ok. Show login UI'
+    post:
+      operationId: R102
+      summary: 'R102: Login Action'
+      description: 'Processes the login form submission. Access: GST'
+      tags:
+        - 'M01: Authentication'
+      
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+              required:
+                - email
+                - password
+      responses:
+        '302':
+          description: 'Redirect after processing the login credentials.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Successful authentication. Redirect to home page.'
+                  value: '/home'
+                302Error:
+                  description: 'Failed authentication. Redirect to login form.'
+                  value: '/login'
+ 
+  /register:
+
+      get:
+        operationId: R103
+        summary: 'R103 : Register Form'
+        description: 'Register a new user. Access: GST'
+        tags:
+          - 'M01: Authentication'
+
+        responses:
+          '200':
+            description: 'Ok. Lets Sign-up.'
+
+      post:
+        operationId: R105
+        summary: 'R105 : Register Action'
+        description: 'Processes the new user registration form submission. Access: VIS'
+        tags:
+          - 'M01: Authentication'
+
+        requestBody:
+          required: true
+          content:
+            application/x-www-form-urlencoded:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  username:
+                    type: string
+                  email:
+                    type: string
+                    format: email
+                  birth_date:
+                    type: string
+                    format: date
+                  password:
+                    type: string
+                    format: password
+                  confirm_password:
+                    type: string
+                    format: password
+                required:
+                  - name  
+                  - username
+                  - email
+                  - birth_date:;
+                  - password
+                  - confirm_password
+        responses:
+          '302':
+            description: 'Redirect after processing the new user information.'
+            headers:
+              Location:
+                schema:
+                  type: string
+                example:
+                    302Success:
+                      description: 'Successful registration. Redirect to home page.'
+                      value: '/home'
+                    302Failure:
+                      description: 'Failed registration. Redirect again to register form.'
+                      value: '/register'
+  /:
+    get:
+      operationId: R201
+      summary: 'R201: Home Page'
+      description: 'Get the home page, Access: GST, USR, OWN, ADM '
+      tags:
+        - 'M02: Users'
+      responses:
+        '200':
+          description: 'OK. Returns the home page'
+  
+  /home:
+    get:
+      operationId: R202
+      summary: 'R202: Home Page'
+      description: 'Get the home page, Access: GST, USR, OWN, ADM'
+      tags:
+        - 'M02: Users'
+      responses:
+        '200':
+          description: 'OK. Returns the home page'
+  
+  /profile:
+    get:
+      operationId: R202
+      summary: 'R212: View User Profile'
+      description: 'View user profile, Access: USR'
+      tags:
+        - 'M02: Users'
+      responses:
+        '200':
+          description: 'OK. Returns the user profile'
+  
+  /user/description:
+    put:
+      operationId: R203
+      summary: 'R203: Update User Description'
+      description: 'Update the user profile description.'
+      tags:
+        - 'M02: Users'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                description:
+                  type: string
+              required:
+                - description
+      responses:
+        '200':
+          description: 'Description updated successfully.'
+        '400':
+          description: 'Invalid description data.'
+  
+  /auctions/auction/{id}:
+    get:
+      operationId: R301
+      summary: 'R301: View Auction Details'
+      description: 'Retrieve details of a specific auction.'
+      tags:
+        - 'M03: Auctions'
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: 'ID of the auction.'
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 'Auction details.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Auction'
+        '404':
+          description: 'Auction not found.'
+
+  /auctions/create_auction:
+      get:
+        operationId: R302
+        summary: 'R505: Show Create Auction Form'
+        description: 'Display the form for creating a new auction.'
+        tags:
+          - 'M03: Auctions'
+        responses:
+          '200':
+            description: 'Auction creation form.'
+
+  /auctions/submit_auction:
+      post:
+        operationId: R303
+        summary: 'R303: Submit Auction'
+        description: 'Submit a new auction.'
+        tags:
+          - 'M03: Auctions'
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuctionCreateRequest'
+        responses:
+          '201':
+            description: 'Auction created successfully.'
+          '400':
+            description: 'Invalid auction data.'
+
+
+
+  /auctions/auction/{id}/bid:
+    post:
+      operationId: R304
+      summary: 'R304: Place a Bid on an Auction'
+      description: 'Place a bid on an ongoing auction.'
+      tags:
+        - 'M03: Auctions'
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: 'ID of the auction to place a bid on.'
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                amount:
+                  type: number
+                  format: float
+                  description: 'Amount to bid on the auction.'
+              required:
+                - amount
+      responses:
+        '201':
+          description: 'Bid placed successfully.'
+        '400':
+          description: 'Invalid bid amount.'
+
+  
+  /auctions/auction/{id}/cancel_auction:
+    post:
+      operationId: R305
+      summary: 'R305: Cancel Auction'
+      description: 'Cancel an ongoing auction.'
+      tags:
+        - 'M03: Auctions'
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: 'ID of the auction to cancel.'
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 'Auction canceled successfully.'
+        '404':
+          description: 'Auction not found.'
+
+  /auctions/auction/{id}/edit:
+    get:
+      operationId: R306
+      summary: 'R306: Edit Auction'
+      description: 'Display auction edit form.'
+      tags:
+        - 'M03: Auctions'
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: 'ID of the auction to edit.'
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 'Auction edit form.'
+
+  /auctions/auction/{id}/delete:
+    delete:
+      operationId: R307
+      summary: 'R307: Delete Auction'
+      description: 'Delete a specific auction.'
+      tags:
+        - 'M03: Auctions'
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: 'ID of the auction to delete.'
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: 'Auction deleted successfully.'
+        '404':
+          description: 'Auction not found.'
+  
+  /auctions/search/json:
+    get:
+      operationId: R401
+      summary: 'R501: Search Auctions JSON'
+      description: 'Search for auctions and return in JSON format.'
+      tags:
+        - 'M04: Search'
+      responses:
+        '200':
+          description: 'List of auctions matching the search criteria in JSON.'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Auction'
+
+  /auctions/search:
+    get:
+      operationId: R402
+      summary: 'R402: Search Auctions'
+      description: 'Display search page for auctions.'
+      tags:
+        - 'M04: Search'
+      responses:
+        '200':
+          description: 'Returns the auction search page.'
+
+  
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        email:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        is_admin:
+          type: boolean
+
+    Auction:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        description:
+          type: string
+        start_price:
+          type: number
+          format: float
+        current_bid:
+          type: number
+          format: float
+        start_date:
+          type: string
+          format: date-time
+        end_date:
+          type: string
+          format: date-time
+        status:
+          type: string
+          enum:
+            - 'Ongoing'
+            - 'Ended'
+            - 'Cancelled'
+
+    AuctionCreateRequest:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        start_price:
+          type: number
+          format: float
+        start_date:
+          type: string
+          format: date-time
+        end_date:
+          type: string
+          format: date-time
+
+    AuctionUpdateRequest:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        start_price:
+          type: number
+          format: float
+        start_date:
+          type: string
+          format: date-time
+        end_date:
+          type: string
+          format: date-time
