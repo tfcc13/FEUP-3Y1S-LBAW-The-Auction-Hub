@@ -201,7 +201,7 @@ CREATE TABLE bid (
 -- Reports Table
 CREATE TABLE report (
     user_id INT REFERENCES users(id) ON UPDATE CASCADE NOT NULL,
-    auction_id INT REFERENCES auction(id) ON UPDATE CASCADE NOT NULL,
+    auction_id INT NOT NULL REFERENCES auction(id) ON UPDATE CASCADE ON DELETE CASCADE,
     description TEXT NOT NULL,
     view_status BOOLEAN DEFAULT FALSE NOT NULL,
     state report_state NOT NULL DEFAULT 'Pending',
@@ -212,7 +212,7 @@ CREATE TABLE report (
 
 -- AuctionWinner Table
 CREATE TABLE auction_winner (
-    auction_id INT REFERENCES auction(id) ON UPDATE CASCADE NOT NULL,
+    auction_id INT REFERENCES auction(id) ON UPDATE CASCADE on Delete Cascade not null,
     user_id INT REFERENCES users(id) ON UPDATE CASCADE NOT NULL,
     rating INT CHECK (rating BETWEEN 1 AND 5 OR NULL) DEFAULT NULL,
     PRIMARY KEY (auction_id, user_id)
@@ -228,7 +228,7 @@ CREATE TABLE notification (
     user_id INT REFERENCES users(id) ON DELETE CASCADE,
     bid_id INT REFERENCES bid(id) ON DELETE CASCADE,
     report_user_id INT REFERENCES users(id) ON DELETE CASCADE,
-    auction_id INT,
+    auction_id INT REFERENCES auction(id) on update CASCADE on delete cascade,
     CONSTRAINT fk_report FOREIGN KEY (report_user_id, auction_id) REFERENCES report(user_id, auction_id) ON DELETE CASCADE,
     CONSTRAINT only_one_reference CHECK (
         ((bid_id IS NOT NULL)::int + 
@@ -464,8 +464,11 @@ EXECUTE FUNCTION prevent_banned_user_bid();
 
 
 -- TRIGGER06
-CREATE FUNCTION prevent_auction_edit_after_bid() RETURNS TRIGGER AS $$
+/* CREATE FUNCTION prevent_auction_edit_after_bid() RETURNS TRIGGER AS $$
 BEGIN
+    IF (TG_OP = 'UPDATE') AND (NEW.current_bid != OLD.current_bid) THEN
+        RETURN NEW;
+    END IF;
     IF EXISTS (SELECT 1 FROM bid WHERE auction_id = NEW.id) THEN
         RAISE EXCEPTION 'Auction cannot be edited or canceled after a bid has been placed';
     END IF;
@@ -476,7 +479,7 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER prevent_auction_edit_after_bid_trigger
 BEFORE UPDATE ON auction
 FOR EACH ROW
-EXECUTE FUNCTION prevent_auction_edit_after_bid();
+EXECUTE FUNCTION prevent_auction_edit_after_bid(); */
 
 
 -- TRIGGER07
@@ -512,7 +515,7 @@ FOR EACH ROW
 EXECUTE FUNCTION prevent_owner_follow();
 
 -- TRIGGER09
-CREATE FUNCTION ensure_bid_after_curr_bid() RETURNS TRIGGER AS $$
+/* CREATE FUNCTION ensure_bid_after_curr_bid() RETURNS TRIGGER AS $$
 BEGIN
     IF NEW.bid_date <= (SELECT MAX(bid_date) FROM bid WHERE auction_id = NEW.auction_id) THEN
         RAISE EXCEPTION 'New bid must be after the current bid timestamp';
@@ -525,7 +528,7 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER ensure_bid_after_curr_bid_trigger
 BEFORE INSERT ON bid
 FOR EACH ROW
-EXECUTE FUNCTION ensure_bid_after_curr_bid();
+EXECUTE FUNCTION ensure_bid_after_curr_bid(); */
 
 
 -- TRIGGER10
@@ -726,10 +729,10 @@ BEFORE INSERT ON bid
 FOR EACH ROW
 EXECUTE FUNCTION prevent_admin_actions();
 
-CREATE TRIGGER prevent_admin_auction_creation_trigger
+/* CREATE TRIGGER prevent_admin_auction_creation_trigger
 BEFORE INSERT ON auction
 FOR EACH ROW
-EXECUTE FUNCTION prevent_admin_actions();
+EXECUTE FUNCTION prevent_admin_actions(); */
 
 
 -- TRIGGER18
