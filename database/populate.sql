@@ -21,7 +21,7 @@ INSERT INTO users (email, username, name, password, birth_date, credit_balance, 
 ('peter.brown@example.com', 'peterb', 'Peter Brown', 'hashedpassword123', '1994-01-20', 65000, FALSE, 'Active', 3),
 ('quinn.foster@example.com', 'quinnf', 'Quinn Foster', 'hashedpassword123', '1989-08-08', 75000, FALSE, 'Active', 4),
 ('admin@lbaw24.com', 'admin', 'Admin', 'adminhashedpassword123','1989-04-10', 0, TRUE, 'Active', NULL),
-('lbaw@lbaw.com','lbaw','lbaw','$2y$10$RTQg99nD/kjmAI7b6l187.FLnoVh3uAT/m87ERCu0tT3TkgThesFm','1980-04-10',1000000,False,'Active',1);
+('lbaw@lbaw.com','lbaw','lbaw','$2y$10$RTQg99nD/kjmAI7b6l187.FLnoVh3uAT/m87ERCu0tT3TkgThesFm','1980-04-10',1000000,FALSE,'Active',1);
 
 
 -- Populate addresses
@@ -113,7 +113,7 @@ INSERT INTO follows_auction (user_id, auction_id) VALUES
 
 -- Populate bids
 INSERT INTO bid (amount, bid_date, auction_id, user_id) VALUES
-(5500, '2024-10-10 10:30:00', 1, 2),
+--(5500, '2024-10-10 10:30:00', 1, 2),
 (2200, '2024-10-16 13:00:00', 2, 1),
 (3200, '2024-10-21 10:15:00', 3, 5),
 (10500, '2024-10-26 15:30:00', 4, 6),
