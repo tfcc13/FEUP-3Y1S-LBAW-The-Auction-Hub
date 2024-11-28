@@ -23,7 +23,7 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
       @foreach($auction->images as $image)
       <img
-        src="{{ $image->path ? asset('' . $image->path) : asset('images/defaults/default-auction.jpg') }}"
+        src="{{ $image->path ? asset('storage/' . $image->path) : asset('images/defaults/auction-default.png') }}"
         alt="{{ $auction->title }} - Image {{ $loop->iteration }}"
         class="w-full h-auto lazyload">
       @endforeach
@@ -81,26 +81,10 @@
           <div class="flex items-center mt-4">
             <div class="w-16 h-16 rounded-full bg-gray-300 flex items-center justify-center text-white text-2xl">
               <!-- Add user profile image if available -->
-              @if($auction->user->username != auth()->user()->username)
               @if($auction->user->profile_image)
-              <a href="{{ route('user.profile.other', ['username' => $auction->user->username]) }}">
-                <img src="{{ asset('storage/' . $auction->user->profile_image) }}" alt="{{ $auction->user->name }}" class="w-16 h-16 rounded-full">
-              </a>
+              <img src="{{ asset('storage/' . $auction->user->profile_image) }}" alt="{{ $auction->user->name }}" class="w-16 h-16 rounded-full">
               @else
-              <a href="{{ route('user.profile.other', ['username' => $auction->user->username]) }}">
-                <img src="{{ asset('/images/defaults/default-profile.jpg') }}" alt="{{ $auction->user->name }}" class="w-16 h-16 rounded-full">
-              </a>
-              @endif
-              @else
-              @if(auth()->user()->profile_image)
-              <a href="{{ url('dashboard') }}">
-                <img src="{{ asset('storage/' . auth()->user()->profile_image) }}" alt="{{ auth()->user()->name }}" class="w-16 h-16 rounded-full">
-              </a>
-              @else
-              <a href="{{ url('dashboard') }}">
-                <img src="{{ asset('/images/defaults/default-profile.jpg') }}" alt="{{ auth()->user()->name }}" class="w-16 h-16 rounded-full">
-              </a>
-              @endif
+              <img src="{{ asset('/images/defaults/default-profile.jpg') }}" alt="{{ $auction->user->name }}" class="w-16 h-16 rounded-full">
               @endif
             </div>
             <div class="ml-4">
@@ -135,17 +119,8 @@
         @endif
       </div>
 
-                    <div class="mb-4">
-                        <label for="amount" class="block text-gray-700 font-semibold mb-2">Your Bid Amount:</label>
-                        <input 
-                            type="number" 
-                            id="amount" 
-                            name="amount" 
-                            step="0.01" 
-                            min="{{ $auction->bids->max('amount') ? $auction->bids->max('amount') + 1 : $auction->start_price }}"
-                            class="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            required>
-                    </div>
+      <div class="bg-white shadow-md rounded p-6 mt-6">
+        <h2 class="text-xl font-semibold text-gray-800">Place a Bid</h2>
 
         <form class="flex flex-col" method="POST" action="{{route('auction.bid', $auction->id) }}">
           @csrf
@@ -158,40 +133,27 @@
               id="amount"
               name="amount"
               step="0.01"
-              min="{{ $auction->start_price }}"
+              min="{{ $auction->bids->max('amount') ? $auction->bids->max('amount') + 1 : $auction->start_price }}"
               class="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
               required>
           </div>
 
-            @endauth
-        </div>
-        @if(Auth::check() && Auth::id() === $auction->owner_id)
-                
-                <a href="{{ route('auction.edit_auction', $auction->id) }}" class="ml-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-                        Edit Auction
-                </a>
-                @if($auction->state === 'Ongoing')
-                <form method="POST" action="{{ route('auction.cancel_auction', $auction->id) }}" class="mt-6">
-                    @csrf
-                    <button type="submit" 
-                        class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
-                        Cancel Auction
-                    </button>
-                </form>
-                @endif
-                <form method="POST" action="{{ route('auction.delete', $auction->id) }}" class="mt-6">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" 
-                            class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">
-                        Delete Auction
-                    </button>
-                </form>
-        @endif
-        
-    </div>
-    @if(Auth::check() && Auth::id() === $auction->owner_id && $auction->state === 'Ongoing')
+          <button type="submit"
+            class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+            Place Bid
+          </button>
+        </form>
+      </div>
 
+
+      @endauth
+    </div>
+    @if(Auth::check() && Auth::id() === $auction->owner_id)
+
+    <a href="{{ route('auction.edit_auction', $auction->id) }}" class="ml-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+      Edit Auction
+    </a>
+    @if($auction->state === 'Ongoing')
     <form method="POST" action="{{ route('auction.cancel_auction', $auction->id) }}" class="mt-6">
       @csrf
       <button type="submit"
@@ -200,6 +162,16 @@
       </button>
     </form>
     @endif
+    <form method="POST" action="{{ route('auction.delete', $auction->id) }}" class="mt-6">
+      @csrf
+      @method('DELETE')
+      <button type="submit"
+        class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">
+        Delete Auction
+      </button>
+    </form>
+    @endif
+
   </div>
 
 </body>
