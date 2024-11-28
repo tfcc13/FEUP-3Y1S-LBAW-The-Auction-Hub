@@ -282,12 +282,12 @@ class AuctionController extends Controller
       DB::beginTransaction();
       $auction->delete();
       DB::commit();
-      dd($auction);
+      //dd($auction);
 
       return redirect()->route('home')->with('success', 'Auction deleted successfully.');
     } catch (\Exception $e) {
       DB::rollBack();
-      dd($e);
+      //dd($e);
 
       return redirect()->back()->with('error', 'Failed to delete the auction: ' . $e->getMessage());
     }
