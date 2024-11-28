@@ -81,8 +81,8 @@ paths:
             description: 'Ok. Lets Sign-up.'
 
       post:
-        operationId: R105
-        summary: 'R105 : Register Action'
+        operationId: R104
+        summary: 'R104 : Register Action'
         description: 'Processes the new user registration form submission. Access: VIS'
         tags:
           - 'M01: Authentication'
@@ -155,8 +155,8 @@ paths:
   
   /profile:
     get:
-      operationId: R202
-      summary: 'R212: View User Profile'
+      operationId: R203
+      summary: 'R203: View User Profile'
       description: 'View user profile, Access: USR'
       tags:
         - 'M02: Users'
@@ -166,8 +166,8 @@ paths:
   
   /user/description:
     put:
-      operationId: R203
-      summary: 'R203: Update User Description'
+      operationId: R204
+      summary: 'R204: Update User Description'
       description: 'Update the user profile description.'
       tags:
         - 'M02: Users'
@@ -215,7 +215,7 @@ paths:
   /auctions/create_auction:
       get:
         operationId: R302
-        summary: 'R505: Show Create Auction Form'
+        summary: 'R302: Show Create Auction Form'
         description: 'Display the form for creating a new auction.'
         tags:
           - 'M03: Auctions'
@@ -339,7 +339,7 @@ paths:
   /auctions/search/json:
     get:
       operationId: R401
-      summary: 'R501: Search Auctions JSON'
+      summary: 'R401: Search Auctions JSON'
       description: 'Search for auctions and return in JSON format.'
       tags:
         - 'M04: Search'
