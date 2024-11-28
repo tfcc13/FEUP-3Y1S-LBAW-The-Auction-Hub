@@ -1,10 +1,10 @@
 <?php
 
 use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\UserController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\AuctionController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -42,14 +42,18 @@ Route::prefix('auctions')->group(function () {
     Route::post('/auction/{id}/bid', [AuctionController::class, 'bidAuction'])->name('auction.bid');
     Route::get('/create_auction', [AuctionController::class, 'createAuction'])->name('auctions.create_auction');
     Route::post('/submit_auction', [AuctionController::class, 'submitAuction'])->name('auctions.submit_auction');
-    Route::post('/auction/{id}/cancel_auction',  [AuctionController::class, 'cancelAuction'])->name('auction.cancel_auction');
+    Route::post('/auction/{id}/cancel_auction', [AuctionController::class, 'cancelAuction'])->name('auction.cancel_auction');
     Route::get('/auction/{id}/edit', [AuctionController::class, 'editAuction'])->name('auction.edit_auction');
     Route::put('/auction/{id}', [AuctionController::class, 'update'])->name('auction.update');
     Route::delete('/auction/{id}/delete', [AuctionController::class, 'deleteAuction'])->name('auction.delete')->middleware('auth');
+    Route::get('/search/upcoming', [AuctionController::class, 'upcomingAuctions'])->name('search.upcoming');
 });
 
 // User
-Route::get('/profile', function () {
-    return view('pages.user.profile');
+Route::get('/dashboard', function () {
+    return view('pages.user.dashboard');
 });
 Route::put('/user/description', [UserController::class, 'updateDescription'])->name('user.updateDescription');
+Route::get('/profile/{username}', [UserController::class, 'showProfile'])->name('user.profile.other');
+
+Route::post('/user/add-money', [UserController::class, 'addMoney'])->name('user.add-money');

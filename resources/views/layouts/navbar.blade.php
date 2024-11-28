@@ -22,7 +22,9 @@
     <div class="hidden w-full md:block md:w-auto" id="navbar-default">
       <ul class="font-medium flex flex-col p-4 md:p-0 sm:mr-8 mt-4 md:flex-row md:space-x-8 rtl:space-x-reverse">
         <li class="flex items-center justify-center">
-          <a href="#" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Live Auctions</a>
+          <a href="{{route('search.upcoming')}}" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">
+            Upcoming Auctions
+          </a>
         </li>
         <li class="flex items-center justify-center">
           <a href="#" class=" block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">My Auctions</a>
@@ -33,7 +35,7 @@
         <li>
 
           @if (Auth::check())
-          <a href="{{ url('/profile') }}"><x-user.image></x-user></a>
+          <a href="{{ url('/dashboard') }}"><x-user.image></x-user></a>
           @else
           <a class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent" href="{{ url('/login') }}"> Login </a>
           @endif

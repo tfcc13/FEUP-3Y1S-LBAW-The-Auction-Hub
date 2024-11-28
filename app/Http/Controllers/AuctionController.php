@@ -247,8 +247,8 @@ class AuctionController extends Controller
 
     // not neeeded it redirects to a 403 page because of the auction policy
     /*         if (Auth::user()->id !== $auction->owner_id) {
-                return redirect()->back()->with('message', 'You do not have permission to edit this auction.');
-            } */
+                                    return redirect()->back()->with('message', 'You do not have permission to edit this auction.');
+                                } */
 
     $validatedData = $request->validate([
       'title' => 'required|string|max:255',
@@ -282,13 +282,26 @@ class AuctionController extends Controller
       DB::beginTransaction();
       $auction->delete();
       DB::commit();
+      //dd($auction);
 
       return redirect()->route('home')->with('success', 'Auction deleted successfully.');
     } catch (\Exception $e) {
       DB::rollBack();
-      dd($e);
+      //dd($e);
 
       return redirect()->back()->with('error', 'Failed to delete the auction: ' . $e->getMessage());
     }
   }
+
+  // In your AuctionController
+
+public function upcomingAuctions()
+{
+
+    $auctions = Auction::whereBetween('end_date', [now(), now()->addDays(7)])
+        ->orderBy('end_date', 'asc')
+        ->get();
+
+    return view('search.upcoming', compact('auctions'));
+}
 }
