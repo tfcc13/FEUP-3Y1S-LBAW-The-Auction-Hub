@@ -53,7 +53,6 @@ class User extends Authenticatable
     return $this->belongsToMany(Auction::class, 'follows', 'user_id', 'auction_id');
   } 
 
-
   public function ownAuction()
   {
     return $this->hasMany(Auction::class, 'owner_id')->orderBy('state','asc');

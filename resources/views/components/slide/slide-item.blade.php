@@ -1,4 +1,4 @@
-@props(['title', 'currentBid', 'imageUrl', 'buttonAction', 'size' => 'w-[400px]', 'height' => 'h-[280px]', 'isOwner' => false])
+@props(['title', 'auction','currentBid', 'imageUrl', 'buttonAction', 'size' => 'w-[400px]', 'height' => 'h-[280px]', 'isOwner' => false])
 <article class="flex-shrink-0 {{ $size }} {{ $height }}" role="listitem">
   <section class="flex flex-col space-y-4 items-start bg-white rounded-lg shadow-md p-4 select-none">
     <figure class="{{ $height }}" style="position: relative; overflow: hidden;">
@@ -23,7 +23,7 @@
         Bid Now
       </button>
       @else
-      <span class="text-gray-500 text-sm">You own this auction</span> <!-- Message for auction owner -->
+      <button onclick="window.location.href='{{ route('auctions.show', $auction->id) }}'" class="btn btn-primary">View Details</button>
       @endif
     </footer>
   </section>

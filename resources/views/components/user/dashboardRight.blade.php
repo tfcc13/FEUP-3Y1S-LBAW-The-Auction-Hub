@@ -10,8 +10,10 @@
         :imageUrl="asset('' . $auction->primaryImage())"
         :buttonAction="route('auctions.show', $auction->id)"
         size="w-[300px]"
+        :auction="$auction"
         height="h-[200px]"
-        :isOwner="true" />       @endforeach
+        :isOwner="true" /> @endforeach
     </x-slide.slide>
+  <button onclick="window.location.href='{{ route('auctions.create_auction') }}'" class="btn btn-success">Create New Auction</button>
   </div>
 </div>
