@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -21,19 +23,20 @@ class UserController extends Controller
 
   public function showProfile($username = null)
   {
-    if ($username) {
-      // Visiting another user's profile
-      $user = User::where('username', $username)->firstOrFail();
-      $isOwner = auth()->check() && auth()->user()->id === $user->id;
-    } else {
-      // Visiting own profile
-      $user = auth()->user();
-      $isOwner = true;
-    }
+    try {
+      $user = $username
+        ? User::where('username', $username)->firstOrFail()
+        : auth()->user();
 
-    return view('pages.user.dashboard', [
-      'user' => $user,
-      'isOwner' => $isOwner,
-    ]);
+      $isOwner = auth()->check() && auth()->user()->id === $user->id;
+
+      return view('pages.user.profile', [
+        'user' => $user,
+        'isOwner' => $isOwner,
+      ]);
+    } catch (ModelNotFoundException $e) {
+      // Handle the exception (e.g., redirect to a 404 page or display an error)
+      abort(404, 'User not found.');
+    }
   }
 }

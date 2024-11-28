@@ -51,3 +51,8 @@ Route::get('/dashboard', function () {
 });
 Route::put('/user/description', [UserController::class, 'updateDescription'])->name('user.updateDescription');
 Route::get('/profile/{username}', [UserController::class, 'showProfile'])->name('user.profile.other');
+
+
+
+
+
