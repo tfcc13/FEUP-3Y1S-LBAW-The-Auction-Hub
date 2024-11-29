@@ -12,6 +12,9 @@ php artisan config:clear
 php artisan clear-compiled
 php artisan optimize
 
+npm install
+npm run build
+
 # docker buildx build --push --platform linux/amd64 -t $IMAGE_NAME .
 docker build -t $IMAGE_NAME .
 docker push $IMAGE_NAME
