@@ -11,18 +11,12 @@
 
     <title>{{ config('app.name', 'Laravel') }}</title>
 
-    <!-- Styles -->
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-    @vite('resources/js/auction.js')
-    <link href="{{ url('css/milligram.min.css') }}" rel="stylesheet">
-    <link href="{{ url('css/app.css') }}" rel="stylesheet">
-    <script type="text/javascript">
-        // Fix for Firefox autofocus CSS bug
-        // See: http://stackoverflow.com/questions/18943276/html-5-autofocus-messes-up-css-loading/18945951#18945951
-    </script>
-    <script type="text/javascript" src={{ url('js/app.js') }} defer>
-    </script>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
+    <!-- Styles and Scripts -->
+    @vite(['resources/css/app.postcss', 'resources/js/app.js', 'resources/js/auction.js'])
 </head>
 
 <body>

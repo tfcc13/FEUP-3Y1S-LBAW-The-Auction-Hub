@@ -13,8 +13,7 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Styles -->
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <link href="{{ url('css/app.css') }}" rel="stylesheet">
+    @vite(['resources/css/app.postcss', 'resources/js/app.js'])
     <script type="text/javascript">
         // Fix for Firefox autofocus CSS bug
         // See: http://stackoverflow.com/questions/18943276/html-5-autofocus-messes-up-css-loading/18945951#18945951
