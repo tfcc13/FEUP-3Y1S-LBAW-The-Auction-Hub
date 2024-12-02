@@ -4,23 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Auction;
-use Illuminate\Database\Eloquent\Collection;
 use Exception;
 use Illuminate\Support\Facades\Log;
-use stdClass;
 
 class HomeController extends Controller
 {
     public function index()
     {
-        try {
-            // Get real categories from database
-            $categories = Category::all();
-            Log::info('Categories fetched successfully: ' . $categories->count());
-        } catch (Exception $e) {
-            Log::error('Failed to fetch categories: ' . $e->getMessage());
-            $categories = collect([]);
-        }
+        $categories = $this->getCategories();
 
         try {
             // Get featured auctions - one from each category

@@ -93,6 +93,7 @@ class AuctionController extends Controller
       return view('search.auction')->with([
         'auctions' => $responseData['data'],
         'searchTerm' => $searchTerm,
+        'categories' => $this->getCategories(),
       ]);
     } catch (\Exception $e) {
       // Handle unexpected errors
@@ -295,13 +296,14 @@ class AuctionController extends Controller
 
   // In your AuctionController
 
-public function upcomingAuctions()
-{
+  public function upcomingAuctions()
+  {
+    $categories = $this->getCategories();
 
     $auctions = Auction::whereBetween('end_date', [now(), now()->addDays(7)])
-        ->orderBy('end_date', 'asc')
-        ->get();
+      ->orderBy('end_date', 'asc')
+      ->get();
 
-    return view('search.upcoming', compact('auctions'));
-}
+    return view('search.upcoming', compact('auctions', 'categories'));
+  }
 }
