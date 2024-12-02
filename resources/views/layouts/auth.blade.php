@@ -21,7 +21,8 @@
     <main class="flex h-full">
         <!-- Left Column -->
         <div class="hidden md:flex md:w-1/2 bg-[#135d3b] items-center justify-center">
-            <a href="{{ route('home') }}">
+            <a href="{{ route('home') }}" class="flex flex-col items-center space-y-2">
+                <img src="{{ asset('images/crown_logo.webp') }}" alt="The Auction Hub Logo" class="w-24 object-contain">
                 <h1 class="text-4xl font-bold text-white">The Auction Hub</h1>
             </a>
         </div>
