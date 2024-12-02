@@ -14,6 +14,6 @@
         height="h-[200px]"
         :isOwner="true" /> @endforeach
     </x-slide.slide>
-  <button onclick="window.location.href='{{ route('auctions.create_auction') }}'" class="btn btn-success">Create New Auction</button>
+    <button onclick="window.location.href='{{ route('auctions.create_auction') }}'" class="btn btn-success">Create New Auction</button>
   </div>
 </div>
