@@ -13,7 +13,8 @@
 
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100..900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 
     <!-- Styles and Scripts -->
     @vite(['resources/css/app.postcss', 'resources/js/app.js', 'resources/js/auction.js'])
@@ -22,7 +23,7 @@
 <body>
     <main>
         <header>
-          @include('layouts.navbar')
+            @include('layouts.navbar')
         </header>
         <section id="content">
             @yield('content')

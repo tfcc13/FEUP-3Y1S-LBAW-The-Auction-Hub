@@ -49,7 +49,6 @@
                     <x-slot:content>
                         <div class="space-y-2 md:-mt-2">
                             {{-- Mobile Navigation --}}
-
                             <a href="#"
                                 class="md:hidden flex items-center space-x-2 py-2 px-4 text-gray-800 hover:bg-[#135d3b]/15 rounded-lg">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24"
@@ -69,6 +68,7 @@
                                 </svg>
                                 <span>Following</span>
                             </a>
+                            {{-- Mobile Navigation --}}
 
                             <a href="{{ url('/dashboard') }}"
                                 class="flex items-center space-x-2 py-2 px-4 text-gray-800 hover:bg-[#135d3b]/15 rounded-lg">
