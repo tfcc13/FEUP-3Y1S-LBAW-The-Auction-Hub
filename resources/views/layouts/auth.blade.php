@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="{{ app()->getLocale() }}">
 
@@ -14,23 +13,25 @@
 
     <!-- Styles -->
     @vite(['resources/css/app.postcss', 'resources/js/app.js'])
-    <script type="text/javascript">
-        // Fix for Firefox autofocus CSS bug
-        // See: http://stackoverflow.com/questions/18943276/html-5-autofocus-messes-up-css-loading/18945951#18945951
-    </script>
-    <script type="text/javascript" src={{ url('js/app.js') }} defer>
-    </script>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 </head>
 
-<body>
-    <main>
-        <header class="m-0 p-0 pb-4">
-          @include('layouts.navbarAuth')
-        </header>
-        <section id="content" class="flex">
-            @yield('content')
-        </section>
+<body class="h-screen">
+    <main class="flex h-full">
+        <!-- Left Column -->
+        <div class="hidden md:flex md:w-1/2 bg-[#135d3b] items-center justify-center">
+            <a href="{{ route('home') }}">
+                <h1 class="text-4xl font-bold text-white">The Auction Hub</h1>
+            </a>
+        </div>
+
+        <!-- Right Column -->
+        <div class="w-full md:w-1/2 overflow-y-auto p-6 flex items-center justify-center">
+            <div class="w-full">
+                @yield('content')
+            </div>
+        </div>
     </main>
     @stack('scripts')
 </body>
