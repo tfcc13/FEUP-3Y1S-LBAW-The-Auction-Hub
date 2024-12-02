@@ -18,12 +18,12 @@
 </head>
 
 <body class="h-screen">
-    <main class="flex h-full">
+    <main class="flex flex-col md:flex-row h-full justify-center">
         <!-- Left Column -->
-        <div class="hidden md:flex md:w-1/2 bg-[#135d3b] items-center justify-center">
+        <div class="flex md:w-1/2 md:bg-[#135d3b] items-center justify-center p-6 md:p-0">
             <a href="{{ route('home') }}" class="flex flex-col items-center space-y-2">
                 <img src="{{ asset('images/crown_logo.webp') }}" alt="The Auction Hub Logo" class="w-24 object-contain">
-                <h1 class="text-4xl font-bold text-white">The Auction Hub</h1>
+                <h1 class="text-4xl font-bold text-gray-800 md:text-white text-center">The Auction Hub</h1>
             </a>
         </div>
 
