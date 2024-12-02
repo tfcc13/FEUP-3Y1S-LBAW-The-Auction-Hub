@@ -1,5 +1,17 @@
 @extends('layouts.app')
 
+<script>
+    window.addEventListener('load', function() {
+        const upcomingCategory = document.getElementById('upcoming-category');
+        if (upcomingCategory) {
+            const button = upcomingCategory.querySelector('button');
+            if (button) {
+                button.focus();
+            }
+        }
+    });
+</script>
+
 @section('content')
     <main class="flex flex-col items-center py-4 px-6 space-y-8">
         <!-- Categories section -->

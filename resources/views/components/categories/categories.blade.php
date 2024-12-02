@@ -30,16 +30,17 @@
 @endphp
 
 <nav aria-label="Product Categories" class="flex items-center justify-between w-full" role="list">
-    <x-categories.category-item text="Upcoming" icon="local_fire_department" :onClick="redirectToUpcoming()" />
+    <x-categories.category-item id="upcoming-category" text="Upcoming" icon="local_fire_department" :onClick="redirectToUpcoming()" />
 
     @foreach ($mappedCategories as $category)
-        <x-categories.category-item :text="$category->name" :icon="$iconMap[$category->name]" {{-- :onclick="$searchCategory($text)"  --}} />
+        <x-categories.category-item :id="$category->name . '-category'" :text="$category->name" :icon="$iconMap[$category->name]" {{-- :onclick="$searchCategory($text)"  --}} />
     @endforeach
 
     @if ($hasUnmappedCategories)
         <x-popup.popup position="bottom" :offset="-27">
             <x-slot:trigger>
-                <x-categories.category-item text="More Categories" icon="more_horiz" onClick="togglePopup(this)" />
+                <x-categories.category-item id="more-categories" text="More Categories" icon="more_horiz"
+                    onClick="togglePopup(this)" />
             </x-slot>
 
             <x-slot:content>
