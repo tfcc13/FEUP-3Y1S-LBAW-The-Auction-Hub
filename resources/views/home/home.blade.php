@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <main class="flex flex-col items-center px-4 py-8 space-y-8">
+    <main class="flex flex-col items-center py-4 px-6 space-y-8">
         <!-- Categories section -->
         <x-categories.categories :categories="$categories" />
 
