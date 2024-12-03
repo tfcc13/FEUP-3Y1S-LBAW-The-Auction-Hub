@@ -22,30 +22,38 @@ class AuctionController extends Controller
     try {
       // Retrieve the search term from the request
       $searchTerm = $request->input('search');
+      $categoryId = $request->get('category');
 
       // Check if the search term is provided
       if (!$searchTerm || empty($searchTerm)) {
         return response()->json([
           'error' => 'Search term is required.'
-        ], 400);  // Bad Request
+        ], 200);  // Bad Request
       }
 
       // Ensure the search term is a string
       if (!is_string($searchTerm)) {
         return response()->json([
           'error' => 'Search term must be a valid string.'
-        ], 400);  // Bad Request
+        ], 200);  // Bad Request
       }
 
       // Perform the full-text search using the scopeSearch method
-      $auctions = Auction::search($searchTerm)->get();
+      $query = Auction::search($searchTerm);
+
+      if ($categoryId) {
+        $query->where('category_id', $categoryId);  // Assuming 'category_id' is the column for category in the auctions table
+      }
+
+      // Execute the query
+      $auctions = $query->get();
 
       // Check if results are empty
       if ($auctions->isEmpty()) {
         return response()->json([
           'message' => 'No results found for the search term.',
           'data' => []
-        ], 404);  // Not Found
+        ], 200);  // OK
       }
 
       // Return the search results as JSON
@@ -59,48 +67,6 @@ class AuctionController extends Controller
         'error' => 'An unexpected error occurred.',
         'details' => $e->getMessage()
       ], 500);  // Internal Server Error
-    }
-  }
-
-  public function searchView(Request $request)
-  {
-    try {
-      // Retrieve the search term from the request
-      $searchTerm = $request->input('search');
-
-      // Call the search function and get the response
-      $response = $this->search($request);
-
-      // Decode the JSON response
-      $responseData = json_decode($response->getContent(), true);
-
-      // Handle errors or empty results
-      if (isset($responseData['error'])) {
-        return view('search.auction')->with([
-          'error' => $responseData['error'],
-        ]);
-      }
-
-      if (empty($responseData['data'])) {
-        return view('search.auction')->with([
-          'message' => 'No results found for the search term.',
-          'auctions' => [],
-          'searchTerm' => $searchTerm,
-        ]);
-      }
-
-      // Pass data to the view
-      return view('search.auction')->with([
-        'auctions' => $responseData['data'],
-        'searchTerm' => $searchTerm,
-        'categories' => $this->getCategories(),
-      ]);
-    } catch (\Exception $e) {
-      // Handle unexpected errors
-      return view('search.auction')->with([
-        'error' => 'An unexpected error occurred.',
-        'details' => $e->getMessage(),
-      ]);
     }
   }
 
@@ -248,8 +214,8 @@ class AuctionController extends Controller
 
     // not neeeded it redirects to a 403 page because of the auction policy
     /*         if (Auth::user()->id !== $auction->owner_id) {
-                                    return redirect()->back()->with('message', 'You do not have permission to edit this auction.');
-                                } */
+                                                return redirect()->back()->with('message', 'You do not have permission to edit this auction.');
+                                            } */
 
     $validatedData = $request->validate([
       'title' => 'required|string|max:255',
@@ -283,12 +249,12 @@ class AuctionController extends Controller
       DB::beginTransaction();
       $auction->delete();
       DB::commit();
-      //dd($auction);
+      // dd($auction);
 
       return redirect()->route('home')->with('success', 'Auction deleted successfully.');
     } catch (\Exception $e) {
       DB::rollBack();
-      //dd($e);
+      // dd($e);
 
       return redirect()->back()->with('error', 'Failed to delete the auction: ' . $e->getMessage());
     }
