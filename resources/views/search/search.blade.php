@@ -3,7 +3,7 @@
 @section('content')
 <main class="flex flex-col items-center py-4 px-6 space-y-8">
   <!-- Categories Section -->
-
+  <x-categories.categories :categories="$categories" />
   <h1 class="text-4xl font-extrabold text-gray-800 mb-8 text-center">Search Results</h1>
 
   <!-- Toggle Buttons -->
@@ -89,8 +89,9 @@
         `<div class="bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden">
                     <div class="p-6">
                         <h2 class="text-2xl font-bold text-gray-800 mb-3">${item.title}</h2>
-                        <p class="text-gray-600 mb-4">${item.description.substring(0, 100)}...</p>
-                        <a href="/auctions/auction/${item.id}" class="inline-block px-4 py-2 text-white bg-green-600 rounded-md hover:bg-green-700">
+<p class="text-gray-600 mb-4">${item.description.substring(0, 100)}...</p>          
+<p class="text-gray-600 mb-4">Ending on: ${new Date(item.end_date).toLocaleString()}</p>
+                        <a href="/auctions/auction/${item.id}" class="inline-block px-4 py-2 text-white sm:text-base rounded-md bg-[#135d3b] hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                             View Auction
                         </a>
                     </div>
@@ -99,7 +100,7 @@
                     <div class="p-6">
                         <h2 class="text-2xl font-bold text-gray-800 mb-3">${item.name}</h2>
                         <p class="text-gray-600 mb-4">Username: ${item.username}</p>
-                        <a href="/profile/${item.username}" class="inline-block px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700">
+                        <a href="/profile/${item.username}" class="inline-block px-4 py-2 text-white sm:text-base rounded-md bg-[#135d3b] hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                             View Profile
                         </a>
                     </div>
