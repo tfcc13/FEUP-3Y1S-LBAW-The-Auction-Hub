@@ -10,7 +10,7 @@ class SearchController extends Controller
   {
     $searchTerm = $request->input('search');
 
-    return view('search')->with([
+    return view('search.search')->with([
       'searchTerm' => $searchTerm,
       'categories' => $this->getCategories(),
     ]);

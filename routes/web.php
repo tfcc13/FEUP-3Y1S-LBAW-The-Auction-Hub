@@ -48,7 +48,7 @@ Route::prefix('auctions')->group(function () {
   Route::get('/search/upcoming', [AuctionController::class, 'upcomingAuctions'])->name('search.upcoming');
 });
 
-Route::get('search', [SearchController::class, 'searchView'])->name('auctions.search.view');
+Route::get('search', [SearchController::class, 'searchView'])->name('search.view');
 // User
 Route::get('/dashboard', function () {
   return view('pages.user.dashboard');
