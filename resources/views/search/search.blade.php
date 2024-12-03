@@ -3,7 +3,9 @@
 @section('content')
 <main class="flex flex-col items-center py-4 px-6 space-y-8">
   <!-- Categories Section -->
-  <x-categories.categories :categories="$categories" />
+  <div id="categories-container" class="hidden w-full">
+    <x-categories.categories :categories="$categories" />
+  </div>
   <h1 class="text-4xl font-extrabold text-gray-800 mb-8 text-center">Search Results</h1>
 
   <!-- Toggle Buttons -->
@@ -32,22 +34,35 @@
   <div id="results-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"></div>
 </main>
 <script>
+document.querySelectorAll('[data-category]').forEach(button => {
+  button.addEventListener('click', () => {
+    const categoryId = button.getAttribute('data-category');
+    setActiveButton(button.id);
+    fetchResults('auctions', categoryId); // Pass the selected category ID
+  });
+});
   document.getElementById('toggle-auctions').addEventListener('click', () => {
     setActiveButton('toggle-auctions');
+
+    document.getElementById('categories-container').classList.remove('hidden'); // Show categories
     fetchResults('auctions');
   });
 
   document.getElementById('toggle-users').addEventListener('click', () => {
     setActiveButton('toggle-users');
+    document.getElementById('categories-container').classList.add('hidden'); // Hide categories
     fetchResults('users');
   });
 
-  async function fetchResults(type) {
+  async function fetchResults(type, categoryId = '') {
     try {
       const searchTerm = '{{ $searchTerm }}';
-      const response = await fetch(`/api/${type}/search?search=${encodeURIComponent(searchTerm)}`);
-      console.log(`Searching for: ${searchTerm}`);
-      console.log(response);
+      let url = `/api/${type}/search?search=${encodeURIComponent(searchTerm)}`;
+      if (categoryId) {
+        url += `&category=${categoryId}`; // Append category filter to URL
+      }
+
+      const response = await fetch(url);
 
 
       if (!response.ok) {
@@ -109,6 +124,7 @@
     });
   }
   document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('categories-container').classList.remove('hidden'); // Show categories
     fetchResults('auctions'); // Default search type is 'auctions'
   });
 

@@ -22,23 +22,31 @@ class AuctionController extends Controller
     try {
       // Retrieve the search term from the request
       $searchTerm = $request->input('search');
+      $categoryId = $request->get('category');
 
       // Check if the search term is provided
       if (!$searchTerm || empty($searchTerm)) {
         return response()->json([
           'error' => 'Search term is required.'
-        ], 400);  // Bad Request
+        ], 200);  // Bad Request
       }
 
       // Ensure the search term is a string
       if (!is_string($searchTerm)) {
         return response()->json([
           'error' => 'Search term must be a valid string.'
-        ], 400);  // Bad Request
+        ], 200);  // Bad Request
       }
 
       // Perform the full-text search using the scopeSearch method
-      $auctions = Auction::search($searchTerm)->get();
+      $query = Auction::search($searchTerm);
+
+      if ($categoryId) {
+        $query->where('category_id', $categoryId);  // Assuming 'category_id' is the column for category in the auctions table
+      }
+
+      // Execute the query
+      $auctions = $query->get();
 
       // Check if results are empty
       if ($auctions->isEmpty()) {
@@ -206,8 +214,8 @@ class AuctionController extends Controller
 
     // not neeeded it redirects to a 403 page because of the auction policy
     /*         if (Auth::user()->id !== $auction->owner_id) {
-                                        return redirect()->back()->with('message', 'You do not have permission to edit this auction.');
-                                    } */
+                                                return redirect()->back()->with('message', 'You do not have permission to edit this auction.');
+                                            } */
 
     $validatedData = $request->validate([
       'title' => 'required|string|max:255',
