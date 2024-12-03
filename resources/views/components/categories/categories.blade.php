@@ -29,19 +29,28 @@
     }
 @endphp
 
-<nav aria-label="Product Categories" class="flex items-center justify-between w-full" role="list">
+<nav aria-label="Product Categories"
+    class="grid grid-flow-col grid-rows-1 sm:grid-rows-2 lg:grid-rows-1 items-center justify-between w-full"
+    role="list">
     <x-categories.category-item id="upcoming-category" text="Upcoming" icon="local_fire_department" :onClick="redirectToUpcoming()" />
 
-    @foreach ($mappedCategories as $category)
-        <x-categories.category-item :id="$category->name . '-category'" :text="$category->name" :icon="$iconMap[$category->name]" {{-- :onclick="$searchCategory($text)"  --}} />
-    @endforeach
+    <div class="hidden sm:contents">
+        @foreach ($mappedCategories as $category)
+            <x-categories.category-item :id="$category->name . '-category'" :text="$category->name" :icon="$iconMap[$category->name]" {{-- :onclick="$searchCategory($text)"  --}} />
+        @endforeach
+    </div>
+
+    {{-- Mobile View Component --}}
+    <div class="sm:hidden">
+        <x-categories.mobile-categories :mappedCategories="$mappedCategories" :iconMap="$iconMap" />
+    </div>
 
     @if ($hasUnmappedCategories)
         <x-popup.popup position="bottom" :offset="-27">
             <x-slot:trigger>
                 <x-categories.category-item id="more-categories" text="More Categories" icon="more_horiz"
                     onClick="togglePopup(this)" />
-            </x-slot>
+            </x-slot:trigger>
 
             <x-slot:content>
                 <div class="space-y-4" role="list">
@@ -53,7 +62,7 @@
                         </div>
                     @endforeach
                 </div>
-            </x-slot>
-            </x-popup>
+            </x-slot:content>
+        </x-popup.popup>
     @endif
 </nav>
