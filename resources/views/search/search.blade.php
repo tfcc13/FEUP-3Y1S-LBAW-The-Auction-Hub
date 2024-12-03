@@ -8,10 +8,10 @@
 
   <!-- Toggle Buttons -->
   <div class="flex space-x-4 mb-6">
-    <button id="toggle-auctions" class="px-4 py-2 text-white bg-green-600 rounded-lg hover:bg-green-700">
+    <button id="toggle-auctions" class="toggle-btn px-4 py-2 text-white bg-green-600 rounded-lg hover:bg-green-700">
       Auctions
     </button>
-    <button id="toggle-users" class="px-4 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700">
+    <button id="toggle-users" class="toggle-btn px-4 py-2 text-white bg-gray-600 rounded-lg hover:bg-blue-700">
       Users
     </button>
   </div>
@@ -33,20 +33,22 @@
 </main>
 <script>
   document.getElementById('toggle-auctions').addEventListener('click', () => {
+    setActiveButton('toggle-auctions');
     fetchResults('auctions');
   });
 
   document.getElementById('toggle-users').addEventListener('click', () => {
+    setActiveButton('toggle-users');
     fetchResults('users');
   });
 
   async function fetchResults(type) {
     try {
-      const searchTerm = '{{ $searchTerm }}'; 
+      const searchTerm = '{{ $searchTerm }}';
       const response = await fetch(`/api/${type}/search?search=${encodeURIComponent(searchTerm)}`);
       console.log(`Searching for: ${searchTerm}`);
       console.log(response);
-      
+
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -103,6 +105,23 @@
                     </div>
                </div>`;
       container.innerHTML += card;
+    });
+  }
+  document.addEventListener('DOMContentLoaded', () => {
+    fetchResults('auctions'); // Default search type is 'auctions'
+  });
+
+  function setActiveButton(activeButtonId) {
+    const buttons = document.querySelectorAll('.toggle-btn'); // Select both buttons
+
+    buttons.forEach(button => {
+      if (button.id === activeButtonId) {
+        button.classList.add('bg-opacity-80'); // Highlight the selected button
+        button.classList.remove('hover:bg-opacity-100');
+      } else {
+        button.classList.remove('bg-opacity-80'); // Remove highlight from unselected button
+        button.classList.add('hover:bg-opacity-100');
+      }
     });
   }
 </script>
