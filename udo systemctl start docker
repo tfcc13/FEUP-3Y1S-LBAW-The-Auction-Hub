@@ -1,0 +1,24 @@
+[0;1;32m●[0m docker.service - Docker Application Container Engine
+     Loaded: loaded (]8;;file://tiago-ROG-Strix-G531GT-G531GT/usr/lib/systemd/system/docker.service/usr/lib/systemd/system/docker.service]8;;; [0;1;32menabled[0m; preset: [0;1;32menabled[0m)
+     Active: [0;1;32mactive (running)[0m since Thu 2024-11-28 11:03:06 WET; 4min 43s ago
+TriggeredBy: [0;1;32m●[0m docker.socket
+       Docs: ]8;;https://docs.docker.comhttps://docs.docker.com]8;;
+   Main PID: 2837 (dockerd)
+      Tasks: 31
+     Memory: 116.6M (peak: 118.8M)
+        CPU: 683ms
+     CGroup: /system.slice/docker.service
+             ├─[0;38;5;245m2837 /usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock[0m
+             ├─[0;38;5;245m3253 /usr/bin/docker-proxy -proto tcp -host-ip 0.0.0.0 -host-port 5432 -container-ip 172.18.0.2 -container-port 5432[0m
+             └─[0;38;5;245m3263 /usr/bin/docker-proxy -proto tcp -host-ip :: -host-port 5432 -container-ip 172.18.0.2 -container-port 5432[0m
+
+nov 28 11:03:05 tiago-ROG-Strix-G531GT-G531GT dockerd[2837]: time="2024-11-28T11:03:05.306349222Z" level=info msg="Loading containers: start."
+nov 28 11:03:05 tiago-ROG-Strix-G531GT-G531GT dockerd[2837]: time="2024-11-28T11:03:05.809100997Z" level=info msg="Default bridge (docker0) is assigned with an IP address 172.17.0.0/16. Daemon option --bip can be used to set a preferred IP address"
+nov 28 11:03:05 tiago-ROG-Strix-G531GT-G531GT dockerd[2837]: time="2024-11-28T11:03:05.894963713Z" level=info msg="No non-localhost DNS nameservers are left in resolv.conf. Using default external servers"
+nov 28 11:03:06 tiago-ROG-Strix-G531GT-G531GT dockerd[2837]: time="2024-11-28T11:03:06.130624926Z" level=info msg="Loading containers: done."
+nov 28 11:03:06 tiago-ROG-Strix-G531GT-G531GT dockerd[2837]: time="2024-11-28T11:03:06.147684401Z" level=warning msg="WARNING: bridge-nf-call-iptables is disabled"
+nov 28 11:03:06 tiago-ROG-Strix-G531GT-G531GT dockerd[2837]: time="2024-11-28T11:03:06.147699413Z" level=warning msg="WARNING: bridge-nf-call-ip6tables is disabled"
+nov 28 11:03:06 tiago-ROG-Strix-G531GT-G531GT dockerd[2837]: time="2024-11-28T11:03:06.147714553Z" level=info msg="Docker daemon" commit=41ca978 containerd-snapshotter=false storage-driver=overlay2 version=27.3.1
+nov 28 11:03:06 tiago-ROG-Strix-G531GT-G531GT dockerd[2837]: time="2024-11-28T11:03:06.147836179Z" level=info msg="Daemon has completed initialization"
+nov 28 11:03:06 tiago-ROG-Strix-G531GT-G531GT dockerd[2837]: time="2024-11-28T11:03:06.239312475Z" level=info msg="API listen on /run/docker.sock"
+nov 28 11:03:06 tiago-ROG-Strix-G531GT-G531GT systemd[1]: Started docker.service - Docker Application Container Engine.
