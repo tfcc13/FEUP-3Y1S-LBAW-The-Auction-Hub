@@ -16,7 +16,7 @@
         aria-label="Carousel navigation">
         @foreach ($items as $index => $item)
             <button onclick="goToSlide('{{ $index }}')"
-                class="w-96 h-2 {{ $index === 0 ? 'bg-[#135d3b]' : 'bg-gray-200' }} focus:bg-[#135d3b] hover:bg-[#135d3b]/75 border-none carousel-dot"
+                class="w-80 h-2 {{ $index === 0 ? 'bg-[#135d3b]' : 'bg-gray-200' }} focus:bg-[#135d3b] hover:bg-[#135d3b]/75 border-none carousel-dot"
                 data-index="{{ $index }}" aria-label="Go to slide {{ $index + 1 }}"
                 aria-selected="{{ $index === 0 ? 'true' : 'false' }}" role="tab">
             </button>
