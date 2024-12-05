@@ -65,7 +65,13 @@ class User extends Authenticatable
 
   public function ownsBids()
   {
-    return $this->hasMany(Bid::class, 'user_id')->orderBy('time', 'desc');
+    return $this->hasMany(Bid::class, 'user_id');
+  }
+
+  public function auctionWon()
+  {
+    return $this
+      ->hasManyThrough(Auction::class, AuctionWinner::class, 'user_id', 'id', 'id', 'auction_id')->orderBy('auction_id');
   }
 
   public function addMoney(float $amount): void
@@ -83,4 +89,5 @@ class User extends Authenticatable
   {
     return $query->whereRaw("to_tsvector('english', username) @@ plainto_tsquery(?)", [$searchTerm]);
   }
+
 }

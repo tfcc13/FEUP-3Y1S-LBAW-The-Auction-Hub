@@ -101,4 +101,50 @@ class UserController extends Controller
       ], 500);  // Internal Server Error
     }
   }
+
+  public function showStatistics()
+  {
+    $user = auth()->user();
+    $auctionWonCount = $user->auctionWon->count();
+    $totalAuctionsWonValue = $user->auctionWon->sum('current_bid');
+    $maxAuctionWonValue = $user->auctionWon->max('current_bid');
+    $avgAuctionWonValue = $user->auctionWon->avg('current_bid');
+
+    $totalBidsMade = $user->ownsBids->count();
+    $totalAmountSpentOnBids = $user->ownsBids->sum('amount');
+    $avgBidAmount = $user->ownsBids->avg('amount');
+    $bidSuccessRate = $totalBidsMade > 0 ? round(($user->auctionWon->count() / $totalBidsMade) * 100, 2) : 0;
+
+    $totalAuctionsParticipatedIn = $totalBidsMade;
+    $mostActiveCategory = $user->ownsBids->groupBy('auction.category_id')->keys()->first();
+
+    // Pass data to the view
+    return view('pages.user.dashboard.auctionStats', compact(
+      'auctionWonCount',
+      'totalAuctionsWonValue',
+      'maxAuctionWonValue',
+      'avgAuctionWonValue',
+      'totalBidsMade',
+      'totalAmountSpentOnBids',
+      'avgBidAmount',
+      'bidSuccessRate',
+      'totalAuctionsParticipatedIn',
+      'mostActiveCategory'
+    ));
+  }
+
+  public function showFinancial()
+  {
+    $user = auth()->user();
+    $balance = $user->credit_balance;
+    return view('pages.user.dashboard.financial', compact('balance'));
+  }
+
+  public function showBids()
+  {
+    $user = auth()->user();
+    $bidsMade = $user->ownsBids;
+    // dd($bidsMade);
+    return view('pages.user.dashboard.bids', compact('bidsMade'));
+  }
 }

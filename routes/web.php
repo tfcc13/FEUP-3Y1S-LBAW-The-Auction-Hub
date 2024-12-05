@@ -49,11 +49,15 @@ Route::prefix('auctions')->group(function () {
 });
 
 Route::get('search', [SearchController::class, 'searchView'])->name('search.view');
+
 // User
 Route::get('/dashboard', function () {
-  return view('pages.user.dashboard');
+  return view('pages.user.dashboard.dashboard');
 });
+
 Route::put('/user/description', [UserController::class, 'updateDescription'])->name('user.updateDescription');
 Route::get('/profile/{username}', [UserController::class, 'showProfile'])->name('user.profile.other');
-
+Route::get('/dashboard/stats', [UserController::class, 'showStatistics'])->name('user.dash.stats');
+Route::get('/dashboard/financial', [UserController::class, 'showFinancial'])->name('user.dash.financial');
 Route::post('/user/add-money', [UserController::class, 'addMoney'])->name('user.add-money');
+Route::get('/dashboard/bids', [UserController::class, 'showBids'])->name('user.dash.bids');

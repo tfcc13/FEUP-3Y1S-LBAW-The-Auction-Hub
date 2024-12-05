@@ -44,7 +44,7 @@ class AuctionController extends Controller
       if ($categoryId) {
         $query->where('category_id', $categoryId);  // Assuming 'category_id' is the column for category in the auctions table
       }
-
+      $query->where('end_date', '>', now());
       // Execute the query
       $auctions = $query->get();
 
@@ -214,8 +214,8 @@ class AuctionController extends Controller
 
     // not neeeded it redirects to a 403 page because of the auction policy
     /*         if (Auth::user()->id !== $auction->owner_id) {
-                                                return redirect()->back()->with('message', 'You do not have permission to edit this auction.');
-                                            } */
+                                                    return redirect()->back()->with('message', 'You do not have permission to edit this auction.');
+                                                } */
 
     $validatedData = $request->validate([
       'title' => 'required|string|max:255',

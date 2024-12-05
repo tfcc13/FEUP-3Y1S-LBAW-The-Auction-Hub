@@ -12,12 +12,11 @@ class AuctionWinner extends Model
     protected $primaryKey = null;
     public $incrementing = false;
     public $timestamps = false;
+    protected $table = 'auction_winner';
 
     protected $fillable = [
         'rating',
     ];
-
-    // Relationships
 
     public function auction()
     {
