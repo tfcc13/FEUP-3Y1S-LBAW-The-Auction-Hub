@@ -18,22 +18,28 @@
 <body class="bg-gray-100">
 
   <!-- Auction Images Section -->
-  <div class="auction-images">
-    @if($auction->images->isNotEmpty())
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-      @foreach($auction->images as $image)
-      <img
-        src="{{ $image->path ? asset('storage/' . $image->path) : asset('images/defaults/auction-default.png') }}"
-        alt="{{ $auction->title }} - Image {{ $loop->iteration }}"
-        class="w-full h-auto lazyload">
-      @endforeach
-    </div>
-    @else
-    <img
-      src="{{ asset('/images/defaults/default-auction.jpg') }}"
-      alt="{{ $auction->title }}"
-      class="w-80 h-auto lazyload mx-auto">
-    @endif
+  <div class="auction-images my-12 py-8">
+      @if($auction->images->isNotEmpty())
+      <div class="flex justify-center items-center">
+          @php
+          $auctionImage = $auction->auctionImage();
+          @endphp
+          <img
+              src="{{ $auctionImage }}"
+              alt="{{ $auction->title }}"
+              class="w-80 h-80 mx-auto object-cover">
+      </div>
+      @else
+      <div class="flex justify-center items-center">
+          @php
+          $auctionImage = $auction->auctionImage();
+          @endphp
+          <img
+              src="{{ $auctionImage }}"
+              alt="{{ $auction->title }}"
+              class="w-80 h-80 mx-auto object-cover">
+      </div>
+      @endif
   </div>
 
   <div class="container mx-auto px-4 py-6">

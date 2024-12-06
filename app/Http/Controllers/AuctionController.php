@@ -176,7 +176,10 @@ class AuctionController extends Controller
       'description' => 'required|string',
       'start_price' => 'required|numeric|min:0',
       'category_id' => 'required|exists:category,id',
+      'files' => 'required|image|mimes:png,jpg,jpeg,gif|max:4196',
     ]);
+
+    //dd($validatedData);
 
     try {
       DB::beginTransaction();
@@ -190,11 +193,18 @@ class AuctionController extends Controller
       $auction->save();
       DB::commit();
 
+      if ($request->hasFile('files')) {
+        //dd($request);
+        //dd($fileRequest, $request);
+        app(FileController::class)->upload($request, $auction->id);
+    }
+
       return redirect()->route('auctions.show', $auction->id)->with('success', 'Auction created successfully!');
     } catch (\Exception $e) {
       return redirect()->route('auctions.create_auction')->with('error', 'An error occurred while creating the auction: ' . $e->getMessage());
     }
   }
+
 
   public function cancelAuction($auction_id)
   {
@@ -304,4 +314,6 @@ public function upcomingAuctions()
 
     return view('search.upcoming', compact('auctions'));
 }
+
+
 }

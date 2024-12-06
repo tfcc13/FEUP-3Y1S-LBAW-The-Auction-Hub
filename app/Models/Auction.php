@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\FileController;
 
 class Auction extends Model
 {
@@ -81,6 +82,10 @@ class Auction extends Model
 
     return $this->images()->first()->path ?? 'images/defaults/default-auction.jpg';
   }
+
+  public function auctionImage() {
+    return FileController::getAuctionImage('auction', $this->id);
+}
   // function used to retrieve the results from a full text search
   public function scopeSearch($query, $searchTerm)
   {

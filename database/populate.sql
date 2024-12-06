@@ -85,7 +85,7 @@ VALUES
 
 -- Populate auction Images 
 INSERT INTO auction_image (path, auction_id) VALUES
---('/images/vintage_car.jpg', 1),
+('vintage_car.jpg', 1),
 ('/images/antique_painting.jpg', 2),
 ('/images/comic_books.jpg', 3),
 ('/images/diamond_necklace.jpg', 4),

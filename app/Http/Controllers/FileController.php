@@ -1,0 +1,160 @@
+<?php
+
+namespace App\Http\Controllers;
+use App\Models\Auction;
+use App\Models\AuctionImage;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
+
+class FileController extends Controller
+{
+    static $default = 'default.jpg';
+    static $diskName = 'Auctions';
+
+    static $systemTypes = [
+        'auction' => ['png', 'jpg', 'jpeg', 'gif'],
+    ];
+
+
+    private static function getDefaultExtension(String $type) {
+        return reset(self::$systemTypes[$type]);
+    }
+
+    private static function isValidExtension(String $type, String $extension) {
+        $allowedExtensions = self::$systemTypes[$type];
+
+        // Note the toLowerCase() method, it is important to allow .JPG and .jpg extensions as well
+        return in_array(strtolower($extension), $allowedExtensions);
+    }
+
+    private static function isValidType(String $type) {
+        return array_key_exists($type, self::$systemTypes);
+    }
+
+    private static function defaultAsset(String $type) {
+        return asset($type . '/' . self::$default);
+    }
+
+    private static function getFileName(String $type, int $id, String $extension = null) {
+
+        $fileName = null;
+        
+        switch($type) {
+            case 'auction':
+                //$auctionImage = AuctionImage::where('auction_id', $id)->first();
+                //$fileName = $auctionImage->path;
+                $fileName = Auction::find($id)->primaryImage();
+                break;
+            default:
+                return null;
+        }
+
+        return $fileName;
+    }
+
+    private static function delete(String $type, int $id) {
+        $existingFileName = self::getFileName($type, $id);
+        if ($existingFileName) {
+            Storage::disk(self::$diskName)->delete($type . '/' . $existingFileName);
+
+            switch($type) {
+                case 'profile':
+                    User::find($id)->profile_image = null;
+                    break;
+                case 'post':
+                    // other models
+                    break;
+            }
+        }
+    }
+
+    function upload(Request $request, $id) {
+        $validated = $request->validate([
+            'type' => 'required|string',
+            'files' => 'required|image|mimes:png,jpg,jpeg,gif|max:4196',
+        ]);
+
+ 
+   /*      if ($request->hasFile('files')) {
+            dd($request->file('files')); // This should be an array of uploaded files
+        } */
+        // Validation: has file
+        if (!$request->hasFile('files')) {
+            return redirect()->back()->with('error', 'Error: File not found');
+        }
+        
+
+        // Validation: upload type
+        if (!$this->isValidType($request->type)) {
+            return redirect()->back()->with('error', 'Error: Unsupported upload type');
+        }
+
+        // Validation: upload extension
+        $file = $request->file('files');
+        $type = $request->type;
+        $extension = $file->extension();
+        if (!$this->isValidExtension($type, $extension)) {
+            return redirect()->back()->with('error', 'Error: Unsupported upload extension');
+        }
+
+        // Prevent existing old files
+        $this->delete($type, $id);
+
+        // Generate unique filename
+        $fileName = $file->hashName();
+
+        // Validation: model
+        $error = null;
+        switch($request->type) {
+            case 'auction':
+                $auction = Auction::findOrFail($id);
+                if ($auction) {
+                    //$auction->profile_image = $fileName;
+                    $auctionImage = new AuctionImage([
+                        'path'  => $fileName,
+                        'auction_id' => $id,
+                    ]);
+                    $auctionImage->save();
+                } else {
+                    $error = "unknown auction";
+                }
+                break;
+            default:
+                redirect()->back()->with('error', 'Error: Unsupported upload object');
+        }
+
+        if ($error) {
+            redirect()->back()->with('error', `Error: {$error}`);
+        }
+
+
+        $path = "{$auction->id}";
+        
+        $file->storeAs($path, $fileName, self::$diskName);
+        
+        return redirect()->back()->with('success', 'Success: upload completed!');
+    }
+
+    static function getAuctionImage(String $type, int $auction_id) {
+
+        // Validation: upload type
+        if (!self::isValidType($type)) {
+            return self::defaultAsset($type);
+        }
+
+        $path = "images/auction/{$auction_id}";
+        // Retrieve the file name from the auction model (if stored in the database)
+        $fileName = self::getFileName($type, $auction_id);
+        
+        if ($fileName) {
+            $filePath = "images/auction/{$auction_id}/{$fileName}";
+            return asset($filePath); // Return full URL to the file
+        }
+    
+        // Not found: returns default asset
+        return self::defaultAsset($type);
+    }
+
+
+}
