@@ -78,10 +78,10 @@ class UserController extends Controller
         ], 400);  // Bad Request
       }
 
-      $auctions = User::search($searchTerm)->get();
+      $users = User::search($searchTerm)->get();
 
       // Check if results are empty
-      if ($auctions->isEmpty()) {
+      if ($users->isEmpty()) {
         return response()->json([
           'message' => 'No results found for the search term.',
           'data' => []
@@ -91,7 +91,7 @@ class UserController extends Controller
       // Return the search results as JSON
       return response()->json([
         'message' => 'Search successful.',
-        'data' => $auctions
+        'data' => $users
       ], 200);  // OK
     } catch (\Exception $e) {
       // Handle unexpected errors
