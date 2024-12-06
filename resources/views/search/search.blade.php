@@ -9,26 +9,11 @@
         <h1 class="text-4xl font-extrabold text-gray-800 mb-8 text-center">Search Results</h1>
 
         <!-- Toggle Buttons -->
-        <div class="flex space-x-4 mb-6">
-            <button id="toggle-auctions" class="toggle-btn px-4 py-2 text-white bg-green-600 rounded-lg hover:bg-green-700">
-                Auctions
-            </button>
-            <button id="toggle-users" class="toggle-btn px-4 py-2 text-white bg-gray-600 rounded-lg hover:bg-blue-700">
-                Users
-            </button>
-        </div>
-
-        <div class="toggle-button-cover">
-            <div class="button-cover">
-                <div class="button b2" id="button-10">
-                    <input type="checkbox" class="checkbox" />
-                    <div class="knobs">
-                        <span>YES</span>
-                    </div>
-                    <div class="layer"></div>
-                </div>
-            </div>
-        </div>
+        <input type="checkbox" id="toggle" class="toggleCheckbox" />
+        <label for="toggle" class='toggleContainer'>
+            <div id="toggle-auctions">Auctions</div>
+            <div id="toggle-users">Users</div>
+        </label>
 
         <!-- Error or Message Section -->
         @if (isset($error))
@@ -112,6 +97,7 @@
             if (!results.length) {
                 container.innerHTML = `<p class="text-gray-600">No ${type} results found.</p>`;
                 return;
+                s
             }
 
             results.forEach(item => {
@@ -160,134 +146,61 @@
 @endsection
 
 <style>
-    .toggle-button-cover {
-        display: table-cell;
+    .toggleContainer {
         position: relative;
-        width: 200px;
-        height: 140px;
-        box-sizing: border-box;
-    }
-
-    .button-cover {
-        height: 100px;
-        margin: 20px;
-        background-color: #fff;
-        box-shadow: 0 10px 20px -8px #c5d6d6;
-        border-radius: 4px;
-    }
-
-    .button-cover:before {
-        counter-increment: button-counter;
-        content: counter(button-counter);
-        position: absolute;
-        right: 0;
-        bottom: 0;
-        color: #d7e3e3;
-        font-size: 12px;
-        line-height: 1;
-        padding: 5px;
-    }
-
-    .button-cover,
-    .knobs,
-    .layer {
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-    }
-
-    .button {
-        position: relative;
-        top: 50%;
-        width: 74px;
-        height: 36px;
-        margin: -20px auto 0 auto;
-        overflow: hidden;
-    }
-
-    .button.r,
-    .button.r .layer {
-        border-radius: 100px;
-    }
-
-    .button.b2 {
-        border-radius: 2px;
-    }
-
-    .checkbox {
-        position: relative;
-        width: 100%;
-        height: 100%;
-        padding: 0;
-        margin: 0;
-        opacity: 0;
-        cursor: pointer;
-        z-index: 3;
-    }
-
-    .knobs {
-        z-index: 2;
-    }
-
-    .layer {
-        width: 100%;
-        background-color: #ebf7fc;
-        transition: 0.3s ease all;
-        z-index: 1;
-    }
-
-    /* Button 10 */
-    #button-10 .knobs:before,
-    #button-10 .knobs:after,
-    #button-10 .knobs span {
-        position: absolute;
-        top: 4px;
-        width: 20px;
-        height: 10px;
-        font-size: 10px;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        width: 14rem;
+        border: 3px solid #135d3b;
+        border-radius: 20px;
+        background: white;
         font-weight: bold;
+        color: #135d3b;
+        cursor: pointer;
+    }
+
+    .toggleContainer::before {
+        content: '';
+        position: absolute;
+        width: 50%;
+        height: 100%;
+        left: 0%;
+        border-radius: 20px;
+        background: #135d3b;
+        transition: all 0.3s;
+    }
+
+    .toggleCheckbox:checked+.toggleContainer::before {
+        left: 50%;
+    }
+
+    .toggleContainer div {
+        padding: 6px;
         text-align: center;
-        line-height: 1;
-        padding: 9px 4px;
-        border-radius: 2px;
-        transition: 0.3s ease all;
-    }
-
-    #button-10 .knobs:before {
-        content: "";
-        left: 4px;
-        background-color: #03a9f4;
-    }
-
-    #button-10 .knobs:after {
-        content: "NO";
-        right: 4px;
-        color: #4e4e4e;
-    }
-
-    #button-10 .knobs span {
-        display: inline-block;
-        left: 4px;
-        color: #fff;
         z-index: 1;
     }
 
-    #button-10 .checkbox:checked+.knobs span {
-        color: #4e4e4e;
+    .toggleCheckbox {
+        display: none;
     }
 
-    #button-10 .checkbox:checked+.knobs:before {
-        left: 42px;
-        background-color: #f44336;
+    .toggleCheckbox:checked+.toggleContainer div:first-child {
+        color: #343434;
+        transition: color 0.3s;
     }
 
-    #button-10 .checkbox:checked+.knobs:after {
-        color: #fff;
+    .toggleCheckbox:checked+.toggleContainer div:last-child {
+        color: white;
+        transition: color 0.3s;
     }
 
-    #button-10 .checkbox:checked~.layer {
-        background-color: #fcebeb;
+    .toggleCheckbox+.toggleContainer div:first-child {
+        color: white;
+        transition: color 0.3s;
+    }
+
+    .toggleCheckbox+.toggleContainer div:last-child {
+        color: #343434;
+        transition: color 0.3s;
     }
 </style>
