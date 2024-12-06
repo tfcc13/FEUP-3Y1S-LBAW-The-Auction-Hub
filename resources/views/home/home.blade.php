@@ -8,13 +8,9 @@
         <!-- Carousel section -->
         <x-carousel.carousel :items="$carouselItems" />
 
-        <div class="h-12"></div>
+        <div class="h-8"></div>
 
         <!-- Slide section -->
-        <x-slide.slide>
-            @foreach ($slideItems as $item)
-                <x-slide.slide-item :title="$item['title']" :currentBid="$item['current_bid']" :imageUrl="$item['imageUrl']" :buttonAction="$item['buttonAction']" />
-            @endforeach
-        </x-slide.slide>
+        <x-slide.slide :items="$slideItems" />
     </main>
 @endsection
