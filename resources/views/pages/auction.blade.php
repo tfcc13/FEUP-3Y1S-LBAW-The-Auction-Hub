@@ -19,20 +19,24 @@
 
   <!-- Auction Images Section -->
   <div class="auction-images my-12 py-8">
-      @if($auction->images->isNotEmpty())
+    @php
+        $auctionImages = $auction->images;
+    @endphp
+      
+    @if($auction->images->isNotEmpty())
       <div class="flex justify-center items-center">
-          @php
-          $auctionImage = $auction->auctionImage();
-          @endphp
+          @foreach ($auctionImages as $auctionImage)
+          @dd($auctionImage->path)
           <img
               src="{{ $auctionImage }}"
               alt="{{ $auction->title }}"
               class="w-80 h-80 mx-auto object-cover">
+            @endforeach
       </div>
       @else
       <div class="flex justify-center items-center">
           @php
-          $auctionImage = $auction->auctionImage();
+          @$auctionImages = $auction->images();
           @endphp
           <img
               src="{{ $auctionImage }}"

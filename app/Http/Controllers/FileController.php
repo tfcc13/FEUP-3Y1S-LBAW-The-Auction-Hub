@@ -136,6 +136,67 @@ class FileController extends Controller
         return redirect()->back()->with('success', 'Success: upload completed!');
     }
 
+    function uploadAuctionImages(Request $request, $id) {
+        $validated = $request->validate([
+            'type' => 'required|string',
+            'files.*' => 'required|image|mimes:png,jpg,jpeg,gif|max:4196',
+        ]);
+
+ 
+   /*      if ($request->hasFile('files')) {
+            dd($request->file('files')); // This should be an array of uploaded files
+        } */
+        // Validation: has file
+        if (!$request->hasFile('files')) {
+            return redirect()->back()->with('error', 'Error: File not found');
+        }
+        
+
+        // Validation: upload type
+        if (!$this->isValidType($request->type)) {
+            return redirect()->back()->with('error', 'Error: Unsupported upload type');
+        }
+
+        // Validation: upload extension
+        $type = $request->type;
+        
+
+        // Prevent existing old files
+        $this->delete($type, $id);
+
+        
+        if ($request->hasFile('files')) {
+            foreach ($request->file('files') as $file) {
+                $extension = $file->extension();
+                if (!$this->isValidExtension($type, $extension)) {
+                    return redirect()->back()->with('error', 'Error: Unsupported upload extension');
+                }
+                // Get the original filename
+                // Generate unique filename
+                $fileName = $file->hashName();
+                
+                $auction = Auction::findOrFail($id);
+                if ($auction) {
+                    //$auction->profile_image = $fileName;
+                    $auctionImage = new AuctionImage([
+                        'path'  => $fileName,
+                        'auction_id' => $id,
+                    ]);
+                    $auctionImage->save();
+                } else {
+                    redirect()->back()->with('error', 'Error: Unsupported upload object');
+                }
+                $path = "{$auction->id}";
+                
+                $file->storeAs($path, $fileName, self::$diskName);
+                
+            }
+        }    
+        
+        return redirect()->back()->with('success', 'Success: upload completed!');
+    }
+    
+/* 
     static function getAuctionImage(String $type, int $auction_id) {
 
         // Validation: upload type
@@ -154,7 +215,27 @@ class FileController extends Controller
     
         // Not found: returns default asset
         return self::defaultAsset($type);
-    }
+    } */
 
+
+    static function getAuctionImage(String $type, int $auction_id, String $path) {
+
+        // Validation: upload type
+        if (!self::isValidType($type)) {
+            return self::defaultAsset($type);
+        }
+
+        //$path = "images/auction/{$auction_id}";
+        // Retrieve the file name from the auction model (if stored in the database)
+        //$fileName = self::getFileName($type, $auction_id);
+        
+        if ($fileName) {
+            $filePath = "images/auction/{$auction_id}/{$path}";
+            return asset($filePath); // Return full URL to the file
+        }
+    
+        // Not found: returns default asset
+        return self::defaultAsset($type);
+    }
 
 }

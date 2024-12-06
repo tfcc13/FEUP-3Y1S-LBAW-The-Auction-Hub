@@ -83,8 +83,8 @@ class Auction extends Model
     return $this->images()->first()->path ?? 'images/defaults/default-auction.jpg';
   }
 
-  public function auctionImage() {
-    return FileController::getAuctionImage('auction', $this->id);
+  public function auctionImage($path) {
+    return FileController::getAuctionImage('auction', $this->id, $path);
 }
   // function used to retrieve the results from a full text search
   public function scopeSearch($query, $searchTerm)

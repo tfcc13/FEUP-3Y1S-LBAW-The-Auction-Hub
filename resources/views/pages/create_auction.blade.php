@@ -84,7 +84,8 @@
                 <input 
                     type="file" 
                     id="files" 
-                    name="files" 
+                    name="files[]" 
+                    multiple 
                     class="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
                     <input name="type" type="text" value="auction" hidden>
                 @error('files')
