@@ -6,14 +6,21 @@
         <div id="categories-container" class="hidden w-full">
             <x-categories.categories :categories="$categories" />
         </div>
-        <h1 class="text-4xl font-extrabold text-gray-800 mb-8 text-center">Search Results</h1>
 
-        <!-- Toggle Buttons -->
-        <input type="checkbox" id="toggle" class="toggleCheckbox" />
-        <label for="toggle" class='toggleContainer'>
-            <div id="toggle-auctions">Auctions</div>
-            <div id="toggle-users">Users</div>
-        </label>
+        <div class="flex items-center justify-center w-full space-x-6">
+            <h1 class="text-4xl font-extrabold text-gray-800 text-center">Search Results</h1>
+
+            <!-- Toggle Buttons -->
+            <input type="checkbox" id="toggle" class="toggleCheckbox hidden peer" />
+            <label for="toggle"
+                class="toggleContainer grid grid-cols-2 w-56 border border-[#135d3b] cursor-pointer relative rounded-2xl before:rounded-2xl 
+                before:bg-[#135d3b] before:absolute before:top-0 before:left-0 before:w-1/2 before:h-full before:transition-all before:duration-300 before:content-[''] *:text-center *:z-10 *:px-2 *:py-1 *:transition-colors *:duration-300 peer-checked:before:left-1/2">
+                <div id="toggle-auctions">
+                    Auctions</div>
+                <div id="toggle-users">
+                    Users</div>
+            </label>
+        </div>
 
         <!-- Error or Message Section -->
         @if (isset($error))
@@ -147,62 +154,20 @@
 
 
     <style>
-        .toggleContainer {
-            position: relative;
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            width: 14rem;
-            border: 3px solid #135d3b;
-            border-radius: 20px;
-            background: white;
-            font-weight: bold;
-            color: #135d3b;
-            cursor: pointer;
-        }
-
-        .toggleContainer::before {
-            content: '';
-            position: absolute;
-            width: 50%;
-            height: 100%;
-            left: 0%;
-            border-radius: 20px;
-            background: #135d3b;
-            transition: all 0.3s;
-        }
-
-        .toggleCheckbox:checked+.toggleContainer::before {
-            left: 50%;
-        }
-
-        .toggleContainer div {
-            padding: 6px;
-            text-align: center;
-            z-index: 1;
-        }
-
-        .toggleCheckbox {
-            display: none;
-        }
-
         .toggleCheckbox:checked+.toggleContainer div:first-child {
             color: #343434;
-            transition: color 0.3s;
         }
 
         .toggleCheckbox:checked+.toggleContainer div:last-child {
             color: white;
-            transition: color 0.3s;
-        }
-
-        .toggleCheckbox+.toggleContainer div:first-child {
-            color: white;
-            transition: color 0.3s;
         }
 
         .toggleCheckbox+.toggleContainer div:last-child {
             color: #343434;
-            transition: color 0.3s;
+        }
+
+        .toggleCheckbox+.toggleContainer div:first-child {
+            color: white;
         }
     </style>
 @endsection
