@@ -7,8 +7,9 @@
             <x-categories.categories :categories="$categories" />
         </div>
 
-        <div class="flex items-center justify-center w-full space-x-6">
-            <h1 class="text-4xl font-extrabold text-gray-800 text-center">Search Results</h1>
+        <div
+            class="flex flex-col sm:flex-row items-center justify-center w-full space-x-0 sm:space-x-6 space-y-2 sm:space-y-0">
+            <h1 class="text-2xl sm:text-4xl sm:font-semibold text-gray-800 text-center whitespace-nowrap">Search Results</h1>
 
             <!-- Toggle Buttons -->
             <input type="checkbox" id="toggle" class="toggleCheckbox hidden peer" />
