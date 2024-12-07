@@ -37,21 +37,21 @@
 
       @for ($i = 0; $i < $fullStars; $i++)
         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 24 24" stroke="none">
-          <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+        <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
         </svg>
-      @endfor
+        @endfor
 
-      @if ($hasHalfStar)
+        @if ($hasHalfStar)
         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 24 24" stroke="none">
           <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
         </svg>
-      @endif
+        @endif
 
-      @for ($i = 0; $i < $emptyStars; $i++)
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+        @for ($i = 0; $i < $emptyStars; $i++)
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
           <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-        </svg>
-      @endfor
+          </svg>
+          @endfor
     </div>
   </div>
 
@@ -61,3 +61,7 @@
     <p>{{ $user->description ?? 'No description set' }}</p>
   </div>
 </div>
+
+@if (Auth::user()->is_admin)
+<x-toast.delete.confirmation :route="'/home'" :button="'Delete User'" />
+@endif
