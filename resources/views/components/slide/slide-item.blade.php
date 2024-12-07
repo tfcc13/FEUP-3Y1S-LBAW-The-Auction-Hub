@@ -1,4 +1,4 @@
-@props(['title', 'auction', 'currentBid', 'imageUrl', 'buttonAction', 'isOwner' => false])
+@props(['title', 'auction', 'currentBid', 'imageUrl', 'buttonAction', 'isOwner' => false, 'searchResults' => false])
 
 <article class="flex-shrink-0 w-[400px]" role="listitem">
     <section class="flex flex-col space-y-4 items-start bg-white rounded-lg shadow-md p-4 select-none">
@@ -32,17 +32,10 @@
 
 <script>
     function adjustImageFit(img) {
-        // Ensure the image keeps the aspect ratio correct
-        const aspectRatio = img.naturalWidth / img.naturalHeight;
-
         if (img.naturalHeight > img.naturalWidth) {
             img.style.objectFit = 'scale-down';
         } else {
-            img.style.objectFit = 'fill';
+            img.style.objectFit = 'cover';
         }
-
-        // Maintain aspect ratio by adjusting the height
-        img.style.height = 'auto';
-        img.style.aspectRatio = aspectRatio;
     }
 </script>

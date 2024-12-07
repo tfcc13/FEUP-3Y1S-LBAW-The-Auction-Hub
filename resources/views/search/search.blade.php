@@ -37,6 +37,11 @@
 
         <!-- Results Container -->
         <div id="results-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+
+        <!-- Template for auction item -->
+        <template id="auction-item-template">
+            <x-slide.slide-item :title="''" :currentBid="0" :imageUrl="''" :buttonAction="''" />
+        </template>
     </main>
 
     <script>
@@ -89,7 +94,7 @@
                     return;
                 }
 
-                displayResults(type, data);
+                displayResults(data, type);
 
             } catch (error) {
                 // Catch unexpected errors, such as network issues
@@ -99,38 +104,54 @@
             }
         }
 
-        function displayResults(type, results) {
+        function displayResults(results, type) {
             const container = document.getElementById('results-container');
             container.innerHTML = '';
 
             if (!results.length) {
                 container.innerHTML = `<p class="text-gray-600">No ${type} results found.</p>`;
                 return;
-                s
             }
 
+            console.log("Search results:", results);
+
             results.forEach(item => {
-                const card = type === 'auctions' ?
-                    `<div class="bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden">
-                    <div class="p-6">
-                        <h2 class="text-2xl font-bold text-gray-800 mb-3">${item.title}</h2>
-<p class="text-gray-600 mb-4">${item.description.substring(0, 100)}...</p>          
-<p class="text-gray-600 mb-4">Ending on: ${new Date(item.end_date).toLocaleString()}</p>
-                        <a href="/auctions/auction/${item.id}" class="inline-block px-4 py-2 text-white sm:text-base rounded-md bg-[#135d3b] hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                            View Auction
-                        </a>
-                    </div>
-               </div>` :
-                    `<div class="bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden">
-                    <div class="p-6">
-                        <h2 class="text-2xl font-bold text-gray-800 mb-3">${item.name}</h2>
-                        <p class="text-gray-600 mb-4">Username: ${item.username}</p>
-                        <a href="/profile/${item.username}" class="inline-block px-4 py-2 text-white sm:text-base rounded-md bg-[#135d3b] hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                            View Profile
-                        </a>
-                    </div>
-               </div>`;
-                container.innerHTML += card;
+                if (type === 'auctions') {
+                    // Clone the template
+                    const template = document.getElementById('auction-item-template');
+                    const clone = template.content.cloneNode(true);
+
+                    // Update the component's attributes
+                    const component = clone.querySelector('article');
+                    if (component) {
+                        // Update title
+                        component.querySelector('.text-xl').textContent = item.title;
+                        // Update current bid - using the first bid amount or start price if no bids
+                        const currentBid = item.bids && item.bids.length > 0 ? item.bids[0].amount : item
+                            .start_price;
+                        component.querySelector('.text-gray-600').textContent = `$${Number(currentBid).toFixed(2)}`;
+                        // Update image using primaryImage
+                        const imageUrl = item.primaryImage;
+                        component.querySelector('img').src = imageUrl;
+                        component.querySelector('img').alt = `Auction item: ${item.title}`;
+                        // Update button action
+                        component.querySelector('button').onclick = () => window.location.href =
+                            `/auctions/auction/${item.id}`;
+                    }
+
+                    container.appendChild(clone);
+                } else {
+                    const userCard = `<div class="bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden">
+                        <div class="p-6">
+                            <h2 class="text-2xl font-bold text-gray-800 mb-3">${item.name}</h2>
+                            <p class="text-gray-600 mb-4">Username: ${item.username}</p>
+                            <a href="/profile/${item.username}" class="inline-block px-4 py-2 text-white sm:text-base rounded-md bg-[#135d3b] hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                View Profile
+                            </a>
+                        </div>
+                    </div>`;
+                    container.innerHTML += userCard;
+                }
             });
         }
         document.addEventListener('DOMContentLoaded', () => {

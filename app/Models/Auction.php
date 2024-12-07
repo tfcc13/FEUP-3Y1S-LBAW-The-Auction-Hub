@@ -27,9 +27,9 @@ class Auction extends Model
     'state',
     'owner_id',
     'category_id',
-    
+
   ];
-/* 
+  /* 
   protected $guarded = [
     'id',
     'owner_id',
