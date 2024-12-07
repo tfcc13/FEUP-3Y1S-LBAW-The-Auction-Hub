@@ -30,7 +30,7 @@
                 </a>
             </li>
             <li class="hidden md:flex items-center justify-center">
-                <a href="#"
+                <a href="/user/follow"
                     class="px-2 py-[0.375rem] font-semibold text-white bg-[#135d3b] hover:bg-[#0f4a2f] rounded-lg w-32 
                             text-center transition-all active:scale-95">
                     Following
