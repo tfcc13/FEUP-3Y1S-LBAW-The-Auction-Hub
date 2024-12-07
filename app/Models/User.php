@@ -71,7 +71,8 @@ class User extends Authenticatable
   public function auctionWon()
   {
     return $this
-      ->hasManyThrough(Auction::class, AuctionWinner::class, 'user_id', 'id', 'id', 'auction_id')->orderBy('auction_id');
+      ->hasManyThrough(Auction::class, AuctionWinner::class, 'user_id', 'id', 'id', 'auction_id')
+      ->orderBy('auction_id');
   }
 
   public function addMoney(float $amount): void
@@ -90,4 +91,8 @@ class User extends Authenticatable
     return $query->whereRaw("to_tsvector('english', name) @@ plainto_tsquery(?)", [$searchTerm]);
   }
 
+  public function follows()
+  {
+    return $this->belongsToMany(Auction::class, 'follows_auction', 'user_id', 'auction_id');
+  }
 }

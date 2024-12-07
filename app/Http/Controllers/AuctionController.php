@@ -38,8 +38,7 @@ class AuctionController extends Controller
         ], 200);  // Bad Request
       }
 
-      // Perform the full-text search using the scopeSearch method
-      $query = Auction::search($searchTerm);
+      $query = Auction::with('images')->search($searchTerm);
 
       if ($categoryId) {
         $query->where('category_id', $categoryId);  // Assuming 'category_id' is the column for category in the auctions table
@@ -48,7 +47,11 @@ class AuctionController extends Controller
       // Execute the query
       $auctions = $query->get();
 
-      // Check if results are empty
+      $auctions = $auctions->map(function ($auction) {
+        $auction->primaryImage = $auction->primaryImage();
+        return $auction;
+      });
+
       if ($auctions->isEmpty()) {
         return response()->json([
           'message' => 'No results found for the search term.',
@@ -266,10 +269,16 @@ class AuctionController extends Controller
   {
     $categories = $this->getCategories();
 
-    $auctions = Auction::whereBetween('end_date', [now(), now()->addDays(7)])
-      ->orderBy('end_date', 'asc')
-      ->get();
+    $auctions = Auction::with('images')
+        ->whereBetween('end_date', [now(), now()->addDays(7)])
+        ->orderBy('end_date', 'asc')
+        ->get()
+        ->map(function ($auction) {
+            $auction->primaryImage = $auction->primaryImage();
+            return $auction;
+        });
 
     return view('search.upcoming', compact('auctions', 'categories'));
   }
+
 }

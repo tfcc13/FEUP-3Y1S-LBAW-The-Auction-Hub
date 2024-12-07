@@ -1,6 +1,6 @@
 @extends('layouts.user')
 
-@section('content')
+@section('inner_content')
 <form id="add-money-form">
   @csrf
   <input type="number" name="amount" placeholder="Enter amount" min="1" required>

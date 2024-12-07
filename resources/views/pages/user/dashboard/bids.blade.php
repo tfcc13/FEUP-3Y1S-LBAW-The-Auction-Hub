@@ -1,6 +1,6 @@
 @extends('layouts.user')
 
-@section('content')
+@section('inner_content')
 @if ($bidsMade->isEmpty())
 <div class="alert alert-info text-center">
   <p>No bids found.</p>

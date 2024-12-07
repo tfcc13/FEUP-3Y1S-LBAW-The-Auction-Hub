@@ -6,14 +6,23 @@
         <div id="categories-container" class="hidden w-full">
             <x-categories.categories :categories="$categories" />
         </div>
-        <h1 class="text-4xl font-extrabold text-gray-800 mb-8 text-center">Search Results</h1>
 
-        <!-- Toggle Buttons -->
-        <input type="checkbox" id="toggle" class="toggleCheckbox" />
-        <label for="toggle" class='toggleContainer'>
-            <div id="toggle-auctions">Auctions</div>
-            <div id="toggle-users">Users</div>
-        </label>
+        <div
+            class="flex flex-col sm:flex-row items-center justify-center w-full space-x-0 sm:space-x-6 space-y-2 sm:space-y-0">
+            {{-- Search Results Title --}}
+            <h1 class="text-2xl sm:text-4xl sm:font-semibold text-gray-800 text-center whitespace-nowrap">Search Results</h1>
+
+            <!-- Toggle Buttons -->
+            <input type="checkbox" id="toggle" class="toggleCheckbox hidden peer" />
+            <label for="toggle"
+                class="toggleContainer grid grid-cols-2 w-56 border border-[#135d3b] cursor-pointer relative rounded-2xl before:rounded-2xl 
+                before:bg-[#135d3b] before:absolute before:top-0 before:left-0 before:w-1/2 before:h-full before:transition-all before:duration-300 before:content-[''] *:text-center *:z-10 *:px-2 *:py-1 *:transition-colors *:duration-300 peer-checked:before:left-1/2">
+                <div id="toggle-auctions">
+                    Auctions</div>
+                <div id="toggle-users">
+                    Users</div>
+            </label>
+        </div>
 
         <!-- Error or Message Section -->
         @if (isset($error))
@@ -28,8 +37,15 @@
         @endif
 
         <!-- Results Container -->
-        <div id="results-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+        <div id="results-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"></div>
+
+        <!-- Template for auction item -->
+        <template id="auction-item-template">
+            <x-slide.slide-item :title="''" :currentBid="0" :imageUrl="''" :buttonAction="''" :endDate="''"
+                :searchResults="true" />
+        </template>
     </main>
+
     <script>
         document.querySelectorAll('[data-category]').forEach(button => {
             button.addEventListener('click', () => {
@@ -80,7 +96,7 @@
                     return;
                 }
 
-                displayResults(type, data);
+                displayResults(data, type);
 
             } catch (error) {
                 // Catch unexpected errors, such as network issues
@@ -90,38 +106,62 @@
             }
         }
 
-        function displayResults(type, results) {
+        function displayResults(results, type) {
             const container = document.getElementById('results-container');
             container.innerHTML = '';
 
             if (!results.length) {
                 container.innerHTML = `<p class="text-gray-600">No ${type} results found.</p>`;
                 return;
-                s
             }
 
+            console.log("Search results:", results);
+
             results.forEach(item => {
-                const card = type === 'auctions' ?
-                    `<div class="bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden">
-                    <div class="p-6">
-                        <h2 class="text-2xl font-bold text-gray-800 mb-3">${item.title}</h2>
-<p class="text-gray-600 mb-4">${item.description.substring(0, 100)}...</p>          
-<p class="text-gray-600 mb-4">Ending on: ${new Date(item.end_date).toLocaleString()}</p>
-                        <a href="/auctions/auction/${item.id}" class="inline-block px-4 py-2 text-white sm:text-base rounded-md bg-[#135d3b] hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                            View Auction
-                        </a>
-                    </div>
-               </div>` :
-                    `<div class="bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden">
-                    <div class="p-6">
-                        <h2 class="text-2xl font-bold text-gray-800 mb-3">${item.name}</h2>
-                        <p class="text-gray-600 mb-4">Username: ${item.username}</p>
-                        <a href="/profile/${item.username}" class="inline-block px-4 py-2 text-white sm:text-base rounded-md bg-[#135d3b] hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                            View Profile
-                        </a>
-                    </div>
-               </div>`;
-                container.innerHTML += card;
+                if (type === 'auctions') {
+                    // Clone the template
+                    const template = document.getElementById('auction-item-template');
+                    const clone = template.content.cloneNode(true);
+
+                    // Update the component's attributes
+                    const component = clone.querySelector('article');
+                    if (component) {
+                        // Update title
+                        component.querySelector('.auction-title span').textContent = item.title;
+
+                        // Update end date
+                        component.querySelector('[aria-label="End date"]').textContent =
+                            `${new Date(item.end_date).toLocaleString('en-US', {month: 'short', day: '2-digit', hour: '2-digit', minute: '2-digit'})}`;
+
+                        // Update current bid - using the first bid amount or start price if no bids
+                        const currentBid = item.bids && item.bids.length > 0 ? item.bids[0].amount : item
+                            .start_price;
+                        component.querySelector('[aria-label="Current bid amount"]').textContent =
+                            `$${Number(currentBid).toFixed(2)}`;
+
+                        // Update image using primaryImage
+                        const imageUrl = item.primaryImage;
+                        component.querySelector('img').src = imageUrl;
+                        component.querySelector('img').alt = `Auction item: ${item.title}`;
+
+                        // Update button action
+                        component.querySelector('button').onclick = () => window.location.href =
+                            `/auctions/auction/${item.id}`;
+                    }
+
+                    container.appendChild(clone);
+                } else {
+                    const userCard = `<div class="bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden">
+                        <div class="p-6">
+                            <h2 class="text-2xl font-bold text-gray-800 mb-3">${item.name}</h2>
+                            <p class="text-gray-600 mb-4">Username: ${item.username}</p>
+                            <a href="/profile/${item.username}" class="inline-block px-4 py-2 text-white sm:text-base rounded-md bg-[#135d3b] hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                View Profile
+                            </a>
+                        </div>
+                    </div>`;
+                    container.innerHTML += userCard;
+                }
             });
         }
         document.addEventListener('DOMContentLoaded', () => {
@@ -143,64 +183,23 @@
             });
         }
     </script>
+
+
+    <style>
+        .toggleCheckbox:checked+.toggleContainer div:first-child {
+            color: #343434;
+        }
+
+        .toggleCheckbox:checked+.toggleContainer div:last-child {
+            color: white;
+        }
+
+        .toggleCheckbox+.toggleContainer div:last-child {
+            color: #343434;
+        }
+
+        .toggleCheckbox+.toggleContainer div:first-child {
+            color: white;
+        }
+    </style>
 @endsection
-
-<style>
-    .toggleContainer {
-        position: relative;
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        width: 14rem;
-        border: 3px solid #135d3b;
-        border-radius: 20px;
-        background: white;
-        font-weight: bold;
-        color: #135d3b;
-        cursor: pointer;
-    }
-
-    .toggleContainer::before {
-        content: '';
-        position: absolute;
-        width: 50%;
-        height: 100%;
-        left: 0%;
-        border-radius: 20px;
-        background: #135d3b;
-        transition: all 0.3s;
-    }
-
-    .toggleCheckbox:checked+.toggleContainer::before {
-        left: 50%;
-    }
-
-    .toggleContainer div {
-        padding: 6px;
-        text-align: center;
-        z-index: 1;
-    }
-
-    .toggleCheckbox {
-        display: none;
-    }
-
-    .toggleCheckbox:checked+.toggleContainer div:first-child {
-        color: #343434;
-        transition: color 0.3s;
-    }
-
-    .toggleCheckbox:checked+.toggleContainer div:last-child {
-        color: white;
-        transition: color 0.3s;
-    }
-
-    .toggleCheckbox+.toggleContainer div:first-child {
-        color: white;
-        transition: color 0.3s;
-    }
-
-    .toggleCheckbox+.toggleContainer div:last-child {
-        color: #343434;
-        transition: color 0.3s;
-    }
-</style>

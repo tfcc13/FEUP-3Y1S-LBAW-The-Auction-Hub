@@ -13,4 +13,10 @@ class FollowAuction extends Model
     protected $table = 'follows_auction';
     protected $primaryKey = null;
     public $incrementing = false;
+
+    // Relationship to Auction
+    public function auction()
+    {
+        return $this->belongsTo(Auction::class, 'auction_id');
+    }
 }
