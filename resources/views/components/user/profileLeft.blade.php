@@ -64,4 +64,5 @@
 
 @if (Auth::user()->is_admin)
 <x-toast.delete.confirmation :route="'admin.deleteUser'" :button="'Delete User'" :object="$user" />
+<x-toast.ban.confirmation :route="'admin.banUser'" :button="'Ban User'" :object="$user" />
 @endif

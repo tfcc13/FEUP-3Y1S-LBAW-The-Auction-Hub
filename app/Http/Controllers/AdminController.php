@@ -32,7 +32,7 @@ class AdminController extends Controller
         } catch (\Exception $e) {
             dd($e);
 
-            DB::commit();
+            DB::rollBack();
             return redirect()->back()->with('error', 'Failed to delete the user. Please try again.');
         }
     }
@@ -49,13 +49,16 @@ class AdminController extends Controller
             DB::beginTransaction();
             $user->ownAuction()->delete();  // Assuming the User has created auctions
             $user->ownsBids()->delete();  // Assuming the User has placed bids
-            $user->state = 'DELETED';
+            $user->state = 'Banned';
+            $user->save();
             DB::commit();
+            // dd($user->state);
+
             return redirect()->route('admin.dashboard')->with('success', 'User deleted successfully.');
         } catch (\Exception $e) {
             dd($e);
 
-            DB::commit();
+            DB::rollBack();
             return redirect()->back()->with('error', 'Failed to delete the user. Please try again.');
         }
     }

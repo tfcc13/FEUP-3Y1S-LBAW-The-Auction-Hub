@@ -69,5 +69,6 @@ Route::prefix('admin')->group(function () {
   Route::middleware(['auth', 'admin'])->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
     Route::delete('/delete/user/{id}', [AdminController::class, 'deleteUser'])->name('deleteUser');
+    Route::post('/ban/user/{id}', [AdminController::class, 'banUser'])->name('banUser');
   });
 });
