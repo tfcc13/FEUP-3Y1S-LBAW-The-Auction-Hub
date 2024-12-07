@@ -58,7 +58,6 @@ class Auction extends Model
     return $this->category->name ?? null;
   }
 
-
   public function auctionWinner()
   {
     return $this->hasOne(AuctionWinner::class, 'auction_id');
@@ -74,17 +73,21 @@ class Auction extends Model
     return $this->hasMany(AuctionImage::class, 'auction_id');
   }
 
-
   public function primaryImage($default = false)
   {
-    if ($default) return 'images/defaults/default-auction.jpg';
+    if ($default)
+      return 'images/defaults/default-auction.jpg';
 
     return $this->images()->first()->path ?? 'images/defaults/default-auction.jpg';
   }
-  // function used to retrieve the results from a full text search
+
   public function scopeSearch($query, $searchTerm)
   {
-    // This function will apply the full-text search query to the database
     return $query->whereRaw("ts_vectors @@ plainto_tsquery('english', ?)", [$searchTerm]);
+  }
+
+  public function followers()
+  {
+    return $this->hasMany(FollowAuction::class, 'auction_id');
   }
 }

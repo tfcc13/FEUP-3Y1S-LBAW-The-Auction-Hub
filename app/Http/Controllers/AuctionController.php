@@ -280,4 +280,5 @@ class AuctionController extends Controller
 
     return view('search.upcoming', compact('auctions', 'categories'));
   }
+
 }

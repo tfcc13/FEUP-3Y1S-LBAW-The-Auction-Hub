@@ -144,7 +144,13 @@ class UserController extends Controller
   {
     $user = auth()->user();
     $bidsMade = $user->ownsBids;
-    // dd($bidsMade);
     return view('pages.user.dashboard.bids', compact('bidsMade'));
+  }
+
+  public function followAuctions()
+  {
+    $user = auth()->user();
+    $followed = $user->follows;  // Retrieves auctions directly
+    return view('pages.auctions.follow', compact('followed'));
   }
 }

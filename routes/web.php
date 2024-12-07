@@ -60,4 +60,5 @@ Route::get('/profile/{username}', [UserController::class, 'showProfile'])->name(
 Route::get('/dashboard/stats', [UserController::class, 'showStatistics'])->name('user.dash.stats');
 Route::get('/dashboard/financial', [UserController::class, 'showFinancial'])->name('user.dash.financial');
 Route::post('/user/add-money', [UserController::class, 'addMoney'])->name('user.add-money');
+Route::get('/user/follow', [UserController::class, 'followAuctions'])->name('follow.auctions');
 Route::get('/dashboard/bids', [UserController::class, 'showBids'])->name('user.dash.bids');
