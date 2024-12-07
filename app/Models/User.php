@@ -88,7 +88,7 @@ class User extends Authenticatable
 
   public function scopeSearch($query, $searchTerm)
   {
-    return $query->whereRaw("to_tsvector('english', name) @@ plainto_tsquery(?)", [$searchTerm]);
+    return $query->where('state','!=','Banned')->whereRaw("to_tsvector('english', name) @@ plainto_tsquery(?)", [$searchTerm]);
   }
 
   public function follows()

@@ -36,4 +36,27 @@ class AdminController extends Controller
             return redirect()->back()->with('error', 'Failed to delete the user. Please try again.');
         }
     }
+
+    public function banUser($userId)
+    {
+        $user = User::find($userId);
+
+        if (!$user) {
+            return redirect()->back()->with('error', 'User not found.');
+        }
+
+        try {
+            DB::beginTransaction();
+            $user->ownAuction()->delete();  // Assuming the User has created auctions
+            $user->ownsBids()->delete();  // Assuming the User has placed bids
+            $user->state = 'DELETED';
+            DB::commit();
+            return redirect()->route('admin.dashboard')->with('success', 'User deleted successfully.');
+        } catch (\Exception $e) {
+            dd($e);
+
+            DB::commit();
+            return redirect()->back()->with('error', 'Failed to delete the user. Please try again.');
+        }
+    }
 }
