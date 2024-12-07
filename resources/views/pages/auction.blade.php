@@ -19,26 +19,25 @@
 
   <!-- Auction Images Section -->
   <div class="auction-images my-12 py-8">
-    @php
-        $auctionImages = $auction->images;
-    @endphp
+      @php
+          $auctionImages = $auction->images;
+      @endphp
       
-    @if(!$auctionImages->isEmpty())
-      <div class="flex justify-center items-center">
-          @foreach ($auctionImages as $auctionImage)
-          
-          @if($auctionImage->path)
-          @php
-          @$image = $auction->auctionImage($auctionImage->path);
-          @endphp
-          <img
-              src="{{ $image }}"
-              alt="{{ $auction->title }}"
-              class="w-80 h-80 mx-auto object-cover">
-          @endif
-          @endforeach
-      </div>
-    @endif
+      @if(!$auctionImages->isEmpty())
+        <div class="grid grid-cols-1 gap-6 justify-center items-center"> <!-- Use grid for fixed size and spacing -->
+            @foreach ($auctionImages as $auctionImage)
+                @if($auctionImage->path)
+                    @php
+                        $image = $auction->auctionImage($auctionImage->path);
+                    @endphp
+                    <img
+                        src="{{ $image }}"
+                        alt="{{ $auction->title }}"
+                        class="w-[400px] h-[300px] object-cover rounded-lg shadow-md mx-auto"> <!-- Fixed size with space between images -->
+                @endif
+            @endforeach
+        </div>
+      @endif
   </div>
 
   <div class="container mx-auto px-4 py-6">
