@@ -116,8 +116,6 @@
                 return;
             }
 
-            console.log("Search results:", results);
-
             results.forEach(item => {
                 if (type === 'auctions') {
                     // Clone the template
@@ -145,11 +143,14 @@
                         component.querySelector('img').src = imageUrl;
                         component.querySelector('img').alt = `Auction item: ${item.title}`;
 
-                        // Update button action
+                        // Replace button with an anchor tag
                         const button = component.querySelector('button');
-                        button.addEventListener('click', function() {
-                            window.location.href = `/auctions/auction/${item.id}`;
-                        });
+                        const link = document.createElement('a');
+                        link.href = `/auctions/auction/${item.id}`;
+                        link.className = button.className; // Copy all the button's classes
+                        link.textContent = 'Bid Now';
+                        link.setAttribute('role', 'button');
+                        button.replaceWith(link);
                     }
 
                     container.appendChild(clone);
