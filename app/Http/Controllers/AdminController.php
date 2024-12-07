@@ -2,12 +2,38 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
 {
     //
-  public function dashboard(){
-    return view('pages.admin.dashboard.main');
-  }
+
+    public function dashboard()
+    {
+        return view('pages.admin.dashboard.main');
+    }
+
+    public function deleteUser($userId)
+    {
+        $user = User::find($userId);
+
+        if (!$user) {
+            return redirect()->back()->with('error', 'User not found.');
+        }
+
+        try {
+            DB::beginTransaction();
+            $user->delete();
+
+            DB::commit();
+            return redirect()->route('admin.dashboard')->with('success', 'User deleted successfully.');
+        } catch (\Exception $e) {
+            dd($e);
+
+            DB::commit();
+            return redirect()->back()->with('error', 'Failed to delete the user. Please try again.');
+        }
+    }
 }

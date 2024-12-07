@@ -63,5 +63,5 @@
 </div>
 
 @if (Auth::user()->is_admin)
-<x-toast.delete.confirmation :route="'/home'" :button="'Delete User'" />
+<x-toast.delete.confirmation :route="'admin.deleteUser'" :button="'Delete User'" :object="$user" />
 @endif

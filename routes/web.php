@@ -66,7 +66,8 @@ Route::get('/dashboard/bids', [UserController::class, 'showBids'])->name('user.d
 
 // need to add admin middleware
 Route::prefix('admin')->group(function () {
-  Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+  Route::middleware(['auth', 'admin'])->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
+    Route::delete('/delete/user/{id}', [AdminController::class, 'deleteUser'])->name('deleteUser');
   });
 });
