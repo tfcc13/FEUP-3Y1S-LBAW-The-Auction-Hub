@@ -78,14 +78,23 @@ class Auction extends Model
 
   public function primaryImage($default = false)
   {
-    if ($default) return 'images/defaults/default-auction.jpg';
-
-    return $this->images()->first()->path ?? 'images/defaults/default-auction.jpg';
+    return $this->auctionImage($this->images()->first()?->path) ?? 'images/defaults/default-auction.jpg';
   }
 
-  public function auctionImage($path) {
+  public function getAllImages()
+  {
+      return FileController::getAuctionImages($this->id);
+  }
+
+  public function auctionImage($fileName)
+  { 
+    $type = 'auction';
+    return FileController::getAuctionImage($type, $this->id, $fileName);
+  }
+
+/*   public function auctionImage($path) {
     return FileController::getAuctionImage('auction', $this->id, $path);
-}
+} */
   // function used to retrieve the results from a full text search
   public function scopeSearch($query, $searchTerm)
   {

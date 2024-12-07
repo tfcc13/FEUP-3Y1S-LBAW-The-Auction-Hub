@@ -217,20 +217,30 @@ class FileController extends Controller
         return self::defaultAsset($type);
     } */
 
+    
+    static function getAuctionImages(int $auction_id) {
+        $path = "images/auction/{auction_id}";
 
-    static function getAuctionImage(String $type, int $auction_id, String $path) {
+        $files = Storage::files($path);
+        
+        $imageFiles = array_filter($files, function ($file) {
+            $extension = pathinfo($file, PATHINFO_EXTENSION);
+            return in_array(strtolower($extension), ['jpg', 'jpeg', 'png', 'gif']);
+        });
+        
+        dd($imageFiles);
 
-        // Validation: upload type
-        if (!self::isValidType($type)) {
-            return self::defaultAsset($type);
-        }
+        return $imageFiles;
+    }
+    
+    
+    static function getAuctionImage( $type, $auction_id, $fileName) {
+        
+        $path = "images/auction/{$auction_id}";
 
-        //$path = "images/auction/{$auction_id}";
-        // Retrieve the file name from the auction model (if stored in the database)
-        //$fileName = self::getFileName($type, $auction_id);
         
         if ($fileName) {
-            $filePath = "images/auction/{$auction_id}/{$path}";
+            $filePath = "images/auction/{$auction_id}/{$fileName}";
             return asset($filePath); // Return full URL to the file
         }
     

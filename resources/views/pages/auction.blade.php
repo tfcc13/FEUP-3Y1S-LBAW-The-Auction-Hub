@@ -23,27 +23,22 @@
         $auctionImages = $auction->images;
     @endphp
       
-    @if($auction->images->isNotEmpty())
+    @if(!$auctionImages->isEmpty())
       <div class="flex justify-center items-center">
           @foreach ($auctionImages as $auctionImage)
-          @dd($auctionImage->path)
-          <img
-              src="{{ $auctionImage }}"
-              alt="{{ $auction->title }}"
-              class="w-80 h-80 mx-auto object-cover">
-            @endforeach
-      </div>
-      @else
-      <div class="flex justify-center items-center">
+          
+          @if($auctionImage->path)
           @php
-          @$auctionImages = $auction->images();
+          @$image = $auction->auctionImage($auctionImage->path);
           @endphp
           <img
-              src="{{ $auctionImage }}"
+              src="{{ $image }}"
               alt="{{ $auction->title }}"
               class="w-80 h-80 mx-auto object-cover">
+          @endif
+          @endforeach
       </div>
-      @endif
+    @endif
   </div>
 
   <div class="container mx-auto px-4 py-6">
