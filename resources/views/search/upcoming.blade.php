@@ -1,18 +1,18 @@
 @extends('layouts.app')
 
-<script>
-    window.addEventListener('load', function() {
-        const upcomingCategory = document.getElementById('upcoming-category');
-        if (upcomingCategory) {
-            const button = upcomingCategory.querySelector('button');
-            if (button) {
-                button.focus();
-            }
-        }
-    });
-</script>
-
 @section('content')
+    <script>
+        window.addEventListener('load', function() {
+            const upcomingCategory = document.getElementById('upcoming-category');
+            if (upcomingCategory) {
+                const button = upcomingCategory.querySelector('button');
+                if (button) {
+                    button.focus();
+                }
+            }
+        });
+    </script>
+
     <main class="flex flex-col items-center py-4 px-6 space-y-8">
         <!-- Categories section -->
         <x-categories.categories :categories="$categories" />
@@ -38,19 +38,10 @@
                 <p>{{ $message }}</p>
             </div>
         @else
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
                 @foreach ($auctions as $auction)
-                    <div class="bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden">
-                        <div class="p-6">
-                            <h2 class="text-2xl font-bold text-gray-800 mb-3">{{ $auction->title }}</h2>
-                            <p class="text-gray-600 mb-4">{{ Str::limit($auction->description, 100) }}</p>
-                            <p class="text-gray-600 mb-4">Ending on: {{ $auction->end_date->format('F j, Y, g:i a') }}</p>
-                            <a href="{{ asset('/auctions/auction/' . $auction['id']) }}"
-                                class="inline-block px-4 py-2 text-white sm:text-base rounded-md bg-[#135d3b] hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                                View Auction
-                            </a>
-                        </div>
-                    </div>
+                    <x-slide.slide-item :title="$auction->title" :currentBid="$auction->bids->first() ? $auction->bids->first()->amount : $auction->start_price" :imageUrl="$auction->primaryImage" :buttonAction="asset('/auctions/auction/' . $auction->id)"
+                        :endDate="$auction->end_date->format('M d, h:i A')" :searchResults="true" />
                 @endforeach
             </div>
         @endif

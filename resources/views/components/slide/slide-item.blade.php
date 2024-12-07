@@ -33,7 +33,7 @@
                 <span class="font-medium">End date: </span>
                 <span class="text-gray-600 select-none {{ $searchResults ? 'text-lg' : 'text-2xl' }}"
                     aria-label="End date">
-                    End date: {{ $endDate }}
+                    {{ $endDate }}
                 </span>
             </div>
         @endif

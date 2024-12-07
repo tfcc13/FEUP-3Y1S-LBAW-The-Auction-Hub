@@ -269,9 +269,14 @@ class AuctionController extends Controller
   {
     $categories = $this->getCategories();
 
-    $auctions = Auction::whereBetween('end_date', [now(), now()->addDays(7)])
-      ->orderBy('end_date', 'asc')
-      ->get();
+    $auctions = Auction::with('images')
+        ->whereBetween('end_date', [now(), now()->addDays(7)])
+        ->orderBy('end_date', 'asc')
+        ->get()
+        ->map(function ($auction) {
+            $auction->primaryImage = $auction->primaryImage();
+            return $auction;
+        });
 
     return view('search.upcoming', compact('auctions', 'categories'));
   }
