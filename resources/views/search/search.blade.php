@@ -54,6 +54,7 @@
                 fetchResults('auctions', categoryId); // Pass the selected category ID
             });
         });
+
         document.getElementById('toggle-auctions').addEventListener('click', () => {
             setActiveButton('toggle-auctions');
 
@@ -145,8 +146,10 @@
                         component.querySelector('img').alt = `Auction item: ${item.title}`;
 
                         // Update button action
-                        component.querySelector('button').onclick = () => window.location.href =
-                            `/auctions/auction/${item.id}`;
+                        const button = component.querySelector('button');
+                        button.addEventListener('click', function() {
+                            window.location.href = `/auctions/auction/${item.id}`;
+                        });
                     }
 
                     container.appendChild(clone);
