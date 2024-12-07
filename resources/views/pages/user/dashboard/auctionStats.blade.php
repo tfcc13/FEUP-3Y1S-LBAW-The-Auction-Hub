@@ -1,6 +1,6 @@
 @extends('layouts.user')
 
-@section('content')
+@section('inner_content')
 <div class="mt-6">
   <div class="bg-white shadow-lg rounded-lg p-6">
     <h4 class="text-xl font-bold text-gray-800 mb-6 border-b pb-3">Your Auction Statistics</h4>
