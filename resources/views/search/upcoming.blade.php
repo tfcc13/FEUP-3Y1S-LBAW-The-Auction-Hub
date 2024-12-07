@@ -17,7 +17,16 @@
         <!-- Categories section -->
         <x-categories.categories :categories="$categories" />
 
-        <h1 class="text-4xl font-extrabold text-gray-800 mb-8 text-center">Recent Auctions (Started in the Next 7 Days)</h1>
+        <div class="flex flex-col space-y-4">
+            <!-- Upcoming Auctions Title -->
+            <h1 class="text-2xl sm:text-4xl sm:font-semibold text-gray-800 text-center whitespace-nowrap">Upcoming Auctions
+            </h1>
+
+            <!-- Upcoming Auctions Description -->
+            <p class="text-base text-gray-400 text-center">
+                These auctions will end in the next 7 days
+            </p>
+        </div>
 
         @if (isset($error))
             <div class="bg-red-50 border-l-4 border-red-500 text-red-700 p-4 rounded mb-6">
@@ -29,9 +38,6 @@
                 <p>{{ $message }}</p>
             </div>
         @else
-            <p class="mb-6 text-lg text-gray-700">
-                Showing auctions that will end in the next 7 days:
-            </p>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                 @foreach ($auctions as $auction)
                     <div class="bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden">

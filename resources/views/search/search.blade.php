@@ -9,6 +9,7 @@
 
         <div
             class="flex flex-col sm:flex-row items-center justify-center w-full space-x-0 sm:space-x-6 space-y-2 sm:space-y-0">
+            {{-- Search Results Title --}}
             <h1 class="text-2xl sm:text-4xl sm:font-semibold text-gray-800 text-center whitespace-nowrap">Search Results</h1>
 
             <!-- Toggle Buttons -->
@@ -36,11 +37,13 @@
         @endif
 
         <!-- Results Container -->
-        <div id="results-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+        <div id="results-container"
+            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 justify-between gap-8"></div>
 
         <!-- Template for auction item -->
         <template id="auction-item-template">
-            <x-slide.slide-item :title="''" :currentBid="0" :imageUrl="''" :buttonAction="''" />
+            <x-slide.slide-item :title="''" :currentBid="0" :imageUrl="''" :buttonAction="''" :endDate="''"
+                :searchResults="true" />
         </template>
     </main>
 
@@ -125,15 +128,23 @@
                     const component = clone.querySelector('article');
                     if (component) {
                         // Update title
-                        component.querySelector('.text-xl').textContent = item.title;
+                        component.querySelector('.auction-title span').textContent = item.title;
+
+                        // Update end date
+                        component.querySelector('[aria-label="End date"]').textContent =
+                            `${new Date(item.end_date).toLocaleString('en-US', {month: 'short', day: '2-digit', hour: '2-digit', minute: '2-digit'})}`;
+
                         // Update current bid - using the first bid amount or start price if no bids
                         const currentBid = item.bids && item.bids.length > 0 ? item.bids[0].amount : item
                             .start_price;
-                        component.querySelector('.text-gray-600').textContent = `$${Number(currentBid).toFixed(2)}`;
+                        component.querySelector('[aria-label="Current bid amount"]').textContent =
+                            `$${Number(currentBid).toFixed(2)}`;
+
                         // Update image using primaryImage
                         const imageUrl = item.primaryImage;
                         component.querySelector('img').src = imageUrl;
                         component.querySelector('img').alt = `Auction item: ${item.title}`;
+
                         // Update button action
                         component.querySelector('button').onclick = () => window.location.href =
                             `/auctions/auction/${item.id}`;
