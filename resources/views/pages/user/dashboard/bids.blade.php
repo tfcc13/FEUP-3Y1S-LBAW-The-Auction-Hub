@@ -1,4 +1,4 @@
-@extends('layouts.user')
+@extends('layouts.user.dashboard')
 
 @section('inner_content')
 @if ($bidsMade->isEmpty())
