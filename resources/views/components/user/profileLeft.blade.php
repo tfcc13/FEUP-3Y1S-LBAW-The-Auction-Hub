@@ -63,7 +63,29 @@
 </div>
 
 @if (Auth::user()->is_admin)
-<x-toast.delete.confirmation :route="'admin.deleteUser'" :button="'Delete User'" :object="$user" :id="'del'"/>
-<x-toast.put.confirmation :route="'admin.banUser'" :button="'Ban User'" :object="$user" :id="'ban'"/>
-<x-toast.put.confirmation :route="'admin.promoteUser'" :button="'Turn Admin'" :object="$user" :id="'promote'"/>
+<x-toast.confirm
+  :buttonText="'Delete User'"
+  :route="'admin.deleteUser'"
+  :method="'DELETE'"
+  :id="$user->id"
+  :modalTitle="'Delete this user?'"
+  :modalMessage="'Are you sure you want to delete this? This action is irreversible.'"
+  :object="$user" />
+<x-toast.confirm
+  :buttonText="'Ban User'"
+  :route="'admin.banUser'"
+  :method="'PUT'"
+  :id="$user->id"
+  :modalTitle="'Ban this user?'"
+  :modalMessage="'Are you sure you want to delete this? '"
+  :object="$user" />
+<x-toast.confirm
+  :buttonText="'Promote User'"
+  :route="'admin.promoteUser'"
+  :method="'PUT'"
+  :id="$user->id"
+  :modalTitle="'Promote this user?'"
+  :modalMessage="'Are you sure you want to delete this? This action is irreversible.'"
+  :object="$user" />
 @endif
+

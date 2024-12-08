@@ -14,6 +14,17 @@
   @endforeach
 </div>
 @endif
+@if (session('success'))
+<div class="alert alert-success">
+  {{ session('success') }}
+</div>
+@endif
+
+@if (session('error'))
+<div class="alert alert-danger">
+  {{ session('error') }}
+</div>
+@endif
 
 <body class="bg-gray-100">
 
@@ -23,6 +34,14 @@
     $auctionImages = $auction->images;
     @endphp
 
+    <x-toast.confirm
+      :buttonText="'Report'"
+      :route="'auction.report'"
+      :method="'POST'"
+      :id="$auction->id"
+      :modalTitle="'Report this auction?'"
+      :modalMessage="'Are you sure you want to report the user?'"
+      :object="$auction" />
     @if(!$auctionImages->isEmpty())
     <div class="grid grid-cols-1 gap-6 justify-center items-center"> <!-- Use grid for fixed size and spacing -->
       @foreach ($auctionImages as $auctionImage)
@@ -181,5 +200,8 @@
 
   </div>
 
+
 </body>
+
+
 @endsection
