@@ -15,7 +15,7 @@
         </div>
     @endif
 
-    <main class="flex flex-col sm:flex-row bg-gray-100 items-start py-4 px-6">
+    <main class="flex flex-col sm:flex-row bg-gray-100 items-start p-6">
         <!-- Auction Images Section -->
         <div class="auction-images flex flex-col w-2/3 text-center space-y-4">
             <h1 class="text-4xl font-bold text-gray-800">{{ $auction->title }}</h1>
@@ -34,7 +34,7 @@
         </div>
 
         <!-- Auction Details and Bid Info -->
-        <div class="flex flex-col w-1/3 space-y-4">
+        <div class="flex flex-col w-1/3 space-y-8">
             <!-- Auction Details (Left Side) -->
             <x-auction.bid_card :auction="$auction" :owner="Auth::check() && Auth::id() === $auction->owner_id" />
 
@@ -42,55 +42,26 @@
             <x-auction.info_card :auction="$auction" />
 
             @auth
-                <!-- Sidebar (Right Side) -->
-                <div class="w-full lg:w-1/3 space-y-6">
-                    <!-- User Information Section (Rating + Name) -->
+                <!-- Owner Information -->
+                <x-auction.owner_info :auction="$auction" />
+
+                <!-- Bidding List Section -->
+                @if ($auction->bids->isNotEmpty())
                     <div class="bg-white shadow-md rounded p-6">
-                        <h2 class="text-xl font-semibold text-gray-800">User Information</h2>
-                        <div class="flex items-center mt-4">
-                            <div
-                                class="w-16 h-16 rounded-full bg-gray-300 flex items-center justify-center text-white text-2xl">
-                                <!-- Add user profile image if available -->
-                                @if ($auction->user->profile_image)
-                                    <img src="{{ asset('storage/' . $auction->user->profile_image) }}"
-                                        alt="{{ $auction->user->name }}" class="w-16 h-16 rounded-full">
-                                @else
-                                    <img src="{{ asset('/images/defaults/default-profile.jpg') }}"
-                                        alt="{{ $auction->user->name }}" class="w-16 h-16 rounded-full">
-                                @endif
-                            </div>
-                            <div class="ml-4">
-                                <p class="font-semibold text-lg">{{ $auction->user->name }}</p>
-                                <p class="text-gray-600">
-                                    @if ($auction->user->rating)
-                                        Rating: <span
-                                            class="font-semibold">{{ number_format($auction->user->rating, 1) }}</span>
-                                    @else
-                                        Rating: <span class="font-semibold">No rating</span>
-                                    @endif
-                                </p>
-                            </div>
+                        <h2 class="text-xl font-bold text-gray-800 mb-4">Bidding History</h2>
+                        <div class="space-y-4">
+                            @foreach ($auction->bids as $bid)
+                                <div class="bg-gray-50 p-4 rounded shadow">
+                                    <p><strong>Bidder:</strong> {{ $bid->user->name }}</p>
+                                    <p><strong>Bid Amount:</strong> ${{ number_format($bid->amount, 2) }}</p>
+                                    <p><strong>Bid Date:</strong> {{ $bid->bid_date->format('d M Y, H:i') }}</p>
+                                </div>
+                            @endforeach
                         </div>
                     </div>
-
-                    <!-- Bidding List Section -->
-                    @if ($auction->bids->isNotEmpty())
-                        <div class="bg-white shadow-md rounded p-6">
-                            <h2 class="text-xl font-bold text-gray-800 mb-4">Bidding History</h2>
-                            <div class="space-y-4">
-                                @foreach ($auction->bids as $bid)
-                                    <div class="bg-gray-50 p-4 rounded shadow">
-                                        <p><strong>Bidder:</strong> {{ $bid->user->name }}</p>
-                                        <p><strong>Bid Amount:</strong> ${{ number_format($bid->amount, 2) }}</p>
-                                        <p><strong>Bid Date:</strong> {{ $bid->bid_date->format('d M Y, H:i') }}</p>
-                                    </div>
-                                @endforeach
-                            </div>
-                        </div>
-                    @else
-                        <p>No bids placed yet.</p>
-                    @endif
-                </div>
+                @else
+                    <p>No bids placed yet.</p>
+                @endif
             @endauth
 
 
