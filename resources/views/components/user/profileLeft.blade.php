@@ -64,6 +64,7 @@
 
 @if (Auth::user()->is_admin)
 <x-toast.delete.confirmation :route="'admin.deleteUser'" :button="'Delete User'" :object="$user" :id="'del'"/>
-<x-toast.post.confirmation :route="'admin.banUser'" :button="'Ban User'" :object="$user" :id="'ban'"/>
-<x-toast.post.confirmation :route="'admin.promoteUser'" :button="'Turn Admin'" :object="$user" :id="'promote'"/>
+<x-toast.put.confirmation :route="'admin.banUser'" :button="'Ban User'" :object="$user" :id="'ban'"/>
+<x-toast.put.confirmation :route="'admin.promoteUser'" :button="'Turn Admin'" :object="$user" :id="'promote'"/>
 @endif
+<x-toast.post.confirmation :route="'user.banUserRequest'" :button="'Request for Ban'" :object="$user" :id="'banRequest'"/>

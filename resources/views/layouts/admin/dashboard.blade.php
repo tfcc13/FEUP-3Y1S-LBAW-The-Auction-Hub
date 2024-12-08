@@ -48,7 +48,7 @@
 
   <!-- Main Content -->
   <div class="flex-1 p-8 bg-white">
-    @yield('adminStats')
+    @yield('Reports')
   </div>
 </div>
 @endsection

@@ -3,90 +3,90 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Report;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
 {
-  //
+    //
 
-  public function dashboard()
-  {
-    $user = Auth::user();
-    $notifications = $user->fetchNotifications();
-    return view('pages.admin.dashboard.notification', compact('notifications'));
-  }
-
-  public function deleteUser($userId)
-  {
-    $user = User::find($userId);
-
-    if (!$user) {
-      return redirect()->back()->with('error', 'User not found.');
+    public function dashboard()
+    {
+        $reports = Report::all();
+        return view('pages.admin.dashboard.notification', compact('reports'));
     }
 
-    try {
-      DB::beginTransaction();
-      $user->delete();
+    public function deleteUser($userId)
+    {
+        $user = User::find($userId);
 
-      DB::commit();
-      return redirect()->route('admin.dashboard')->with('success', 'User deleted successfully.');
-    } catch (\Exception $e) {
-      dd($e);
+        if (!$user) {
+            return redirect()->back()->with('error', 'User not found.');
+        }
 
-      DB::rollBack();
-      return redirect()->back()->with('error', 'Failed to delete the user. Please try again.');
-    }
-  }
+        try {
+            DB::beginTransaction();
+            $user->delete();
 
-  public function banUser($userId)
-  {
-    $user = User::find($userId);
+            DB::commit();
+            return redirect()->route('admin.dashboard')->with('success', 'User deleted successfully.');
+        } catch (\Exception $e) {
+            dd($e);
 
-    if (!$user) {
-      return redirect()->back()->with('error', 'User not found.');
-    }
-
-    try {
-      DB::beginTransaction();
-      $user->ownAuction()->delete();  // Assuming the User has created auctions
-      $user->ownsBids()->delete();  // Assuming the User has placed bids
-      $user->state = 'Banned';
-      $user->save();
-      DB::commit();
-      // dd($user->state);
-
-      return redirect()->route('admin.dashboard')->with('success', 'User deleted successfully.');
-    } catch (\Exception $e) {
-      dd($e);
-
-      DB::rollBack();
-      return redirect()->back()->with('error', 'Failed to delete the user. Please try again.');
-    }
-  }
-
-  public function promoteUser($userId)
-  {
-    $user = User::find($userId);
-
-    if (!$user) {
-      return redirect()->back()->with('error', 'User not found.');
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Failed to delete the user. Please try again.');
+        }
     }
 
-    try {
-      DB::beginTransaction();
-      $user->is_admin = true;
-      $user->save();
-      DB::commit();
-      // dd($user->state);
+    public function banUser($userId)
+    {
+        $user = User::find($userId);
 
-      return redirect()->route('admin.dashboard')->with('success', 'User deleted successfully.');
-    } catch (\Exception $e) {
-      dd($e);
+        if (!$user) {
+            return redirect()->back()->with('error', 'User not found.');
+        }
 
-      DB::rollBack();
-      return redirect()->back()->with('error', 'Failed to delete the user. Please try again.');
+        try {
+            DB::beginTransaction();
+            $user->ownAuction()->delete();  // Assuming the User has created auctions
+            $user->ownsBids()->delete();  // Assuming the User has placed bids
+            $user->state = 'Banned';
+            $user->save();
+            DB::commit();
+            // dd($user->state);
+
+            return redirect()->route('admin.dashboard')->with('success', 'User deleted successfully.');
+        } catch (\Exception $e) {
+            dd($e);
+
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Failed to delete the user. Please try again.');
+        }
     }
-  }
+
+    public function promoteUser($userId)
+    {
+        $user = User::find($userId);
+
+        if (!$user) {
+            return redirect()->back()->with('error', 'User not found.');
+        }
+
+        try {
+            DB::beginTransaction();
+            $user->is_admin = true;
+            $user->save();
+            DB::commit();
+            // dd($user->state);
+
+            return redirect()->route('admin.dashboard')->with('success', 'User deleted successfully.');
+        } catch (\Exception $e) {
+            dd($e);
+
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Failed to delete the user. Please try again.');
+        }
+    }
 }

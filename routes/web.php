@@ -63,13 +63,14 @@ Route::get('/dashboard/financial', [UserController::class, 'showFinancial'])->na
 Route::post('/user/add-money', [UserController::class, 'addMoney'])->name('user.add-money');
 Route::get('/user/follow', [UserController::class, 'followAuctions'])->name('follow.auctions');
 Route::get('/dashboard/bids', [UserController::class, 'showBids'])->name('user.dash.bids');
+Route::post('/user/ban_request', [UserController::class, 'banUserRequest'])->name('user.banUserRequest');
 
 // need to add admin middleware
 Route::prefix('admin')->group(function () {
   Route::middleware(['auth', 'admin'])->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
     Route::delete('/delete/user/{id}', [AdminController::class, 'deleteUser'])->name('deleteUser');
-    Route::post('/ban/user/{id}', [AdminController::class, 'banUser'])->name('banUser');
-    Route::post('/promote/user/{id}', [AdminController::class, 'promoteUser'])->name('promoteUser');
+    Route::put('/ban/user/{id}', [AdminController::class, 'banUser'])->name('banUser');
+    Route::put('/promote/user/{id}', [AdminController::class, 'promoteUser'])->name('promoteUser');
   });
 });
