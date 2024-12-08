@@ -57,7 +57,7 @@ class HomeController extends Controller
                         'title' => $auction->title,
                         'current_bid' => $auction->bids->first()->amount ?? $auction->start_price,
                         'buttonAction' => url('/auctions/auction/' . $auction->id),
-                        'imageUrl' => $auction->primaryImage(true)
+                        'imageUrl' => $auction->primaryImage()
                     ];
                 })->toArray();
 

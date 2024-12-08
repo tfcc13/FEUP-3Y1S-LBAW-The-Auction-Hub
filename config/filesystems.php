@@ -56,6 +56,14 @@ return [
             'throw' => false,
         ],
 
+        'Auctions' => [
+            'driver' => 'local',
+            'root' => public_path('images/auction'),
+            'url' => env('APP_URL'),
+            'visibility' => 'public',
+        ],        
+
+
     ],
 
     /*

@@ -1,25 +1,65 @@
-@props(['title', 'auction', 'currentBid', 'imageUrl', 'buttonAction', 'isOwner' => false])
+@props([
+    'title',
+    'auction',
+    'currentBid',
+    'imageUrl',
+    'buttonAction',
+    'endDate' => '',
+    'isOwner' => false,
+    'searchResults' => false,
+])
 
-<article class="flex-shrink-0 w-[400px]" role="listitem">
-    <section class="flex flex-col space-y-4 items-start bg-white rounded-lg shadow-md p-4 select-none">
+<article class="flex-shrink-0 {{ $searchResults ? 'w-[370px]' : 'w-[400px]' }}" role="listitem">
+    <section
+        class="flex flex-col {{ $searchResults ? 'space-y-2 p-2' : 'space-y-4 p-4' }} items-start bg-white rounded-lg shadow-md select-none">
+        {{-- Auction image --}}
         <figure class="w-full">
             <img src="{{ $imageUrl }}" alt="Auction item: {{ $title }}"
                 class="w-full aspect-[4/3] object-cover rounded-xl select-none" draggable="false"
                 onload="adjustImageFit(this)" loading="lazy">
         </figure>
-        <header>
-            <span class="text-gray-800 text-xl font-semibold select-none line-clamp-1">{{ $title }}</span>
-        </header>
-        <footer class="flex justify-between items-center w-full">
-            <span class="text-gray-600 text-2xl select-none" aria-label="Current bid amount">
-                ${{ number_format($currentBid, 2) }}
-            </span>
 
-            <!-- Conditionally render Bid button if the user is not the owner -->
+        {{-- Auction title --}}
+        <header class="auction-title">
+            <span
+                class="text-gray-800 {{ $searchResults ? 'text-lg' : 'text-xl' }} font-semibold select-none line-clamp-1">
+                {{ $title }}
+            </span>
+        </header>
+
+        {{-- Current bid amount --}}
+        @if ($searchResults)
+            <div class="flex items-baseline gap-3">
+                <span class="font-medium">End date: </span>
+                <span class="text-gray-600 select-none {{ $searchResults ? 'text-lg' : 'text-2xl' }}"
+                    aria-label="End date">
+                    {{ $endDate }}
+                </span>
+            </div>
+        @endif
+
+        {{-- Footer --}}
+        <footer class="flex justify-between items-center w-full">
+            {{-- Current bid amount --}}
+            @if ($searchResults)
+                <div class="flex items-baseline gap-3">
+                    <span class="font-medium">Current bid: </span>
+                    <span class="text-gray-600 select-none text-lg" aria-label="Current bid amount">
+                        ${{ number_format($currentBid, 2) }}
+                    </span>
+                </div>
+            @else
+                <span class="text-gray-600 select-none text-2xl" aria-label="Current bid amount">
+                    ${{ number_format($currentBid, 2) }}
+                </span>
+            @endif
+
+            {{-- Bid button --}}
             @if (!$isOwner)
                 <button
-                    class="text-white px-6 py-2 rounded border-none bg-[#135d3b] hover:bg-[#135d3b]/75 transition-colors flex items-center active:scale-95 select-none"
-                    aria-label="Place bid for {{ $title }}" onclick="window.location.href='{{ $buttonAction }}'">
+                    class="text-white {{ $searchResults ? 'px-3 py-1' : 'px-6 py-2' }} rounded border-none bg-[#135d3b] hover:bg-[#135d3b]/75 transition-colors flex items-center active:scale-95 select-none"
+                    aria-label="Place bid for {{ $title }}"
+                    onclick="window.location.href='{{ $buttonAction }}'">
                     Bid Now
                 </button>
             @else
@@ -32,17 +72,10 @@
 
 <script>
     function adjustImageFit(img) {
-        // Ensure the image keeps the aspect ratio correct
-        const aspectRatio = img.naturalWidth / img.naturalHeight;
-
         if (img.naturalHeight > img.naturalWidth) {
             img.style.objectFit = 'scale-down';
         } else {
-            img.style.objectFit = 'fill';
+            img.style.objectFit = 'cover';
         }
-
-        // Maintain aspect ratio by adjusting the height
-        img.style.height = 'auto';
-        img.style.aspectRatio = aspectRatio;
     }
 </script>
