@@ -45,23 +45,8 @@
                 <!-- Owner Information -->
                 <x-auction.owner_info :auction="$auction" />
 
-                <!-- Bidding List Section -->
-                @if ($auction->bids->isNotEmpty())
-                    <div class="bg-white shadow-md rounded p-6">
-                        <h2 class="text-xl font-bold text-gray-800 mb-4">Bidding History</h2>
-                        <div class="space-y-4">
-                            @foreach ($auction->bids as $bid)
-                                <div class="bg-gray-50 p-4 rounded shadow">
-                                    <p><strong>Bidder:</strong> {{ $bid->user->name }}</p>
-                                    <p><strong>Bid Amount:</strong> ${{ number_format($bid->amount, 2) }}</p>
-                                    <p><strong>Bid Date:</strong> {{ $bid->bid_date->format('d M Y, H:i') }}</p>
-                                </div>
-                            @endforeach
-                        </div>
-                    </div>
-                @else
-                    <p>No bids placed yet.</p>
-                @endif
+                <!-- Bidding History -->
+                <x-auction.bidding_history :auction="$auction" />
             @endauth
 
 
