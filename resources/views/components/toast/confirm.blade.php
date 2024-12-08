@@ -18,6 +18,16 @@
         @if (strtoupper($method) !== 'POST')
         @method($method)
         @endif
+        @if ($text)
+        <div class="mb-4">
+          <label for="text" class="block text-sm font-medium text-gray-700">Message</label>
+          <textarea
+            name="text"
+            id="text"
+            class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm"
+            placeholder="Enter your message here">{{ old('text', $text) }}</textarea>
+        </div>
+        @endif
         <div class="flex justify-end space-x-4">
           <button type="button"
             class="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400 cancelButton">

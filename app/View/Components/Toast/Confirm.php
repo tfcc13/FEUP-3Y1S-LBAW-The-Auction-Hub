@@ -13,6 +13,7 @@ class Confirm extends Component
   public ?string $id;
   public ?string $modalTitle;
   public ?string $modalMessage;
+  public bool $text; 
   public $object;
 
   public function __construct(
@@ -20,9 +21,10 @@ class Confirm extends Component
     string $route,
     string $method,
     string $id,
+    $object,
     string $modalTitle = 'Are you sure?',
     string $modalMessage = 'This action cannot be undone.',
-    $object
+    $text = false,
   ) {
     $this->buttonText = $buttonText;
     $this->route = $route;
@@ -30,6 +32,7 @@ class Confirm extends Component
     $this->id = $id;
     $this->modalTitle = $modalTitle;
     $this->modalMessage = $modalMessage;
+    $this->text = $text;
     $this->object = $object;
   }
 
