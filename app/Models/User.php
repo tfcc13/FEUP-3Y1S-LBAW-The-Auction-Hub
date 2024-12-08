@@ -97,6 +97,8 @@ class User extends Authenticatable
         $query->whereRaw("to_tsvector('english', name) @@ plainto_tsquery(?)", [$searchTerm]);
         Log::info('After Adding Full-text Search', [$query->toSql()]);
 
+        $query->where('is_admin','!=',true);
+
         return $query;
     }
 

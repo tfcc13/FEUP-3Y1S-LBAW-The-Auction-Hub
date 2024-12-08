@@ -12,9 +12,8 @@
       <h2 class="text-lg font-bold text-gray-900 mb-4">Are you sure?</h2>
       <p class="text-sm text-gray-600 mb-6">This action cannot be undone.</p>
 
-      <form action="{{ route($route, ['id' => $object->id]) }}" method="POST" class="w-full">
+      <form  action="{{ route($route, ['id' => $object->id]) }}" method="POST" class="w-full">
         @csrf
-        @method('DELETE')
 
         <div class="flex justify-end space-x-4">
           <button type="button" id="{{ 'cancelButton' . $idName }}" class="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400">
@@ -36,15 +35,19 @@ document.addEventListener('DOMContentLoaded', () => {
   const confirmationModal = document.getElementById("{{ 'confirmationModal' . $idName }}");
   const cancelButton = document.getElementById("{{ 'cancelButton' . $idName }}");
 
-  // Show the modal
-  confirmationButton.addEventListener('click', (e) => {
-    e.preventDefault(); // Prevent default behavior
-    confirmationModal.classList.remove('hidden');
-  });
+  if (confirmationButton && confirmationModal && cancelButton) {
+    // Show the modal
+    confirmationButton.addEventListener('click', (e) => {
+      e.preventDefault();
+      confirmationModal.classList.remove('hidden');
+    });
 
-  // Hide the modal on cancel
-  cancelButton.addEventListener('click', () => {
-    confirmationModal.classList.add('hidden');
-  });
-})
+    // Hide the modal on cancel
+    cancelButton.addEventListener('click', () => {
+      confirmationModal.classList.add('hidden');
+    });
+  } else {
+    console.error("Could not find elements for modal interaction.");
+  }
+});
 </script>

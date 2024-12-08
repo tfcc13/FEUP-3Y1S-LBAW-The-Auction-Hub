@@ -70,5 +70,6 @@ Route::prefix('admin')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
     Route::delete('/delete/user/{id}', [AdminController::class, 'deleteUser'])->name('deleteUser');
     Route::post('/ban/user/{id}', [AdminController::class, 'banUser'])->name('banUser');
+    Route::post('/promote/user/{id}', [AdminController::class, 'promoteUser'])->name('promoteUser');
   });
 });
