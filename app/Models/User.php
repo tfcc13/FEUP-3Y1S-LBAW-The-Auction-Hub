@@ -11,99 +11,109 @@ use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+  use HasApiTokens, HasFactory, Notifiable;
 
-    // Don't add create and update timestamps in database.
-    public $timestamps = false;
+  // Don't add create and update timestamps in database.
+  public $timestamps = false;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
-    protected $fillable = [
-        'name',
-        'username',
-        'email',
-        'password',
-        'birth_date',
-        'rating',
-        'description'
-    ];
+  /**
+   * The attributes that are mass assignable.
+   *
+   * @var array<int, string>
+   */
+  protected $fillable = [
+    'name',
+    'username',
+    'email',
+    'password',
+    'birth_date',
+    'rating',
+    'description'
+  ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
-    protected $hidden = [
-        'password',
-    ];
+  /**
+   * The attributes that should be hidden for serialization.
+   *
+   * @var array<int, string>
+   */
+  protected $hidden = [
+    'password',
+  ];
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
-    protected $casts = [
-        'password' => 'hashed',
-    ];
+  /**
+   * The attributes that should be cast.
+   *
+   * @var array<string, string>
+   */
+  protected $casts = [
+    'password' => 'hashed',
+  ];
 
-    public function followsAuction()
-    {
-        return $this->belongsToMany(Auction::class, 'follows', 'user_id', 'auction_id');
+  public function notifications(): HasMany
+  {
+    return $this->hasMany(Notification::class);
+  }
+
+  public function fetchNotifications()
+  {
+    return $this->notifications()->get();
+  }
+
+  public function followsAuction()
+  {
+    return $this->belongsToMany(Auction::class, 'follows', 'user_id', 'auction_id');
+  }
+
+  public function ownAuction()
+  {
+    return $this->hasMany(Auction::class, 'owner_id')->orderBy('state', 'asc');
+  }
+
+  public function userImage()
+  {
+    return $this->hasOne(UserImage::class);  // Use hasMany() if a user can have multiple images
+  }
+
+  public function ownsBids()
+  {
+    return $this->hasMany(Bid::class, 'user_id');
+  }
+
+  public function auctionWon()
+  {
+    return $this
+      ->hasManyThrough(Auction::class, AuctionWinner::class, 'user_id', 'id', 'id', 'auction_id')
+      ->orderBy('auction_id');
+  }
+
+  public function addMoney(float $amount): void
+  {
+    // Ensure the amount is positive
+    if ($amount <= 0) {
+      throw new \InvalidArgumentException('Amount must be greater than zero.');
     }
 
-    public function ownAuction()
-    {
-        return $this->hasMany(Auction::class, 'owner_id')->orderBy('state', 'asc');
-    }
+    // Increment the user's balance
+    $this->increment('credit_balance', $amount);
+  }
 
-    public function userImage()
-    {
-        return $this->hasOne(UserImage::class);  // Use hasMany() if a user can have multiple images
-    }
+  public function scopeSearch($query, $searchTerm)
+  {
+    Log::info('Initial Query', [$query->toSql()]);
 
-    public function ownsBids()
-    {
-        return $this->hasMany(Bid::class, 'user_id');
-    }
+    $query->where('state', '!=', 'Banned');
+    Log::info('After Adding State Filter', [$query->toSql()]);
 
-    public function auctionWon()
-    {
-        return $this
-            ->hasManyThrough(Auction::class, AuctionWinner::class, 'user_id', 'id', 'id', 'auction_id')
-            ->orderBy('auction_id');
-    }
+    $query->whereRaw("to_tsvector('english', name) @@ plainto_tsquery(?)", [$searchTerm]);
+    Log::info('After Adding Full-text Search', [$query->toSql()]);
 
-    public function addMoney(float $amount): void
-    {
-        // Ensure the amount is positive
-        if ($amount <= 0) {
-            throw new \InvalidArgumentException('Amount must be greater than zero.');
-        }
+    $query->where('is_admin', '!=', true);
 
-        // Increment the user's balance
-        $this->increment('credit_balance', $amount);
-    }
+    return $query;
+  }
 
-    public function scopeSearch($query, $searchTerm)
-    {
-        Log::info('Initial Query', [$query->toSql()]);
-
-        $query->where('state', '!=', 'Banned');
-        Log::info('After Adding State Filter', [$query->toSql()]);
-
-        $query->whereRaw("to_tsvector('english', name) @@ plainto_tsquery(?)", [$searchTerm]);
-        Log::info('After Adding Full-text Search', [$query->toSql()]);
-
-        $query->where('is_admin','!=',true);
-
-        return $query;
-    }
-
-    public function follows()
-    {
-        return $this->belongsToMany(Auction::class, 'follows_auction', 'user_id', 'auction_id');
-    }
+  public function follows()
+  {
+    return $this->belongsToMany(Auction::class, 'follows_auction', 'user_id', 'auction_id');
+  }
 }

@@ -1,7 +1,7 @@
 <div>
   <!-- Button to trigger confirmation -->
   <div>
-    <button id="{{ 'confirmationButton' . $idName }}" class="px-4 py-2 bg-blue-500 text-white rounded">
+    <button id="{{ 'confirmationButton' . $idName }}" class="px-4 py-2 text-white rounded" style="background-color: #135d3b; hover:bg-opacity-80;" >
       {{$buttonName}}
     </button>
   </div>

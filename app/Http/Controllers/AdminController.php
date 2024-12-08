@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class AdminController extends Controller
 {
@@ -12,7 +13,9 @@ class AdminController extends Controller
 
   public function dashboard()
   {
-    return view('pages.admin.dashboard.main');
+    $user = Auth::user();
+    $notifications = $user->fetchNotifications();
+    return view('pages.admin.dashboard.notification', compact('notifications'));
   }
 
   public function deleteUser($userId)
