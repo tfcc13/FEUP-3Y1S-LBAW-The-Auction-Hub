@@ -17,20 +17,25 @@
 
     <main class="flex flex-col sm:flex-row bg-gray-100 items-start p-6">
         <!-- Auction Images Section -->
-        <div class="auction-images flex flex-col w-2/3 text-center space-y-4">
-            <h1 class="text-4xl font-bold text-gray-800">{{ $auction->title }}</h1>
-            <p class="text-gray-600 text-xl font-medium">{{ $auction->description }}</p>
-            {{-- @if ($auction->images->isNotEmpty())
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                    @foreach ($auction->images as $image)
-                        <img src="{{ $image->path ? asset('storage/' . $image->path) : asset('images/defaults/auction-default.png') }}"
-                            alt="{{ $auction->title }} - Image {{ $loop->iteration }}" class="w-full h-auto lazyload">
+        <div class="auction-images my-12 py-8">
+            @php
+                $auctionImages = $auction->images;
+            @endphp
+
+            @if (!$auctionImages->isEmpty())
+                <div class="grid grid-cols-1 gap-6 justify-center items-center"> <!-- Use grid for fixed size and spacing -->
+                    @foreach ($auctionImages as $auctionImage)
+                        @if ($auctionImage->path)
+                            @php
+                                $image = $auction->auctionImage($auctionImage->path);
+                            @endphp
+                            <img src="{{ $image }}" alt="{{ $auction->title }}"
+                                class="w-[400px] h-[300px] object-cover rounded-lg shadow-md mx-auto">
+                            <!-- Fixed size with space between images -->
+                        @endif
                     @endforeach
                 </div>
-            @else --}}
-            <img src="{{ asset('/images/defaults/default-auction.jpg') }}" alt="{{ $auction->title }}"
-                class="w-80 h-auto lazyload mx-auto">
-            {{--  @endif --}}
+            @endif
         </div>
 
         <!-- Auction Details and Bid Info -->

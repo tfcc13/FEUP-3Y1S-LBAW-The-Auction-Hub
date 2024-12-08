@@ -11,6 +11,8 @@ class Notification extends Model
 
   public $timestamps = false;
 
+  protected $table = 'notification';
+
   protected $fillable = [//ask if admin can alter notifications
     'content',
     'type',
