@@ -6,6 +6,12 @@ export default class Carousel {
         this.slides = container.querySelectorAll('.carousel-slide');
         this.dots = container.querySelectorAll('.carousel-dot');
         
+        // Touch handling properties
+        this.touchStartX = 0;
+        this.touchEndX = 0;
+        this.isDragging = false;
+        this.dragThreshold = 50; // Minimum distance to trigger slide
+        
         this.initializeCarousel();
     }
 
@@ -17,6 +23,54 @@ export default class Carousel {
         this.dots.forEach((dot, index) => {
             dot.addEventListener('click', () => this.goToSlide(index));
         });
+
+        // Add touch event listeners
+        this.inner.addEventListener('touchstart', (e) => this.handleTouchStart(e));
+        this.inner.addEventListener('touchmove', (e) => this.handleTouchMove(e));
+        this.inner.addEventListener('touchend', (e) => this.handleTouchEnd(e));
+    }
+
+    handleTouchStart(e) {
+        this.touchStartX = e.touches[0].clientX;
+        this.isDragging = true;
+        this.inner.style.transition = 'none'; // Remove transition for immediate response
+        
+        // Pause auto-sliding during touch interaction
+        if (this.autoSlideInterval) {
+            clearInterval(this.autoSlideInterval);
+        }
+    }
+
+    handleTouchMove(e) {
+        if (!this.isDragging) return;
+        
+        e.preventDefault();
+        const currentX = e.touches[0].clientX;
+        const diff = this.touchStartX - currentX;
+        const offset = -(this.currentSlide * 100 + (diff / this.inner.offsetWidth) * 100);
+        
+        // Apply the transform with boundaries
+        this.inner.style.transform = `translateX(${offset}%)`;
+    }
+
+    handleTouchEnd(e) {
+        if (!this.isDragging) return;
+        
+        this.isDragging = false;
+        this.inner.style.transition = ''; // Restore transition
+        
+        const diff = this.touchStartX - e.changedTouches[0].clientX;
+        
+        if (Math.abs(diff) > this.dragThreshold) {
+            // If dragged far enough, move to next/previous slide
+            this.moveSlide(diff > 0 ? 1 : -1);
+        } else {
+            // If not dragged far enough, snap back
+            this.updateCarousel();
+        }
+        
+        // Restart auto-sliding
+        this.autoSlideInterval = setInterval(() => this.moveSlide(1), 7500);
     }
 
     updateCarousel() {
@@ -51,5 +105,10 @@ export default class Carousel {
         if (this.autoSlideInterval) {
             clearInterval(this.autoSlideInterval);
         }
+        
+        // Remove touch event listeners
+        this.inner.removeEventListener('touchstart', this.handleTouchStart);
+        this.inner.removeEventListener('touchmove', this.handleTouchMove);
+        this.inner.removeEventListener('touchend', this.handleTouchEnd);
     }
-} 
+}

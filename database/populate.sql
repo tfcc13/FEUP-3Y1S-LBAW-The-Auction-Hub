@@ -1,7 +1,7 @@
 -- Populate users
 INSERT INTO users (email, username, name, password, birth_date, credit_balance, is_admin, state, rating) VALUES
 ('john.doe@example.com', 'johndoe', 'John Doe', '$2y$10$sUY.kxsoyTrNZwLh6zrJn.HQ1ckKdnjbrngQvS3Z.65fxW/aYy8Yq', '1990-01-01', 50000, FALSE, 'Active', 4),
-('jane.smith@example.com', 'janesmith', 'Jane Smith', 'hashedpassword123', '1985-05-15', 50000, FALSE, 'Active', 5),
+('jane.smith@example.com', 'janesmith', 'Jane Smith', '$2y$10$sUY.kxsoyTrNZwLh6zrJn.HQ1ckKdnjbrngQvS3Z.65fxW/aYy8Yq', '1985-05-15', 50000, FALSE, 'Active', 5),
 ('deleted.user@example.com', 'deleteduser', 'Deleted User', 'hashedpassword123', '1975-08-22', 50000, FALSE, 'Deleted', 1),
 ('alice.johnson@example.com', 'alicej', 'Alice Johnson', 'hashedpassword123', '1992-03-20', 75500, FALSE, 'Active', 3),
 ('bob.wilson@example.com', 'bobw', 'Bob Wilson', 'hashedpassword123', '1988-11-12', 50000, FALSE, 'Active', 4),
@@ -128,7 +128,7 @@ INSERT INTO bid (amount, bid_date, auction_id, user_id) VALUES
 (8200, '2024-12-11 11:45:00', 13, 16),
 (12500, '2024-12-16 14:15:00', 14, 18),
 (3700, '2024-12-21 15:30:00', 15, 20),
-(2100, '2024-12-26 13:00:00', 16, 11),
+(2100, '2024-12-26 13:00:00', 16, 2),
 (5200, '2024-12-31 12:15:00', 17, 13),
 (1900, '2025-01-06 11:30:00', 18, 15),
 (1100, '2025-01-11 16:00:00', 19, 17),

@@ -1,87 +1,80 @@
 @extends('layouts.auth')
 
 @section('content')
-<form method="POST"
-  class="flex flex-col w-full sm:w-4/5 md:w-3/5 mt-8 mx-auto bg-gray-400 p-5 rounded-md"
-  action="{{ route('register') }}">
-  {{ csrf_field() }}
+    <div class="flex flex-col max-w-md mx-auto space-y-5">
+        <span class="text-2xl font-semibold text-gray-800 text-center">Register</span>
 
-  <label for="name">Name</label>
-  <input id="name" type="text" name="name" value="{{ old('name') }}" required autofocus
-    class="py-2 px-4 border border-gray-300 sm:border-transparent shadow-sm text-sm sm:text-base rounded-md text-black focus:ring-2 focus:ring-green-500 focus:border-green-500 focus:outline-none">
-  
-  @if ($errors->has('name'))
-  <span class="error">
-    {{ $errors->first('name') }}
-  </span>
-  @endif
+        <span class="text-gray-600 text-center">Create your auction hub account</span>
 
-  <label for="username">User Name</label>
-  <input id="username" type="text" name="username" value="{{ old('username') }}" required autofocus
-    class="py-2 px-4 border border-gray-300 sm:border-transparent shadow-sm text-sm sm:text-base rounded-md text-black focus:ring-2 focus:ring-green-500 focus:border-green-500 focus:outline-none">
-  
-  @if ($errors->has('username'))
-  <span class="error">
-    {{ $errors->first('username') }}
-  </span>
-  @endif
+        <form method="POST" action="{{ route('register') }}">
+            {{ csrf_field() }}
 
-  <label for="email">E-Mail Address</label>
-  <input id="email" type="email" name="email" value="{{ old('email') }}" required
-    class="py-2 px-4 border border-gray-300 sm:border-transparent shadow-sm text-sm sm:text-base rounded-md text-black focus:ring-2 focus:ring-green-500 focus:border-green-500 focus:outline-none">
-  
-  @if ($errors->has('email'))
-  <span class="error">
-    {{ $errors->first('email') }}
-  </span>
-  @endif
+            <div class="flex flex-col justify-start space-y-4 w-full">
+                <div class="flex flex-col justify-start space-y-1 w-full">
+                    <input id="name" type="text" name="name" value="{{ old('name') }}" placeholder="Name" required
+                        autofocus class="form-input">
+                    @if ($errors->has('name'))
+                        <span class="text-red-500 pl-1">
+                            {{ $errors->first('name') }}
+                        </span>
+                    @endif
+                </div>
 
-  <label for="birth_date">Birth Date</label>
-  <input id="birth_date" type="date" name="birth_date" value="{{ old('birth_date') }}" required autofocus
-    class="py-2 px-4 border border-gray-300 sm:border-transparent shadow-sm text-sm sm:text-base rounded-md text-black focus:ring-2 focus:ring-green-500 focus:border-green-500 focus:outline-none">
-  
-  @if ($errors->has('birth_date'))
-  <span class="error">
-    {{ $errors->first('birth_date') }}
-  </span>
-  @endif
+                <div class="flex flex-col justify-start space-y-1 w-full">
+                    <input id="username" type="text" name="username" value="{{ old('username') }}"
+                        placeholder="Username" required class="form-input">
+                    @if ($errors->has('username'))
+                        <span class="text-red-500 pl-1">
+                            {{ $errors->first('username') }}
+                        </span>
+                    @endif
+                </div>
 
-  <label for="password">Password</label>
-  <input id="password" type="password" name="password" required
-    class="py-2 px-4 border border-gray-300 sm:border-transparent shadow-sm text-sm sm:text-base rounded-md text-black focus:ring-2 focus:ring-green-500 focus:border-green-500 focus:outline-none">
-  
-  @if ($errors->has('password'))
-  <span class="error">
-    {{ $errors->first('password') }}
-  </span>
-  @endif
+                <div class="flex flex-col justify-start space-y-1 w-full">
+                    <input id="email" type="email" name="email" value="{{ old('email') }}" placeholder="Email"
+                        required class="form-input lowercase">
+                    @if ($errors->has('email'))
+                        <span class="text-red-500 pl-1">
+                            {{ $errors->first('email') }}
+                        </span>
+                    @endif
+                </div>
 
-  <label for="password-confirm">Confirm Password</label>
-  <input id="password-confirm" type="password" name="password_confirmation" required
-    class="py-2 px-4 border border-gray-300 sm:border-transparent shadow-sm text-sm sm:text-base rounded-md text-black focus:ring-2 focus:ring-green-500 focus:border-green-500 focus:outline-none">
-  
-<section class="mt-6">
-    <button type="submit"
-      class="py-2 px-4 border border-transparent shadow-sm text-sm sm:text-base rounded-md text-white bg-[#135d3b] hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-    
-    Register
-  </button>
-    <a href="{{ route('login') }}"
-      class="
-        block
-        w-20 sm:w-auto  
-        sm:inline-block
-        mt-3 
-        w-fir
-        text-center text-green-600 hover:text-white 
-        bg-white hover:bg-green-600 
-        py-2 px-4 
-        border border-gray-300 
-        shadow-sm 
-        text-sm sm:text-base 
-        rounded-md
-    ">
-    Login</a>
-</section>
-</form>
+                <div class="flex flex-col justify-start space-y-1 w-full">
+                    <input id="birth_date" type="date" name="birth_date" value="{{ old('birth_date') }}" required
+                        class="form-input">
+                    @if ($errors->has('birth_date'))
+                        <span class="text-red-500 pl-1">
+                            {{ $errors->first('birth_date') }}
+                        </span>
+                    @endif
+                </div>
+
+                <div class="flex flex-col justify-start space-y-1 w-full">
+                    <input id="password" type="password" name="password" placeholder="Password" required
+                        class="form-input">
+                    @if ($errors->has('password'))
+                        <span class="text-red-500 pl-1">
+                            {{ $errors->first('password') }}
+                        </span>
+                    @endif
+                </div>
+
+                <div class="flex flex-col justify-start space-y-1 w-full">
+                    <input id="password-confirm" type="password" name="password_confirmation" placeholder="Confirm Password"
+                        required class="form-input">
+                </div>
+
+                <button type="submit"
+                    class="w-full bg-[#135d3b] text-white rounded-lg py-2 active:scale-95 hover:bg-[#135d3b]/85 transition-all duration-150 ease-out">
+                    Register
+                </button>
+
+                <div class="flex justify-center space-x-1">
+                    <span class="text-gray-500">Already have an account?</span>
+                    <a href="{{ route('login') }}" class="hover:underline text-gray-800">Login here.</a>
+                </div>
+            </div>
+        </form>
+    </div>
 @endsection
