@@ -34,5 +34,28 @@
                 Place Bid
             </button>
         </form>
+    @else
+        <button
+            class="w-full bg-[#135d3b] text-white rounded-lg py-2 active:scale-95 hover:bg-[#135d3b]/85 transition-all duration-150 ease-out"
+            onclick="window.location.href='{{ route('auction.edit_auction', $auction->id) }}'">
+            Edit Auction
+        </button>
+        @if ($auction->state === 'Ongoing')
+            <form method="POST" action="{{ route('auction.cancel_auction', $auction->id) }}" class="mt-6">
+                @csrf
+                <button type="submit"
+                    class="w-full bg-red-500 text-white rounded-lg py-2 active:scale-95 hover:bg-red-500/85 transition-all duration-150 ease-out">
+                    Cancel Auction
+                </button>
+            </form>
+        @endif
+        <form method="POST" action="{{ route('auction.delete', $auction->id) }}" class="mt-6">
+            @csrf
+            @method('DELETE')
+            <button type="submit"
+                class="w-full bg-red-700 text-white rounded-lg py-2 active:scale-95 hover:bg-red-700/85 transition-all duration-150 ease-out">
+                Delete Auction
+            </button>
+        </form>
     @endif
 </div>
