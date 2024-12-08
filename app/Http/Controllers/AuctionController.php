@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Auction;
 use App\Models\Bid;
 use App\Models\Category;
+use App\Models\Report;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -149,7 +150,7 @@ class AuctionController extends Controller
       'files.*' => 'required|image|mimes:png,jpg,jpeg,gif|max:4196',
     ]);
 
-    //dd($validatedData);
+    // dd($validatedData);
 
     try {
       DB::beginTransaction();
@@ -164,10 +165,10 @@ class AuctionController extends Controller
       DB::commit();
 
       if ($request->hasFile('files')) {
-        //dd($request);
-        //dd($fileRequest, $request);
+        // dd($request);
+        // dd($fileRequest, $request);
         app(FileController::class)->uploadAuctionImages($request, $auction->id);
-    }
+      }
 
       return redirect()->route('auctions.show', $auction->id)->with('success', 'Auction created successfully!');
     } catch (\Exception $e) {
@@ -175,45 +176,42 @@ class AuctionController extends Controller
     }
   }
 
+  /*   public function submitAuction(Request $request)
+          {
+            // Validate the form data
+            $validatedData = $request->validate([
+              'title' => 'required|string|max:255',
+              'description' => 'required|string',
+              'start_price' => 'required|numeric|min:0',
+              'category_id' => 'required|exists:category,id',
+              'files' => 'required|image|mimes:png,jpg,jpeg,gif|max:4196',
+            ]);
 
-/*   public function submitAuction(Request $request)
-  {
-    // Validate the form data
-    $validatedData = $request->validate([
-      'title' => 'required|string|max:255',
-      'description' => 'required|string',
-      'start_price' => 'required|numeric|min:0',
-      'category_id' => 'required|exists:category,id',
-      'files' => 'required|image|mimes:png,jpg,jpeg,gif|max:4196',
-    ]);
+            //dd($validatedData);
 
-    //dd($validatedData);
+            try {
+              DB::beginTransaction();
+              // Create a new auction
+              $auction = new Auction();
+              $auction->title = $validatedData['title'];
+              $auction->description = $validatedData['description'];
+              $auction->start_price = $validatedData['start_price'];
+              $auction->category_id = $validatedData['category_id'];
+              $auction->owner_id = Auth::id();
+              $auction->save();
+              DB::commit();
 
-    try {
-      DB::beginTransaction();
-      // Create a new auction
-      $auction = new Auction();
-      $auction->title = $validatedData['title'];
-      $auction->description = $validatedData['description'];
-      $auction->start_price = $validatedData['start_price'];
-      $auction->category_id = $validatedData['category_id'];
-      $auction->owner_id = Auth::id();
-      $auction->save();
-      DB::commit();
+              if ($request->hasFile('files')) {
+                //dd($request);
+                //dd($fileRequest, $request);
+                app(FileController::class)->upload($request, $auction->id);
+            }
 
-      if ($request->hasFile('files')) {
-        //dd($request);
-        //dd($fileRequest, $request);
-        app(FileController::class)->upload($request, $auction->id);
-    }
-
-      return redirect()->route('auctions.show', $auction->id)->with('success', 'Auction created successfully!');
-    } catch (\Exception $e) {
-      return redirect()->route('auctions.create_auction')->with('error', 'An error occurred while creating the auction: ' . $e->getMessage());
-    }
-  } */
-
-
+              return redirect()->route('auctions.show', $auction->id)->with('success', 'Auction created successfully!');
+            } catch (\Exception $e) {
+              return redirect()->route('auctions.create_auction')->with('error', 'An error occurred while creating the auction: ' . $e->getMessage());
+            }
+          } */
 
   public function cancelAuction($auction_id)
   {
@@ -266,8 +264,8 @@ class AuctionController extends Controller
 
     // not neeeded it redirects to a 403 page because of the auction policy
     /*         if (Auth::user()->id !== $auction->owner_id) {
-                                                    return redirect()->back()->with('message', 'You do not have permission to edit this auction.');
-                                                } */
+                                                                return redirect()->back()->with('message', 'You do not have permission to edit this auction.');
+                                                            } */
 
     $validatedData = $request->validate([
       'title' => 'required|string|max:255',
@@ -319,15 +317,31 @@ class AuctionController extends Controller
     $categories = $this->getCategories();
 
     $auctions = Auction::with('images')
-        ->whereBetween('end_date', [now(), now()->addDays(7)])
-        ->orderBy('end_date', 'asc')
-        ->get()
-        ->map(function ($auction) {
-            $auction->primaryImage = $auction->primaryImage();
-            return $auction;
-        });
+      ->whereBetween('end_date', [now(), now()->addDays(7)])
+      ->orderBy('end_date', 'asc')
+      ->get()
+      ->map(function ($auction) {
+        $auction->primaryImage = $auction->primaryImage();
+        return $auction;
+      });
 
     return view('search.upcoming', compact('auctions', 'categories'));
   }
 
+  public function report($auctionId)
+  {
+    $userId = Auth::id();
+
+    // Create a new report
+    $report = Report::create([
+      'user_id' => $userId,  // the auction owner's ID
+      'auction_id' => $auctionId,  // the auction ID
+      'description' => 'User requested to ban another user.',  // modify as needed
+      'state' => 'Pending',  // default state
+      'view_status' => false,  // default value
+    ]);
+
+    // Redirect to the reports page with a success message
+    return redirect()->route('home')->with('success', 'Ban request has been reported.');
+  }
 }

@@ -47,6 +47,7 @@ Route::prefix('auctions')->group(function () {
   Route::put('/auction/{id}', [AuctionController::class, 'update'])->name('auction.update');
   Route::delete('/auction/{id}/delete', [AuctionController::class, 'deleteAuction'])->name('auction.delete')->middleware('auth');
   Route::get('/search/upcoming', [AuctionController::class, 'upcomingAuctions'])->name('search.upcoming');
+  Route::post('/report/{id}', [AuctionController::class, 'report'])->name('auction.report');
 });
 
 Route::get('search', [SearchController::class, 'searchView'])->name('search.view');
@@ -63,7 +64,6 @@ Route::get('/dashboard/financial', [UserController::class, 'showFinancial'])->na
 Route::post('/user/add-money', [UserController::class, 'addMoney'])->name('user.add-money');
 Route::get('/user/follow', [UserController::class, 'followAuctions'])->name('follow.auctions');
 Route::get('/dashboard/bids', [UserController::class, 'showBids'])->name('user.dash.bids');
-Route::post('/user/ban_request', [UserController::class, 'banUserRequest'])->name('user.banUserRequest');
 
 // need to add admin middleware
 Route::prefix('admin')->group(function () {

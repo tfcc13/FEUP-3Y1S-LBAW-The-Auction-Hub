@@ -19,25 +19,25 @@
 
   <!-- Auction Images Section -->
   <div class="auction-images my-12 py-8">
+    @php
+    $auctionImages = $auction->images;
+    @endphp
+
+    @if(!$auctionImages->isEmpty())
+    <div class="grid grid-cols-1 gap-6 justify-center items-center"> <!-- Use grid for fixed size and spacing -->
+      @foreach ($auctionImages as $auctionImage)
+      @if($auctionImage->path)
       @php
-          $auctionImages = $auction->images;
+      $image = $auction->auctionImage($auctionImage->path);
       @endphp
-      
-      @if(!$auctionImages->isEmpty())
-        <div class="grid grid-cols-1 gap-6 justify-center items-center"> <!-- Use grid for fixed size and spacing -->
-            @foreach ($auctionImages as $auctionImage)
-                @if($auctionImage->path)
-                    @php
-                        $image = $auction->auctionImage($auctionImage->path);
-                    @endphp
-                    <img
-                        src="{{ $image }}"
-                        alt="{{ $auction->title }}"
-                        class="w-[400px] h-[300px] object-cover rounded-lg shadow-md mx-auto"> <!-- Fixed size with space between images -->
-                @endif
-            @endforeach
-        </div>
+      <img
+        src="{{ $image }}"
+        alt="{{ $auction->title }}"
+        class="w-[400px] h-[300px] object-cover rounded-lg shadow-md mx-auto"> <!-- Fixed size with space between images -->
       @endif
+      @endforeach
+    </div>
+    @endif
   </div>
 
   <div class="container mx-auto px-4 py-6">
@@ -127,6 +127,7 @@
 
       @endauth
     </div>
+
     @if(Auth::check() && Auth::id() === $auction->owner_id)
 
     <a href="{{ route('auction.edit_auction', $auction->id) }}" class="ml-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">

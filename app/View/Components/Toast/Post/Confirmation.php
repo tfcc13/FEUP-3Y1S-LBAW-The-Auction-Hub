@@ -25,7 +25,6 @@ class Confirmation extends Component
 
   public function render(): View|Closure|string
   {
-   
     return view('components.toast.post.confirmation', [
       'buttonName' => $this->buttonName,
       'action' => $this->route,
