@@ -15,7 +15,7 @@
         </div>
     @endif
 
-    <main class="flex  bg-gray-100 items-start p-6">
+    <main class="flex flex-col sm:flex-row bg-gray-100 items-start p-6">
         <div class="flex flex-col w-2/3 text-center space-y-4">
             <h1 class="text-4xl font-bold text-gray-800">{{ $auction->title }}</h1>
             <p class="text-gray-600 text-xl font-medium">{{ $auction->description }}</p>
