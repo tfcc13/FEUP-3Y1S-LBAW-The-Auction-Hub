@@ -9,7 +9,8 @@
                     <li class="w-full">
                         <a href="{{ route('dashboard') }}"
                             class="tab-link {{ request()->routeIs('dashboard') ? 'text-[#135d3b]' : 'text-gray-800' }} ">
-                            <span class="material-symbols-outlined">home</span> Dashboard
+                            <span class="material-symbols-outlined">home</span> 
+                            <span class="hidden sm:inline">Dashboard</span>
                             @if (request()->routeIs('dashboard'))
                                 <div class="absolute bottom-0 left-0 w-full h-1 bg-[#135d3b]"></div>
                             @endif
@@ -18,7 +19,8 @@
                     <li class="w-full">
                         <a href="{{ route('user.dash.stats') }}"
                             class="tab-link {{ request()->routeIs('user.dash.stats') ? 'text-[#135d3b]' : 'text-gray-800' }}">
-                            <span class="material-symbols-outlined">equalizer</span> Statistics
+                            <span class="material-symbols-outlined">equalizer</span>
+                            <span class="hidden sm:inline">Statistics</span>
                             @if (request()->routeIs('user.dash.stats'))
                                 <div class="absolute bottom-0 left-0 w-full h-1 bg-[#135d3b]"></div>
                             @endif
@@ -27,7 +29,8 @@
                     <li class="w-full">
                         <a href="{{ route('user.dash.financial') }}"
                             class="tab-link {{ request()->routeIs('user.dash.financial') ? 'text-[#135d3b]' : 'text-gray-800' }}">
-                            <span class="material-symbols-outlined">payments</span> Financial
+                            <span class="material-symbols-outlined">payments</span>
+                            <span class="hidden sm:inline">Financial</span>
                             @if (request()->routeIs('user.dash.financial'))
                                 <div class="absolute bottom-0 left-0 w-full h-1 bg-[#135d3b]"></div>
                             @endif
@@ -36,7 +39,8 @@
                     <li class="w-full">
                         <a href="{{ route('user.dash.bids') }}"
                             class="tab-link {{ request()->routeIs('user.dash.bids') ? 'text-[#135d3b]' : 'text-gray-800' }}">
-                            <span class="material-symbols-outlined">gavel</span> Bids
+                            <span class="material-symbols-outlined">gavel</span>
+                            <span class="hidden sm:inline">Bids</span>
                             @if (request()->routeIs('user.dash.bids'))
                                 <div class="absolute bottom-0 left-0 w-full h-1 bg-[#135d3b]"></div>
                             @endif
