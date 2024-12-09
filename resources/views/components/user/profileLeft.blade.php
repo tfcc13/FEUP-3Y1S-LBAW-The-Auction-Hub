@@ -67,15 +67,16 @@
   :buttonText="'Delete User'"
   :route="'admin.deleteUser'"
   :method="'DELETE'"
-  :id="$user->id"
+  :id="'delete'.$user->id"
   :modalTitle="'Delete this user?'"
   :modalMessage="'Are you sure you want to delete this? This action is irreversible.'"
   :object="$user" />
+@if($user->state !== 'Banned')
 <x-toast.confirm
   :buttonText="'Ban User'"
   :route="'admin.banUser'"
   :method="'PUT'"
-  :id="$user->id"
+  :id="'ban' .$user->id"
   :modalTitle="'Ban this user?'"
   :modalMessage="'Are you sure you want to delete this? '"
   :object="$user" />
@@ -83,9 +84,10 @@
   :buttonText="'Promote User'"
   :route="'admin.promoteUser'"
   :method="'PUT'"
-  :id="$user->id"
+  :id="'promote'.$user->id"
   :modalTitle="'Promote this user?'"
   :modalMessage="'Are you sure you want to delete this? This action is irreversible.'"
   :object="$user" />
+@endif
 @endif
 
