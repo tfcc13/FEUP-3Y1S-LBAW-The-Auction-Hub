@@ -54,7 +54,7 @@ Route::get('search', [SearchController::class, 'searchView'])->name('search.view
 // User
 Route::get('/dashboard', function () {
   return view('pages.user.dashboard.dashboard');
-});
+})->name('dashboard');
 
 Route::put('/user/description', [UserController::class, 'updateDescription'])->name('user.updateDescription');
 Route::get('/profile/{username}', [UserController::class, 'showProfile'])->name('user.profile.other');
