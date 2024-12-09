@@ -17,7 +17,7 @@
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 
     <!-- Styles and Scripts -->
-    @vite(['resources/css/app.postcss', 'resources/js/app.js', 'resources/js/auction.js'])
+    @vite(['resources/css/app.postcss', 'resources/js/app.js', 'resources/js/auction.js', 'resources/js/components/bid_card.js', 'resources/js/components/info_card.js'])
 </head>
 
 <body>

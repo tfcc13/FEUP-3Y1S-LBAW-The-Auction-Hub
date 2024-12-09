@@ -1,9 +1,6 @@
-@extends('layouts.user')
+@extends('layouts.user.profile')
 
-@section('left')
+@section('content')
 @include('components.user.profileLeft')
 @endsection
 
-@section('right')
-@include('components.user.profileRight')
-@endsection

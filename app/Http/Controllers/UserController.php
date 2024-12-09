@@ -78,7 +78,7 @@ class UserController extends Controller
         ], 400);  // Bad Request
       }
 
-      $users = User::search($searchTerm)->get();
+      $users = User::search($searchTerm)->where('state', '!=', 'Banned')->get();
 
       // Check if results are empty
       if ($users->isEmpty()) {
@@ -152,5 +152,9 @@ class UserController extends Controller
     $user = auth()->user();
     $followed = $user->follows;  // Retrieves auctions directly
     return view('pages.auctions.follow', compact('followed'));
+  }
+
+  public function banUserRequest()
+  {
   }
 }

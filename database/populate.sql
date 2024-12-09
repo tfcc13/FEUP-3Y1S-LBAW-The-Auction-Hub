@@ -17,10 +17,10 @@ INSERT INTO users (email, username, name, password, birth_date, credit_balance, 
 ('liam.taylor@example.com', 'liamt', 'Liam Taylor', 'hashedpassword123', '1990-12-05', 130000, FALSE, 'Active', 4),
 ('mia.anderson@example.com', 'miaa', 'Mia Anderson', 'hashedpassword123', '1988-04-17', 90000, FALSE, 'Active', 3),
 ('nathan.clark@example.com', 'nathanc', 'Nathan Clark', 'hashedpassword123', '1991-10-10', 50050, FALSE, 'Active', 4),
-('olivia.martinez@example.com', 'oliviam', 'Olivia Martinez', 'hashedpassword123', '1987-03-25', 105000, FALSE, 'Active', 5),
+('olivia.martinez@example.com', 'oliviam', 'Olivia Martinez', '$2y$10$RTQg99nD/kjmAI7b6l187.FLnoVh3uAT/m87ERCu0tT3TkgThesFm', '1987-03-25', 105000, FALSE, 'Active', 5),
 ('peter.brown@example.com', 'peterb', 'Peter Brown', 'hashedpassword123', '1994-01-20', 65000, FALSE, 'Active', 3),
 ('quinn.foster@example.com', 'quinnf', 'Quinn Foster', 'hashedpassword123', '1989-08-08', 75000, FALSE, 'Active', 4),
-('admin@lbaw24.com', 'admin', 'Admin', 'adminhashedpassword123','1989-04-10', 0, TRUE, 'Active', NULL),
+('admin@lbaw24.com', 'admin', 'Admin', '$2y$10$sUY.kxsoyTrNZwLh6zrJn.HQ1ckKdnjbrngQvS3Z.65fxW/aYy8Yq','1989-04-10', 0, TRUE, 'Active', NULL),
 ('lbaw@lbaw.com','lbaw','lbaw','$2y$10$RTQg99nD/kjmAI7b6l187.FLnoVh3uAT/m87ERCu0tT3TkgThesFm','1980-04-10',1000000,FALSE,'Active',1);
 
 
@@ -54,7 +54,7 @@ INSERT INTO category (name) VALUES
 
 -- Populate Auctions
 INSERT INTO auction (title, description, start_price, current_bid, start_date, end_date, state, owner_id, category_id) VALUES
-('Vintage Car Auction', 'Auction for a vintage car', 5000, NULL, '2024-10-30 10:00:00', '2024-12-09 12:11:00', 'Ongoing', 1,1),
+('Vintage Car Auction', 'Auction for a vintage car', 5000, NULL, '2024-10-30 10:00:00', '2024-12-09 13:08:00', 'Ongoing', 1,1),
 ('Antique Painting Auction', 'Rare antique painting', 2000, NULL, '2024-10-15 12:00:00', NULL, 'Resumed', 2,1),
 ('Rare Comic Book Collection', 'Collection of rare comic books', 3000, NULL, '2024-10-20 09:00:00', NULL, 'Resumed', 4,1),
 ('Diamond Necklace', 'Exquisite diamond necklace', 10000, NULL, '2024-10-25 14:00:00', NULL, 'Resumed', 5,1),
