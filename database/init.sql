@@ -736,7 +736,7 @@ EXECUTE FUNCTION prevent_admin_actions(); */
 
 
 -- TRIGGER18
-CREATE FUNCTION update_balances_on_auction_end() RETURNS TRIGGER AS $$
+/* CREATE FUNCTION update_balances_on_auction_end() RETURNS TRIGGER AS $$
 DECLARE
     winner_balance DECIMAL(12, 2);
     owner_balance DECIMAL(12, 2);
@@ -775,7 +775,7 @@ CREATE TRIGGER auction_end_balance_update_trigger
 AFTER UPDATE ON auction
 FOR EACH ROW
 WHEN (NEW.state = 'Resumed')
-EXECUTE FUNCTION update_balances_on_auction_end();
+EXECUTE FUNCTION update_balances_on_auction_end(); */
 
 
 

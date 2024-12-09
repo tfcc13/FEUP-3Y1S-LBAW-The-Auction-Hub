@@ -54,12 +54,12 @@ INSERT INTO category (name) VALUES
 
 -- Populate Auctions
 INSERT INTO auction (title, description, start_price, current_bid, start_date, end_date, state, owner_id, category_id) VALUES
-('Vintage Car Auction', 'Auction for a vintage car', 5000, NULL, '2024-10-30 10:00:00', NULL, 'Ongoing', 1,1),
-('Antique Painting Auction', 'Rare antique painting', 2000, NULL, '2024-10-15 12:00:00', NULL, 'Ongoing', 2,1),
-('Rare Comic Book Collection', 'Collection of rare comic books', 3000, NULL, '2024-10-20 09:00:00', NULL, 'Ongoing', 4,1),
-('Diamond Necklace', 'Exquisite diamond necklace', 10000, NULL, '2024-10-25 14:00:00', NULL, 'Ongoing', 5,1),
-('Signed Football Jersey', 'Jersey signed by famous player', 1500, NULL, '2024-11-01 11:00:00', NULL, 'Ongoing', 6,1),
-('Antique Clock', 'Rare antique grandfather clock', 4000, NULL, '2024-11-05 13:00:00', NULL, 'Ongoing', 7,1),
+('Vintage Car Auction', 'Auction for a vintage car', 5000, NULL, '2024-10-30 10:00:00', '2024-12-09 12:11:00', 'Ongoing', 1,1),
+('Antique Painting Auction', 'Rare antique painting', 2000, NULL, '2024-10-15 12:00:00', NULL, 'Resumed', 2,1),
+('Rare Comic Book Collection', 'Collection of rare comic books', 3000, NULL, '2024-10-20 09:00:00', NULL, 'Resumed', 4,1),
+('Diamond Necklace', 'Exquisite diamond necklace', 10000, NULL, '2024-10-25 14:00:00', NULL, 'Resumed', 5,1),
+('Signed Football Jersey', 'Jersey signed by famous player', 1500, NULL, '2024-11-01 11:00:00', NULL, 'Resumed', 6,1),
+('Antique Clock', 'Rare antique grandfather clock', 4000, NULL, '2024-11-05 13:00:00', NULL, 'Resumed', 7,1),
 ('Vintage Camera', 'Classic film camera from the 1960s', 1200, NULL, '2024-11-10 10:00:00', NULL, 'Ongoing', 8,1),
 ('First Edition Book', 'Rare first edition of a classic novel', 2500, NULL, '2024-11-15 15:00:00', NULL, 'Ongoing', 9,1),
 ('Designer Handbag', 'Limited edition designer handbag', 3500, NULL, '2024-11-20 12:00:00', NULL, 'Ongoing', 10,1),
@@ -155,7 +155,12 @@ INSERT INTO report (description, view_status, state, user_id, auction_id) VALUES
 
 -- Populate Auction Winners
 INSERT INTO auction_winner (auction_id, user_id, rating) VALUES
-(1, 2, 5), (3, 5, 4), (5, 4, 5), (7, 3, 4), (9, 9, 5), (11, 12, 4);
+(1, 2, 5), 
+(3, 5, 4),
+(5, 4, 5),
+(7, 3, 4),
+(9, 9, 5),
+(11, 12, 4);
 
 -- Populate Notifications
 INSERT INTO notification (content, notification_date, type, view_status, user_id, bid_id) VALUES

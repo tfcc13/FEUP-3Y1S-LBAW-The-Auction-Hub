@@ -45,6 +45,10 @@
     <div class="flex flex-col lg:flex-row gap-6">
 
       <!-- Auction Details (Left Side) -->
+      <div id="auction-data" 
+        data-auction-id="{{ $auction->id }}" 
+        data-auction-url="{{ route('auction_state.fetch', ['id' => $auction->id]) }}">
+      </div>
       <div class="flex-1 bg-white shadow-md rounded p-6">
         <h1 class="text-3xl font-bold text-gray-800">{{ $auction->title }}</h1>
         <p class="text-gray-600 mt-2">{{ $auction->description }}</p>
@@ -65,7 +69,7 @@
               {{ $auction->end_date ? $auction->end_date->format('d M Y, H:i') : 'No end date specified' }}
             </span>
           </p>
-          <p>State: <span class="font-semibold capitalize">{{ $auction->state }}</span></p>
+          <p>State: <span  id="auction-state" class="font-semibold capitalize">{{ $auction->state }}</span></p>
         </div>
 
         <!-- Auction Remaining Time -->

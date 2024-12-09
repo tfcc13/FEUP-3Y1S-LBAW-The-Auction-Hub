@@ -330,4 +330,10 @@ class AuctionController extends Controller
     return view('search.upcoming', compact('auctions', 'categories'));
   }
 
+  public function getAuctionState($id)
+  {
+      $auction = Auction::findOrFail($id);
+      return response()->json(['state' => $auction->state]);
+  }
+
 }
