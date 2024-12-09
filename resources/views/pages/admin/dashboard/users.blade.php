@@ -1,4 +1,3 @@
-
 @extends('layouts.admin.dashboard')
 
 @section('Display')
@@ -16,6 +15,11 @@
         <p class="font-medium text-gray-700">Auction ID: {{ $report->owner_id }}</p>
         <p class="text-sm text-gray-500">{{ $report->report_count }}</p>
         <p class="text-sm text-gray-500">{{ $report->name }}</p>
+        <p class="text-sm text-gray-500">{{ $report->username }}</p>
+        <a href="{{ route('user.profile.other', ['username' => $report->username]) }}"
+          class="inline-block px-4 py-2 mt-2 bg-[rgb(19,93,59)] text-white rounded hover:bg-[rgb(19,93,59)]">
+          View Profile
+        </a>
       </li>
       @empty
       <li class="text-gray-500">You have no reports.</li>

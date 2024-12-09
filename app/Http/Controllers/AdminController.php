@@ -24,8 +24,8 @@ class AdminController extends Controller
   {
     $reportsPerOwner = Report::join('auction', 'report.auction_id', '=', 'auction.id')
       ->join('users', 'users.id','=','auction.owner_id')
-      ->select('auction.owner_id', DB::raw('COUNT(*) as report_count'), 'users.name as name')
-      ->groupBy('auction.owner_id','users.name')
+      ->select('auction.owner_id', DB::raw('COUNT(*) as report_count'), 'users.name as name', 'users.username as username')
+      ->groupBy('auction.owner_id','users.name','username')
       ->orderBy('report_count', 'DESC')
       ->get();
     return view('pages.admin.dashboard.users', compact('reportsPerOwner'));
