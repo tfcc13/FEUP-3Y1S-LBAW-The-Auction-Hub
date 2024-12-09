@@ -334,7 +334,7 @@ class AuctionController extends Controller
     $text = $request->input('text');
     
     try {
-      $report = Report::create([
+      Report::create([
         'user_id' => $userId,
         'auction_id' => $auctionId,
         'description' => $text ? $text : 'User requested to ban another user.',
@@ -348,7 +348,6 @@ class AuctionController extends Controller
         return redirect()->back()->with('error', 'You have already reported this auction.');
       }
 
-      // Handle other database errors
       return redirect()->back()->with('error', 'An unexpected error occurred. Please try again later.');
     }
   }

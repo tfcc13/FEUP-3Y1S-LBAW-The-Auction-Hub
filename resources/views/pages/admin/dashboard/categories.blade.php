@@ -2,6 +2,12 @@
 
 @section('Display')
 <!-- Main Content -->
+
+@if(session('error'))
+<div class="alert alert-danger text-red-500 bg-red-100 border border-red-400 rounded p-4">
+  {{ session('error') }}
+</div>
+@endif
 <div class="flex-1 p-8 bg-white">
   <h3 class="text-2xl font-semibold text-[rgb(19,93,59)]">Welcome to Your Dashboard</h3>
   <p class="mt-2 text-gray-600">Select an option from the menu to view details or perform actions.</p>
@@ -19,5 +25,13 @@
       @endforelse
     </ul>
   </div>
+  <x-toast.confirm
+    :buttonText="'Create Category'"
+    :route="'admin.createCategory'"
+    :method="'POST'"
+    :id="'createCategory' "
+    :modalTitle="'Creater new Category?'"
+    :modalMessage="'Are you sure you want to create a new Category? '"
+    :textFlag="true" />
 </div>
 @endsection

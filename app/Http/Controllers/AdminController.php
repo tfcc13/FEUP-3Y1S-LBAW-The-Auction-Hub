@@ -22,8 +22,9 @@ class AdminController extends Controller
   public function dashboardCategorie()
   {
     $categories = Category::all();
-    return view('pages.admin.dashboard.categorie', compact('categories'));
+    return view('pages.admin.dashboard.categories', compact('categories'));
   }
+
   public function deleteUser($userId)
   {
     $user = User::find($userId);
@@ -166,7 +167,20 @@ class AdminController extends Controller
     }
   }
 
-  public function createCategory(Request $request){
-
+  public function createCategory(Request $request)
+  {
+    $text = $request->input('text');
+    try {
+      $c = Category::create([
+        'name'=> $text ? $text : 'New Category',
+      ]);
+      return redirect()->back();
+    } catch (\Illuminate\Database\QueryException $e) {
+      if ($e->getCode() == '23505') {
+        return redirect()->back()->with('error', 'There allready exists a category with this name.');
+      }
+      // Handle other database errors
+      return redirect()->back()->with('error', 'An unexpected error occurred. Please try again later.');
+    }
   }
 }

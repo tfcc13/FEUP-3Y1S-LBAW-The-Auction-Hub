@@ -69,9 +69,10 @@ Route::get('/dashboard/bids', [UserController::class, 'showBids'])->name('user.d
 Route::prefix('admin')->group(function () {
     Route::middleware(['auth', 'admin'])->name('admin.')->group(function () {
         Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
-        Route::get('/dashboard/categorie', [AdminController::class, 'dashboardCategorie'])->name('dashboard.categorie');
+        Route::get('/dashboard/categories', [AdminController::class, 'dashboardCategorie'])->name('dashboard.categories');
         Route::delete('/delete/user/{id}', [AdminController::class, 'deleteUser'])->name('deleteUser');
         Route::put('/ban/user/{id}', [AdminController::class, 'banUser'])->name('banUser');
+        Route::post('/create/category', [AdminController::class, 'createCategory'])->name('createCategory');
         Route::put('/unban/user/{id}', [AdminController::class, 'unbanUser'])->name('unbanUser');
         Route::put('/promote/user/{id}', [AdminController::class, 'promoteUser'])->name('promoteUser');
         Route::get('search', [SearchController::class, 'searchView'])->name('search.view');

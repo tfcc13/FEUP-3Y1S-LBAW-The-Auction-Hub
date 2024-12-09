@@ -41,7 +41,7 @@
       :id="$auction->id"
       :modalTitle="'Report this auction?'"
       :modalMessage="'Are you sure you want to report the user?'"
-      :text="true"
+      :textFlag="true"
       :object="$auction" />
     @if(!$auctionImages->isEmpty())
     <div class="grid grid-cols-1 gap-6 justify-center items-center"> <!-- Use grid for fixed size and spacing -->

@@ -13,12 +13,12 @@
     <div class="bg-white p-6 rounded-lg shadow-lg w-96">
       <h2 class="text-lg font-bold text-gray-900 mb-4">{{ $modalTitle }}</h2>
       <p class="text-sm text-gray-600 mb-4">{{ $modalMessage }}</p>
-      <form action="{{ route($route, ['id' => $object->id]) }}" method="POST" class="w-full">
+      <form action="{{ $object ? route($route, ['id' => $object->id]) : route($route) }}" method="POST" class="w-full">
         @csrf
         @if (strtoupper($method) !== 'POST')
         @method($method)
         @endif
-        @if ($text)
+        @if ($textFlag)
         <div class="mb-4">
           <label for="text" class="block text-sm font-medium text-gray-700">Message</label>
           <textarea
