@@ -2,13 +2,27 @@
 
 @section('inner_content')
     <div class="flex flex-col space-y-6 w-full" id="financial-content">
-        <h3 class="text-2xl font-semibold text-gray-800">Your Auction Statistics</h3>
-        <form id="add-money-form">
+        <h3 class="text-2xl font-semibold text-gray-800">Your Finances</h3>
+
+        {{-- Current Balance --}}
+        <div class="flex flex-col sm:flex-row items-baseline space-x-8">
+            <span class="text-gray-600 text-lg font-medium">Current Balance: </span>
+            <span id="balance-display" class="text-gray-800 text-lg font-semibold">
+                ${{ number_format(auth()->user()->credit_balance, 2, '.', ' ') }}
+            </span>
+        </div>
+
+        {{-- Add Money Form --}}
+        <form id="add-money-form" class="flex flex-col space-y-4 w-min">
             @csrf
-            <input type="number" name="amount" placeholder="Enter amount" min="1" required>
-            <button type="submit">Add Money</button>
+            <input id="email" type="number" name="amount" min="1" placeholder="Enter amount" required autofocus
+                class="form-input">
+            <button type="submit" class="bg-[#135d3b] text-white rounded-lg py-2 active:scale-95 hover:bg-[#135d3b]/85 transition-all duration-150 ease-out">
+                Fund Account
+            </button>
         </form>
-        <p id="balance-info">Current Balance: ${{ auth()->user()->credit_balance }}</p>
+
+        {{-- Message --}}
         <p id="message"></p>
     </div>
 
@@ -68,7 +82,7 @@
             const form = e.target;
             const formData = new FormData(form);
             const messageElement = document.getElementById('message');
-            const balanceInfo = document.getElementById('balance-info');
+            const balanceDisplay = document.getElementById('balance-display');
 
             fetch('/user/add-money', {
                     method: 'POST',
@@ -84,7 +98,7 @@
                         messageElement.style.color = 'red';
                     } else {
                         showNotification(data.message);
-                        balanceInfo.textContent = `Current Balance: $${data.balance}`;
+                        balanceDisplay.textContent = `$${number_format(data.balance, 2, '.', ' ')}`;
                         form.reset();
                     }
                 })
@@ -94,5 +108,28 @@
                     console.error('Error:', error);
                 });
         });
+
+        // Helper function to format numbers like PHP's number_format
+        function number_format(number, decimals, dec_point, thousands_sep) {
+            number = (number + '').replace(/[^0-9+\-Ee.]/g, '');
+            var n = !isFinite(+number) ? 0 : +number,
+                prec = !isFinite(+decimals) ? 0 : Math.abs(decimals),
+                sep = (typeof thousands_sep === 'undefined') ? ' ' : thousands_sep,
+                dec = (typeof dec_point === 'undefined') ? '.' : dec_point,
+                s = '',
+                toFixedFix = function(n, prec) {
+                    var k = Math.pow(10, prec);
+                    return '' + Math.round(n * k) / k;
+                };
+            s = (prec ? toFixedFix(n, prec) : '' + Math.round(n)).split('.');
+            if (s[0].length > 3) {
+                s[0] = s[0].replace(/\B(?=(?:\d{3})+(?!\d))/g, sep);
+            }
+            if ((s[1] || '').length < prec) {
+                s[1] = s[1] || '';
+                s[1] += new Array(prec - s[1].length + 1).join('0');
+            }
+            return s.join(dec);
+        }
     </script>
 @endsection
