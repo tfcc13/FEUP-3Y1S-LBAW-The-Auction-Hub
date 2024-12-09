@@ -20,6 +20,17 @@ class AdminController extends Controller
     return view('pages.admin.dashboard.notification', compact('reports'));
   }
 
+  public function dashboardUsers()
+  {
+    $reportsPerOwner = Report::join('auction', 'report.auction_id', '=', 'auction.id')
+      ->join('users', 'users.id','=','auction.owner_id')
+      ->select('auction.owner_id', DB::raw('COUNT(*) as report_count'), 'users.name as name')
+      ->groupBy('auction.owner_id','users.name')
+      ->orderBy('report_count', 'DESC')
+      ->get();
+    return view('pages.admin.dashboard.users', compact('reportsPerOwner'));
+  }
+
   public function dashboardCategorie()
   {
     $categories = Category::all();
@@ -200,7 +211,7 @@ class AdminController extends Controller
 
       if ($auction) {
         DB::rollBack();
-        
+
         return redirect()->back()->with('error', 'This category cannot be deleted because there are associated auctions.');
       }
       $category->delete();
@@ -208,7 +219,6 @@ class AdminController extends Controller
       DB::commit();
       return redirect()->route('admin.dashboard')->with('success', 'Category deleted successfully.');
     } catch (\Exception $e) {
-
       DB::rollBack();
       return redirect()->back()->with('error', 'Failed to delete the Category. Please try again.');
     }

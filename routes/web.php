@@ -69,6 +69,7 @@ Route::get('/dashboard/bids', [UserController::class, 'showBids'])->name('user.d
 Route::prefix('admin')->group(function () {
     Route::middleware(['auth', 'admin'])->name('admin.')->group(function () {
         Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
+        Route::get('/dashboard/users', [AdminController::class, 'dashboardUsers'])->name('dashboard.users');
         Route::get('/dashboard/categories', [AdminController::class, 'dashboardCategorie'])->name('dashboard.categories');
         Route::delete('/delete/user/{id}', [AdminController::class, 'deleteUser'])->name('deleteUser');
         Route::delete('/delete/category/{id}', [AdminController::class, 'deleteCategory'])->name('deleteCategory');
