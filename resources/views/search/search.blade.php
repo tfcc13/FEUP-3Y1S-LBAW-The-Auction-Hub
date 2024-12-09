@@ -44,6 +44,11 @@
             <x-slide.slide-item :title="''" :currentBid="0" :imageUrl="''" :buttonAction="''" :endDate="''"
                 :searchResults="true" />
         </template>
+
+        <!-- Template for user card -->
+        <template id="user-card-template">
+            @include('search.user-card', ['name' => '', 'username' => ''])
+        </template>
     </main>
 
     <script>
@@ -155,16 +160,12 @@
 
                     container.appendChild(clone);
                 } else {
-                    const userCard = `<div class="bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden">
-                        <div class="p-6">
-                            <h2 class="text-2xl font-bold text-gray-800 mb-3">${item.name}</h2>
-                            <p class="text-gray-600 mb-4">Username: ${item.username}</p>
-                            <a href="/profile/${item.username}" class="inline-block px-4 py-2 text-white sm:text-base rounded-md bg-[#135d3b] hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                                View Profile
-                            </a>
-                        </div>
-                    </div>`;
-                    container.innerHTML += userCard;
+                    const userDiv = document.createElement('div');
+                    userDiv.innerHTML = `@include('search.user-card', [
+                        'name' => '${item.name}',
+                        'username' => '${item.username}',
+                    ])`;
+                    container.appendChild(userDiv.firstElementChild);
                 }
             });
         }
