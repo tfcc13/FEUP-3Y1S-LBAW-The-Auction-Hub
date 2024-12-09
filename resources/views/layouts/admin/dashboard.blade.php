@@ -30,6 +30,13 @@
         </a>
       </li>
       <li>
+        <a href="{{ route('admin.dashboard.categorie') }}"
+          class="block px-4 py-3 hover:bg-white hover:text-[rgb(19,93,59)] rounded transition 
+                              {{ request()->routeIs('admin.reports') ? 'bg-white text-[rgb(19,93,59)]' : '' }}">
+          🔠 Categories
+        </a>
+      </li>
+      <li>
         <a href="#"
           class="block px-4 py-3 hover:bg-white hover:text-[rgb(19,93,59)] rounded transition 
                               {{ request()->routeIs('admin.reports') ? 'bg-white text-[rgb(19,93,59)]' : '' }}">
@@ -48,7 +55,7 @@
 
   <!-- Main Content -->
   <div class="flex-1 p-8 bg-white">
-    @yield('Reports')
+    @yield('Display')
   </div>
 </div>
 @endsection

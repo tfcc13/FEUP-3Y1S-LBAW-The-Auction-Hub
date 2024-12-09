@@ -10,12 +10,9 @@
   <div class="mt-8">
     <h4 class="text-xl font-semibold text-gray-800">Your Reports</h4>
     <ul class="mt-4 space-y-2">
-      @forelse ($reports as $report)
+      @forelse ($categories as $category)
       <li class="p-4 border border-gray-200 rounded shadow-sm">
-        <p class="font-medium text-gray-700">Auction ID: {{ $report->auction_id }}</p>
-        <p class="text-sm text-gray-500">{{ $report->description }}</p>
-        <p class="text-xs text-gray-400">Status: {{ $report->state }}</p>
-        <p class="text-xs text-gray-400">Viewed: {{ $report->view_status ? 'Yes' : 'No' }}</p>
+        <p class="font-medium text-gray-700">Category Name: {{ $category->name }}</p>
       </li>
       @empty
       <li class="text-gray-500">You have no reports.</li>

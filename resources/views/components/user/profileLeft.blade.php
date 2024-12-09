@@ -62,7 +62,7 @@
   </div>
 </div>
 
-@if (Auth::user()->is_admin)
+@if (Auth::check() && Auth::user()->is_admin)
 <x-toast.confirm
   :buttonText="'Delete User'"
   :route="'admin.deleteUser'"
@@ -78,7 +78,7 @@
   :method="'PUT'"
   :id="'ban' .$user->id"
   :modalTitle="'Ban this user?'"
-  :modalMessage="'Are you sure you want to delete this? '"
+  :modalMessage="'Are you sure you want to ban this user, this will delete all there auction! '"
   :object="$user" />
 <x-toast.confirm
   :buttonText="'Promote User'"
@@ -87,6 +87,15 @@
   :id="'promote'.$user->id"
   :modalTitle="'Promote this user?'"
   :modalMessage="'Are you sure you want to delete this? This action is irreversible.'"
+  :object="$user" />
+@else 
+<x-toast.confirm
+  :buttonText="'Unban User'"
+  :route="'admin.unbanUser'"
+  :method="'PUT'"
+  :id="'unban' .$user->id"
+  :modalTitle="'Unban this user?'"
+  :modalMessage="'Are you sure you want to unban the user? '"
   :object="$user" />
 @endif
 @endif
