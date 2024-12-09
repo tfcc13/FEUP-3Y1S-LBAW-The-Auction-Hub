@@ -1,32 +1,40 @@
 <div class="flex flex-col space-y-6 w-full p-4 sm:p-6">
-    <!-- Top Row: Profile Picture, Details, and Rating -->
-    <div class="flex flex-col sm:flex-row sm:space-x-8 items-start">
+    <div
+        class="grid grid-cols-1 sm:grid-cols-2 items-center justify-items-center sm:justify-items-start space-y-8 sm:space-y-0">
         <!-- User Profile Picture -->
-        <div class="w-48 h-48 flex-shrink-0 mb-4 sm:mb-0">
+        <div class="w-48 h-48 flex-shrink-0 items-center justify-center">
             <x-user.image class="w-full h-full object-cover rounded-full" />
         </div>
 
         <!-- User Details and Rating -->
-        <div class="flex-grow">
-            <!-- User Details -->
-            <div class="text-md font-bold text-gray-900 mb-2 sm:text-xl">
-                <span class="mr-2">Name:</span>
-                <span class="break-words">{{ auth()->user()->name }}</span>
+        <div class="flex flex-col w-full sm:w-80 space-y-4">
+            <!-- Name -->
+            <div class="flex items-baseline justify-between">
+                <span class="text-gray-600 text-lg font-medium">Name: </span>
+                <span class="text-gray-800 text-lg font-semibold">
+                    {{ auth()->user()->name }}
+                </span>
             </div>
 
-            <div class="text-md text-gray-500 font-bold mb-2 sm:text-xl">
-                <span class="mr-2">Username:</span>
-                <span class="break-words">{{ auth()->user()->username }}</span>
+            <!-- Username -->
+            <div class="flex items-baseline justify-between">
+                <span class="text-gray-600 text-lg font-medium">Username: </span>
+                <span class="text-gray-800 text-lg font-semibold">
+                    {{ auth()->user()->username }}
+                </span>
             </div>
 
-            <div class="text-md text-gray-500 mb-4 sm:text-xl">
-                <span class="mr-2 font-bold">Email:</span>
-                <span class="break-words">{{ auth()->user()->email }}</span>
+            <!-- Email -->
+            <div class="flex items-baseline justify-between">
+                <span class="text-gray-600 text-lg font-medium">Email: </span>
+                <span class="text-gray-800 text-lg font-semibold">
+                    {{ auth()->user()->email }}
+                </span>
             </div>
 
             <!-- User Rating -->
-            <div class="flex items-center text-gray-900 mb-4 sm:text-xl">
-                <span class="mr-2 font-bold">Rating:</span>
+            <div class="flex items-baseline justify-between">
+                <span class="text-gray-600 text-lg font-medium">Rating: </span>
                 <div class="flex items-center">
                     @php
                         $rating = auth()->user()->rating ?? 0;
@@ -66,10 +74,10 @@
     <!-- Description Section -->
     <div class="border-t pt-6">
         <div class="flex flex-col space-y-4">
-            <div class="flex justify-between items-center">
+            <div class="grid grid-cols-1 sm:grid-cols-2 items-center justify-items-start space-y-2 sm:space-y-0">
                 <span class="text-xl font-semibold text-gray-900">Description</span>
                 <button
-                    class="px-4 py-2 rounded-md text-white border border-gray-300 bg-[#135d3b] hover:bg-[#0d4429] focus:ring-2 focus:ring-gray-300 transition-colors"
+                    class="w-min sm:w-auto px-4 py-2 rounded-md text-white border border-gray-300 bg-[#135d3b] hover:bg-[#135d3b]/85 focus:ring-2 focus:ring-gray-300 transition-colors text-nowrap"
                     data-modal-toggle="edit-description-modal">
                     Change Description
                 </button>
@@ -100,7 +108,7 @@
                             Cancel
                         </button>
                         <button type="submit"
-                            class="px-6 py-2 rounded-md text-white border border-gray-300 bg-[#135d3b] hover:bg-[#0d4429] focus:ring-2 focus:ring-gray-300 transition-colors">
+                            class="px-6 py-2 rounded-md text-white border border-gray-300 bg-[#135d3b] hover:bg-[#135d3b]/85 focus:ring-2 focus:ring-gray-300 transition-colors">
                             Save Changes
                         </button>
                     </div>
