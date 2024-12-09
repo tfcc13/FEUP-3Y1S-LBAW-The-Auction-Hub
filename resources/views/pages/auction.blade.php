@@ -15,28 +15,45 @@
         </div>
     @endif
 
-    <main class="flex flex-col sm:flex-row bg-gray-100 items-start p-6">
+    <main class="flex  bg-gray-100 items-start p-6">
         <div class="flex flex-col w-2/3 text-center space-y-4">
             <h1 class="text-4xl font-bold text-gray-800">{{ $auction->title }}</h1>
             <p class="text-gray-600 text-xl font-medium">{{ $auction->description }}</p>
 
             <!-- Auction Images Section -->
-            <div class="auction-images my-12 py-8">
+            <div class="auction-images py-4">
                 @php
                     $auctionImages = $auction->images;
                 @endphp
 
-                @if (!$auctionImages->isEmpty())
-                    <div class="grid grid-cols-1 gap-6 justify-center items-center">
-                        <!-- Use grid for fixed size and spacing -->
-                        @foreach ($auctionImages as $auctionImage)
+                @if (!empty($auctionImages))
+                    <div class="flex flex-col gap-6 justify-center items-center">
+                        @foreach ($auctionImages as $index => $auctionImage)
                             @if ($auctionImage->path)
                                 @php
                                     $image = $auction->auctionImage($auctionImage->path);
                                 @endphp
-                                <img src="{{ $image }}" alt="{{ $auction->title }}"
-                                    class="w-[400px] h-[300px] object-cover rounded-lg shadow-md mx-auto">
-                                <!-- Fixed size with space between images -->
+                                @if ($index % 3 == 0)
+                                    <div class="w-full flex justify-center">
+                                        <img src="{{ $image }}" alt="Auction item: {{ $auction->title }}"
+                                            class="w-[40rem] aspect-[4/3] object-cover rounded-xl select-none"
+                                            draggable="false" onload="adjustImageFit(this)" loading="lazy">
+                                    </div>
+                                @elseif ($index % 3 == 1)
+                                    <div class="w-full flex justify-center gap-4">
+                                        <img src="{{ $image }}" alt="Auction item: {{ $auction->title }}"
+                                            class="w-[30rem] aspect-[4/3] object-cover rounded-xl select-none"
+                                            draggable="false" onload="adjustImageFit(this)" loading="lazy">
+                                        @if ($index + 1 < count($auctionImages) && $auctionImages[$index + 1] && $auctionImages[$index + 1]->path)
+                                            @php
+                                                $nextImage = $auction->auctionImage($auctionImages[$index + 1]->path);
+                                            @endphp
+                                            <img src="{{ $nextImage }}" alt="Auction item: {{ $auction->title }}"
+                                                class="w-[30rem] aspect-[4/3] object-cover rounded-xl select-none"
+                                                draggable="false" onload="adjustImageFit(this)" loading="lazy">
+                                        @endif
+                                    </div>
+                                @endif
                             @endif
                         @endforeach
                     </div>
@@ -62,3 +79,13 @@
         </div>
     </main>
 @endsection
+
+<script>
+    function adjustImageFit(img) {
+        if (img.naturalHeight > img.naturalWidth) {
+            img.style.objectFit = 'scale-down';
+        } else {
+            img.style.objectFit = 'cover';
+        }
+    }
+</script>
