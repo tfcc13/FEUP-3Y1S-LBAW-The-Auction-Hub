@@ -71,6 +71,7 @@ Route::prefix('admin')->group(function () {
         Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
         Route::get('/dashboard/categories', [AdminController::class, 'dashboardCategorie'])->name('dashboard.categories');
         Route::delete('/delete/user/{id}', [AdminController::class, 'deleteUser'])->name('deleteUser');
+        Route::delete('/delete/category/{id}', [AdminController::class, 'deleteCategory'])->name('deleteCategory');
         Route::put('/ban/user/{id}', [AdminController::class, 'banUser'])->name('banUser');
         Route::post('/create/category', [AdminController::class, 'createCategory'])->name('createCategory');
         Route::put('/unban/user/{id}', [AdminController::class, 'unbanUser'])->name('unbanUser');

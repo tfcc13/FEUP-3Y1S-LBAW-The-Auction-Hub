@@ -19,6 +19,15 @@
       @forelse ($categories as $category)
       <li class="p-4 border border-gray-200 rounded shadow-sm">
         <p class="font-medium text-gray-700">Category Name: {{ $category->name }}</p>
+        <x-toast.confirm
+          :buttonText="'Delete Category'"
+          :route="'admin.deleteCategory'"
+          :method="'DELETE'"
+          :id="'deleteCategory'. $category->id "
+          :modalTitle="'Delete new Category?'"
+          :modalMessage="'Are you sure you want to delete a Category? '"
+          :object="$category"
+          />
       </li>
       @empty
       <li class="text-gray-500">You have no reports.</li>
