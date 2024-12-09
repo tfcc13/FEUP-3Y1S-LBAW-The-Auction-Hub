@@ -15,10 +15,10 @@
         </div>
     @endif
 
-    <main class="flex flex-col sm:flex-row bg-gray-100 items-start p-6">
-        <div class="flex flex-col w-2/3 text-center space-y-4">
-            <h1 class="text-4xl font-bold text-gray-800">{{ $auction->title }}</h1>
-            <p class="text-gray-600 text-xl font-medium">{{ $auction->description }}</p>
+    <main class="flex flex-col sm:flex-row bg-gray-100 items-center sm:items-start p-6 min-h-[calc(100vh-5rem)]">
+        <div class="flex flex-col w-full sm:w-2/3 text-center space-y-4 ">
+            <h1 class="text-2xl sm:text-4xl font-bold text-gray-800">{{ $auction->title }}</h1>
+            <p class="text-gray-600 text-base sm:text-xl font-medium">{{ $auction->description }}</p>
 
             <!-- Auction Images Section -->
             <div class="auction-images py-4">
@@ -62,7 +62,7 @@
         </div>
 
         <!-- Auction Details and Bid Info -->
-        <div class="flex flex-col w-1/3 space-y-8">
+        <div class="flex flex-col sm:w-1/3 space-y-8">
             <!-- Auction Details (Left Side) -->
             <x-auction.bid_card :auction="$auction" :owner="Auth::check() && Auth::id() === $auction->owner_id" />
 
