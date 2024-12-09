@@ -4,10 +4,10 @@
     <h2 class="text-4xl font-bold text-gray-800">Featured Auctions</h2>
     <section class="slider-container" aria-label="Auction items slider">
         <main class="inner-slider" role="region" aria-roledescription="slider">
-      {{--            @foreach ($items as $item)
+            @foreach ($items as $item)
                 <x-slide.slide-item :title="$item['title']" :currentBid="$item['current_bid']" :imageUrl="$item['imageUrl']" :buttonAction="$item['buttonAction']" />
             @endforeach
-        </main>--}}
+        </main>
     </section>
 
 </div>
