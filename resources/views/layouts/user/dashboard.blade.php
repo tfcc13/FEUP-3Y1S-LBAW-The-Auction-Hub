@@ -1,40 +1,54 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="flex h-screen">
-    <!-- Sidebar -->
-    <div class="w-64 bg-[rgb(19,93,59)] text-white shadow-lg flex-shrink-0 overflow-y-auto">
-        <div class="p-6">
-            <h4 class="text-lg font-semibold border-b border-white/50 pb-2">User Dashboard</h4>
+    <div class="flex flex-col h-screen">
+        <!-- Top Navigation Bar -->
+        <div class="bg-white border-b">
+            <nav class="container mx-auto px-6">
+                <ul class="flex w-full list-none">
+                    <li class="w-full">
+                        <a href="{{ route('dashboard') }}"
+                            class="tab-link {{ request()->routeIs('dashboard') ? 'text-[#135d3b]' : 'text-gray-800' }} ">
+                            <span class="material-symbols-outlined">home</span> Dashboard
+                            @if (request()->routeIs('dashboard'))
+                                <div class="absolute bottom-0 left-0 w-full h-1 bg-[#135d3b]"></div>
+                            @endif
+                        </a>
+                    </li>
+                    <li class="w-full">
+                        <a href="{{ route('user.dash.stats') }}"
+                            class="tab-link {{ request()->routeIs('user.dash.stats') ? 'text-[#135d3b]' : 'text-gray-800' }}">
+                            <span class="material-symbols-outlined">equalizer</span> Statistics
+                            @if (request()->routeIs('user.dash.stats'))
+                                <div class="absolute bottom-0 left-0 w-full h-1 bg-[#135d3b]"></div>
+                            @endif
+                        </a>
+                    </li>
+                    <li class="w-full">
+                        <a href="{{ route('user.dash.financial') }}"
+                            class="tab-link {{ request()->routeIs('user.dash.financial') ? 'text-[#135d3b]' : 'text-gray-800' }}">
+                            <span class="material-symbols-outlined">payments</span> Financial
+                            @if (request()->routeIs('user.dash.financial'))
+                                <div class="absolute bottom-0 left-0 w-full h-1 bg-[#135d3b]"></div>
+                            @endif
+                        </a>
+                    </li>
+                    <li class="w-full">
+                        <a href="{{ route('user.dash.bids') }}"
+                            class="tab-link {{ request()->routeIs('user.dash.bids') ? 'text-[#135d3b]' : 'text-gray-800' }}">
+                            <span class="material-symbols-outlined">gavel</span> Bids
+                            @if (request()->routeIs('user.dash.bids'))
+                                <div class="absolute bottom-0 left-0 w-full h-1 bg-[#135d3b]"></div>
+                            @endif
+                        </a>
+                    </li>
+                </ul>
+            </nav>
         </div>
-        <ul class="mt-6 space-y-2">
-            <li>
-                <a href="{{ route('user.dash.stats') }}"
-                   class="block px-4 py-3 hover:bg-white hover:text-[rgb(19,93,59)] rounded transition 
-                              {{ request()->routeIs('user.dash.stats') ? 'bg-white text-[rgb(19,93,59)]' : '' }}">
-                    📊 Statistics
-                </a>
-            </li>
-            <li>
-                <a href="{{ route('user.dash.financial') }}"
-                   class="block px-4 py-3 hover:bg-white hover:text-[rgb(19,93,59)] rounded transition 
-                              {{ request()->routeIs('user.dash.financial') ? 'bg-white text-[rgb(19,93,59)]' : '' }}">
-                    💰 Financial
-                </a>
-            </li>
-            <li>
-                <a href="{{ route('user.dash.bids') }}"
-                   class="block px-4 py-3 hover:bg-white hover:text-[rgb(19,93,59)] rounded transition 
-                              {{ request()->routeIs('user.dash.bids') ? 'bg-white text-[rgb(19,93,59)]' : '' }}">
-                    🔨 Bids
-                </a>
-            </li>
-        </ul>
+
+        <!-- Main Content -->
+        <div class="flex-1 p-8 bg-white">
+            @yield('inner_content')
+        </div>
     </div>
-    
-    <!-- Main Content -->
-    <div class="flex-1 p-8 bg-white">
-        @yield('inner_content')
-    </div>
-</div>
 @endsection
