@@ -38,7 +38,10 @@
 
   <!-- Results Container -->
   <div id="results-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"></div>
-
+  <!-- Template for user card -->
+  <template id="user-card-template">
+    @include('search.user-card', ['name' => '', 'username' => ''])
+  </template>
   <!-- Template for auction item -->
   <template id="auction-item-template">
     <x-slide.slide-item :title="''" :currentBid="0" :imageUrl="''" :buttonAction="''" :endDate="''"
@@ -144,9 +147,16 @@
           component.querySelector('img').src = imageUrl;
           component.querySelector('img').alt = `Auction item: ${item.title}`;
 
-          // Update button action
-          component.querySelector('button').onclick = () => window.location.href =
-            `/auctions/auction/${item.id}`;
+
+          // Replace button with an anchor tag
+          const button = component.querySelector('button');
+          const link = document.createElement('a');
+          link.href = `/auctions/auction/${item.id}`;
+          link.className = button.className; // Copy all the button's classes
+          link.textContent = 'Bid Now';
+          link.setAttribute('role', 'button');
+          button.replaceWith(link);
+
         }
 
         container.appendChild(clone);

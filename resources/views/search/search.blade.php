@@ -59,7 +59,6 @@
                 fetchResults('auctions', categoryId); // Pass the selected category ID
             });
         });
-
         document.getElementById('toggle-auctions').addEventListener('click', () => {
             setActiveButton('toggle-auctions');
 
