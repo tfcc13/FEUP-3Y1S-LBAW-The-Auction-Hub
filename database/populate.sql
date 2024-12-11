@@ -54,7 +54,7 @@ INSERT INTO category (name) VALUES
 
 -- Populate Auctions
 INSERT INTO auction (title, description, start_price, current_bid, start_date, end_date, state, owner_id, category_id) VALUES
-('Vintage Car Auction', 'Auction for a vintage car', 5000, NULL, '2024-10-30 10:00:00', '2024-12-11 20:50:10', 'Ongoing', 1,1),
+('Vintage Car Auction', 'Auction for a vintage car', 5000, NULL, '2024-10-30 10:00:00', '2024-12-11 21:50:10', 'Ongoing', 1,1),
 ('Antique Painting Auction', 'Rare antique painting', 2000, NULL, '2024-10-15 12:00:00', NULL, 'Resumed', 2,1),
 ('Rare Comic Book Collection', 'Collection of rare comic books', 3000, NULL, '2024-10-20 09:00:00', NULL, 'Resumed', 4,1),
 ('Diamond Necklace', 'Exquisite diamond necklace', 10000, NULL, '2024-10-25 14:00:00', NULL, 'Resumed', 5,1),
@@ -73,7 +73,7 @@ INSERT INTO auction (title, description, start_price, current_bid, start_date, e
 ('Rare Vinyl Records', 'Collection of rare and first press vinyl records', 5000, NULL, '2024-12-30 11:00:00', NULL, 'Ongoing', 17,1),
 ('Antique Tea Set', 'Complete antique porcelain tea set', 1800, NULL, '2025-01-05 10:00:00', NULL, 'Ongoing', 18,1),
 ('Vintage Typewriter', 'Fully functional vintage typewriter', 1000, NULL, '2025-01-10 15:00:00', NULL, 'Ongoing', 19,1),
-('Antique Map Collection', 'Collection of rare antique maps', 9000, NULL, '2025-01-15 14:00:00', NULL, 'Ongoing', 20,1);
+('Antique Map Collection', 'Collection of rare antique maps', 9000, NULL, '2024-12-10 14:00:00', '2024-12-12 21:00:00' , 'Ongoing', 20,1);
 
 -- Populate user image
 
