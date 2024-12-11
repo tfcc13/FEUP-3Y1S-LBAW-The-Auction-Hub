@@ -10,12 +10,16 @@
   <div class="mt-8">
     <h4 class="text-xl font-semibold text-gray-800">Your Reports</h4>
     <ul class="mt-4 space-y-2">
-      @forelse ($reports as $report)
+      @forelse ($reportsPerOwner as $report)
       <li class="p-4 border border-gray-200 rounded shadow-sm">
-        <p class="font-medium text-gray-700">Auction ID: {{ $report->auction_id }}</p>
-        <p class="text-sm text-gray-500">{{ $report->description }}</p>
-        <p class="text-xs text-gray-400">Status: {{ $report->state }}</p>
-        <p class="text-xs text-gray-400">Viewed: {{ $report->view_status ? 'Yes' : 'No' }}</p>
+        <p class="font-medium text-gray-700">Auction ID: {{ $report->owner_id }}</p>
+        <p class="text-sm text-gray-500">{{ $report->report_count }}</p>
+        <p class="text-sm text-gray-500">{{ $report->name }}</p>
+        <p class="text-sm text-gray-500">{{ $report->username }}</p>
+        <a href="{{ route('user.profile.other', ['username' => $report->username]) }}"
+          class="inline-block px-4 py-2 mt-2 bg-[rgb(19,93,59)] text-white rounded hover:bg-[rgb(19,93,59)]">
+          View Profile
+        </a>
       </li>
       @empty
       <li class="text-gray-500">You have no reports.</li>

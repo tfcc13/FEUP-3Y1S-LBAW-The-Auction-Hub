@@ -49,6 +49,11 @@ class Auction extends Model
     return $this->belongsTo(User::class, 'owner_id');
   }
 
+  public function fetchUser()
+  {
+    return $this->user()->get();
+  }
+
   public function category()
   {
     return $this->belongsTo(Category::class, 'category_id');

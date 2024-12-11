@@ -154,7 +154,4 @@ class UserController extends Controller
     return view('pages.auctions.follow', compact('followed'));
   }
 
-  public function banUserRequest()
-  {
-  }
 }

@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuctionController;
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\UserController;
 
 /*
@@ -22,3 +23,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::get('/auctions/search', [AuctionController::class, 'search']);
 Route::get('/users/search', [UserController::class, 'search']);
+Route::get('/admin/search', [AdminController::class, 'search']);
