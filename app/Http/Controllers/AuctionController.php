@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Auction;
+use App\Models\User;
 use App\Models\Bid;
 use App\Models\Category;
 use App\Models\Report;
@@ -104,8 +105,22 @@ class AuctionController extends Controller
       return redirect()->back()->withErrors(['amount' => 'You already own the highest bid.']);
     }
 
+    $currentUser = Auth::user();
+    if ($currentUser->credit_balance < $validatedData['amount']) {
+        return redirect()->back()->withErrors(['amount' => 'Insufficient balance to place this bid.']);
+    }
+
+
     try {
       DB::beginTransaction();
+
+      if($currentHighestBid) {
+        $previous_bidder = User::findOrFail($currentHighestBid->user_id);
+        if($previous_bidder) {
+          $previous_bidder->credit_balance += $currentHighestBid->amount;
+          $previous_bidder->save();
+        }
+      }
 
       $bid = new Bid([
         'auction_id' => $auction->id,
@@ -114,6 +129,9 @@ class AuctionController extends Controller
         'bid_date' => now(),
       ]);
       $bid->save();
+
+      $currentUser->credit_balance -= $validatedData['amount'];
+      $currentUser->save();
 
       // Update the auction's current bid
       $auction->current_bid = $validatedData['amount'];
@@ -326,6 +344,12 @@ class AuctionController extends Controller
       });
 
     return view('search.upcoming', compact('auctions', 'categories'));
+  }
+
+  public function getAuctionState($id)
+  {
+      $auction = Auction::findOrFail($id);
+      return response()->json(['state' => $auction->state]);
   }
 
   public function report(Request $request, $auctionId)

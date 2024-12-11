@@ -15,7 +15,7 @@
     <div class="flex items-baseline justify-between">
         <span class="text-gray-600 text-xl">Current Bid: </span>
         <span class="text-gray-800 text-xl font-bold">
-            {{ $auction->bids->first() ? '$ ' . number_format($auction->bids->first()->amount, 2) : 'No bids yet' }}
+          {{ $auction->bids->count() > 0 ? '$ ' . number_format($auction->bids->max('amount'), 2) : 'No bids yet' }}
         </span>
     </div>
 

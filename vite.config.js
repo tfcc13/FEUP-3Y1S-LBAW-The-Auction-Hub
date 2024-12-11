@@ -8,6 +8,8 @@ export default defineConfig({
                 'resources/css/app.postcss',
                 'resources/js/app.js',
                 'resources/js/auction.js',
+                'resources/js/components/bid_card.js',
+                'resources/js/components/info_card.js',
             ],
             refresh: true,
         }),

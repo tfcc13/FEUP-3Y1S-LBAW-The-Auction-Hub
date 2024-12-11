@@ -1,5 +1,9 @@
 <div class="flex-1 flex-col bg-white shadow-md rounded p-6 space-y-6 max-w-[26rem] min-w-[22rem]">
     <div class="h-2 bg-[#135d3b] rounded-t-md -mt-6 -mx-6 mb-6"></div>
+        <div id="auction-data" 
+        data-auction-id="{{ $auction->id }}" 
+        data-auction-url="{{ route('auction_state.fetch', ['id' => $auction->id]) }}">
+        </div>
 
     <!-- Start Price -->
     <div class="flex items-baseline justify-between">
@@ -36,7 +40,7 @@
     <!-- State -->
     <div class="flex items-baseline justify-between">
         <span class="text-gray-600 text-lg">State: </span>
-        <span class="text-gray-800 text-lg font-semibold capitalize">
+        <span  id="auction-state" class="text-gray-800 text-lg font-semibold capitalize">
             {{ $auction->state }}
         </span>
     </div>

@@ -47,6 +47,7 @@ Route::prefix('auctions')->group(function () {
     Route::put('/auction/{id}', [AuctionController::class, 'update'])->name('auction.update');
     Route::delete('/auction/{id}/delete', [AuctionController::class, 'deleteAuction'])->name('auction.delete')->middleware('auth');
     Route::get('/search/upcoming', [AuctionController::class, 'upcomingAuctions'])->name('search.upcoming');
+    Route::get('/auction-state/{id}', [AuctionController::class, 'getAuctionState'])->name('auction_state.fetch');
     Route::post('/report/{id}', [AuctionController::class, 'report'])->name('auction.report');
 });
 
