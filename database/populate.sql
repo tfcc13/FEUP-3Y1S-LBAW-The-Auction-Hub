@@ -54,13 +54,13 @@ INSERT INTO category (name) VALUES
 
 -- Populate Auctions
 INSERT INTO auction (title, description, start_price, current_bid, start_date, end_date, state, owner_id, category_id) VALUES
-('Vintage Car Auction', 'Auction for a vintage car', 5000, NULL, '2024-10-30 10:00:00', '2024-12-09 13:31:00', 'Ongoing', 1,1),
+('Vintage Car Auction', 'Auction for a vintage car', 5000, NULL, '2024-10-30 10:00:00', '2024-12-11 20:50:10', 'Ongoing', 1,1),
 ('Antique Painting Auction', 'Rare antique painting', 2000, NULL, '2024-10-15 12:00:00', NULL, 'Resumed', 2,1),
 ('Rare Comic Book Collection', 'Collection of rare comic books', 3000, NULL, '2024-10-20 09:00:00', NULL, 'Resumed', 4,1),
 ('Diamond Necklace', 'Exquisite diamond necklace', 10000, NULL, '2024-10-25 14:00:00', NULL, 'Resumed', 5,1),
 ('Signed Football Jersey', 'Jersey signed by famous player', 1500, NULL, '2024-11-01 11:00:00', NULL, 'Resumed', 6,1),
 ('Antique Clock', 'Rare antique grandfather clock', 4000, NULL, '2024-11-05 13:00:00', NULL, 'Resumed', 7,1),
-('Vintage Camera', 'Classic film camera from the 1960s', 1200, NULL, '2024-11-10 10:00:00', NULL, 'Ongoing', 8,1),
+('Vintage Camera', 'Classic film camera from the 1960s', 1200, NULL, '2024-11-10 10:00:00', NULL, 'Resumed', 8,1),
 ('First Edition Book', 'Rare first edition of a classic novel', 2500, NULL, '2024-11-15 15:00:00', NULL, 'Ongoing', 9,1),
 ('Designer Handbag', 'Limited edition designer handbag', 3500, NULL, '2024-11-20 12:00:00', NULL, 'Ongoing', 10,1),
 ('Vintage Record Player', 'Fully restored vintage record player', 1800, NULL, '2024-11-25 14:00:00', NULL, 'Ongoing', 1,1),
@@ -119,7 +119,7 @@ INSERT INTO bid (amount, bid_date, auction_id, user_id) VALUES
 (10500, '2024-10-26 15:30:00', 4, 6),
 (1600, '2024-11-02 12:45:00', 5, 4),
 (4100, '2024-11-06 14:20:00', 6, 2),
-(1300, '2024-11-11 11:30:00', 7, 3),
+(1300, '2024-11-11 11:30:00', 7, 4),
 (2600, '2024-11-16 16:15:00', 8, 7),
 (3600, '2024-11-21 13:00:00', 9, 9),
 (1900, '2024-11-26 15:45:00', 10, 8),
@@ -132,7 +132,8 @@ INSERT INTO bid (amount, bid_date, auction_id, user_id) VALUES
 (5200, '2024-12-31 12:15:00', 17, 13),
 (1900, '2025-01-06 11:30:00', 18, 15),
 (1100, '2025-01-11 16:00:00', 19, 17),
-(9300, '2025-01-16 15:15:00', 20, 19);
+(9300, '2025-01-16 15:15:00', 20, 19),
+(5200, '2024-12-11 15:15:00', 1, 22);
 
 -- Populate Reports
 INSERT INTO report (description, view_status, state, user_id, auction_id) VALUES
@@ -155,10 +156,10 @@ INSERT INTO report (description, view_status, state, user_id, auction_id) VALUES
 
 -- Populate Auction Winners
 INSERT INTO auction_winner (auction_id, user_id, rating) VALUES
-(1, 2, 5), 
+--(1, 2, 5), 
 (3, 5, 4),
 (5, 4, 5),
-(7, 3, 4),
+(7, 4, 4),
 (9, 9, 5),
 (11, 12, 4);
 

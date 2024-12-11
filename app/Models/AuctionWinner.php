@@ -15,6 +15,8 @@ class AuctionWinner extends Model
     protected $table = 'auction_winner';
 
     protected $fillable = [
+        'auction_id',
+        'user_id',
         'rating',
     ];
 

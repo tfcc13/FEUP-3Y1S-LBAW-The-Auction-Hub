@@ -547,8 +547,8 @@ FOR EACH ROW
 EXECUTE FUNCTION prevent_owner_report();
 
 
--- TRIGGER11
-CREATE FUNCTION ensure_auction_winner() RETURNS TRIGGER AS $$
+-- TRIGGER11 da erro quando nao ha winner
+/* CREATE FUNCTION ensure_auction_winner() RETURNS TRIGGER AS $$
 BEGIN
     IF NEW.end_date <= CURRENT_TIMESTAMP THEN
         INSERT INTO auction_winner (auction_id, user_id)
@@ -565,7 +565,7 @@ CREATE TRIGGER ensure_auction_winner_trigger
 AFTER UPDATE ON auction
 FOR EACH ROW
 EXECUTE FUNCTION ensure_auction_winner();
-
+ */
 
 -- TRIGGER12
 CREATE FUNCTION ensure_age_for_registration() RETURNS TRIGGER AS $$

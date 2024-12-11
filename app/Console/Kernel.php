@@ -5,7 +5,10 @@ namespace App\Console;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use App\Models\Auction;
+use App\Models\AuctionWinner;
+use App\Models\Bid;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class Kernel extends ConsoleKernel
 {
@@ -34,6 +37,32 @@ class Kernel extends ConsoleKernel
         foreach ($auction_ids as $id) {
             DB::transaction(function () use ($id) {
                 Auction::where('id', $id)->update(['state' => 'Resumed']);
+                
+                $auction = Auction::find($id);
+                if ($auction) {
+                    Log::error("Auction found: ID $id");
+                    //return; // Skip if auction is not found
+                }
+                if(Bid::where('auction_id', $id)->exists()) {
+                    
+                    $highest_bid = Bid::where('auction_id', $id)->orderBy('amount', 'desc')->first(); 
+                    Log::error("Highest bid found: $highest_bid");
+                    AuctionWinner::create([
+                        'auction_id' => $id,
+                        'user_id' => $highest_bid->user_id,
+                        'rating' => null,
+                    ]);
+                    
+                    //$auction = Auction::findOrFail($id);
+                    $auction_owner = $auction->owner_id; 
+                    
+                    //dd($auction, $auction_owner);
+
+                    DB::table('users')->where('id', $auction_owner)->increment('credit_balance', $highest_bid->amount);
+
+
+                }
+
             });
         }
     })->everyMinute();    
