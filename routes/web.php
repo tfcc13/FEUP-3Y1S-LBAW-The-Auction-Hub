@@ -36,35 +36,34 @@ Route::controller(RegisterController::class)->group(function () {
     Route::post('/register', 'register');
 });
 
-// Auctions
-Route::prefix('auctions')->group(function () {
-    Route::get('/auction/{id}', [AuctionController::class, 'showAuction'])->name('auctions.show');
-    Route::post('/auction/{id}/bid', [AuctionController::class, 'bidAuction'])->name('auction.bid');
-    Route::get('/create_auction', [AuctionController::class, 'createAuction'])->name('auctions.create_auction');
-    Route::post('/submit_auction', [AuctionController::class, 'submitAuction'])->name('auctions.submit_auction');
-    Route::post('/auction/{id}/cancel_auction', [AuctionController::class, 'cancelAuction'])->name('auction.cancel_auction');
-    Route::get('/auction/{id}/edit', [AuctionController::class, 'editAuction'])->name('auction.edit_auction');
-    Route::put('/auction/{id}', [AuctionController::class, 'update'])->name('auction.update');
-    Route::delete('/auction/{id}/delete', [AuctionController::class, 'deleteAuction'])->name('auction.delete')->middleware('auth');
-    Route::get('/search/upcoming', [AuctionController::class, 'upcomingAuctions'])->name('search.upcoming');
-    Route::get('/auction-state/{id}', [AuctionController::class, 'getAuctionState'])->name('auction_state.fetch');
-    Route::post('/report/{id}', [AuctionController::class, 'report'])->name('auction.report');
+Route::middleware(['auth', 'not.banned'])->group(function () {
+    // User
+    Route::get('/dashboard', function () {
+        return view('pages.user.dashboard.dashboard');
+    })->name('dashboard');
+    Route::put('/user/description', [UserController::class, 'updateDescription'])->name('user.updateDescription');
+    Route::get('/profile/{username}', [UserController::class, 'showProfile'])->name('user.profile.other');
+    Route::get('/dashboard/stats', [UserController::class, 'showStatistics'])->name('user.dash.stats');
+    Route::get('/dashboard/financial', [UserController::class, 'showFinancial'])->name('user.dash.financial');
+    Route::post('/user/add-money', [UserController::class, 'addMoney'])->name('user.add-money');
+    Route::get('/user/follow', [UserController::class, 'followAuctions'])->name('follow.auctions');
+    Route::get('/dashboard/bids', [UserController::class, 'showBids'])->name('user.dash.bids');
+    // Auctions
+    Route::prefix('auctions')->group(function () {
+        Route::get('/auction/{id}', [AuctionController::class, 'showAuction'])->name('auctions.show');
+        Route::post('/auction/{id}/bid', [AuctionController::class, 'bidAuction'])->name('auction.bid');
+        Route::get('/create_auction', [AuctionController::class, 'createAuction'])->name('auctions.create_auction');
+        Route::post('/submit_auction', [AuctionController::class, 'submitAuction'])->name('auctions.submit_auction');
+        Route::post('/auction/{id}/cancel_auction', [AuctionController::class, 'cancelAuction'])->name('auction.cancel_auction');
+        Route::get('/auction/{id}/edit', [AuctionController::class, 'editAuction'])->name('auction.edit_auction');
+        Route::put('/auction/{id}', [AuctionController::class, 'update'])->name('auction.update');
+        Route::delete('/auction/{id}/delete', [AuctionController::class, 'deleteAuction'])->name('auction.delete')->middleware('auth');
+        Route::get('/search/upcoming', [AuctionController::class, 'upcomingAuctions'])->name('search.upcoming');
+        Route::get('/auction-state/{id}', [AuctionController::class, 'getAuctionState'])->name('auction_state.fetch');
+        Route::post('/report/{id}', [AuctionController::class, 'report'])->name('auction.report');
+    });
+    Route::get('search', [SearchController::class, 'searchView'])->name('search.view');
 });
-
-Route::get('search', [SearchController::class, 'searchView'])->name('search.view');
-
-// User
-Route::get('/dashboard', function () {
-  return view('pages.user.dashboard.dashboard');
-})->name('dashboard');
-
-Route::put('/user/description', [UserController::class, 'updateDescription'])->name('user.updateDescription');
-Route::get('/profile/{username}', [UserController::class, 'showProfile'])->name('user.profile.other');
-Route::get('/dashboard/stats', [UserController::class, 'showStatistics'])->name('user.dash.stats');
-Route::get('/dashboard/financial', [UserController::class, 'showFinancial'])->name('user.dash.financial');
-Route::post('/user/add-money', [UserController::class, 'addMoney'])->name('user.add-money');
-Route::get('/user/follow', [UserController::class, 'followAuctions'])->name('follow.auctions');
-Route::get('/dashboard/bids', [UserController::class, 'showBids'])->name('user.dash.bids');
 
 // need to add admin middleware
 Route::prefix('admin')->group(function () {
