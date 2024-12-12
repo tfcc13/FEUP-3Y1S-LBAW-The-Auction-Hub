@@ -179,48 +179,4 @@ class AdminController extends Controller
     }
   }
 
-  public function createCategory(Request $request)
-  {
-    $text = $request->input('text');
-    try {
-      $c = Category::create([
-        'name' => $text ? $text : 'New Category',
-      ]);
-      return redirect()->back();
-    } catch (\Illuminate\Database\QueryException $e) {
-      if ($e->getCode() == '23505') {
-        return redirect()->back()->with('error', 'There allready exists a category with this name.');
-      }
-      // Handle other database errors
-      return redirect()->back()->with('error', 'An unexpected error occurred. Please try again later.');
-    }
-  }
-
-  public function deleteCategory($categoryId)
-  {
-    $category = Category::find($categoryId);
-
-    if (!$category) {
-      return redirect()->back()->with('error', 'Category not found.');
-    }
-
-    try {
-      DB::beginTransaction();
-
-      $auction = Auction::where('category_id', $category->id)->first();
-
-      if ($auction) {
-        DB::rollBack();
-
-        return redirect()->back()->with('error', 'This category cannot be deleted because there are associated auctions.');
-      }
-      $category->delete();
-
-      DB::commit();
-      return redirect()->route('admin.dashboard')->with('success', 'Category deleted successfully.');
-    } catch (\Exception $e) {
-      DB::rollBack();
-      return redirect()->back()->with('error', 'Failed to delete the Category. Please try again.');
-    }
-  }
 }

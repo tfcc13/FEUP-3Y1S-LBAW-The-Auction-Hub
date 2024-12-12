@@ -21,7 +21,7 @@
         <p class="font-medium text-gray-700">Category Name: {{ $category->name }}</p>
         <x-toast.confirm
           :buttonText="'Delete Category'"
-          :route="'admin.deleteCategory'"
+          :route="'category.destroy'"
           :method="'DELETE'"
           :id="'deleteCategory'. $category->id "
           :modalTitle="'Delete new Category?'"
@@ -36,7 +36,7 @@
   </div>
   <x-toast.confirm
     :buttonText="'Create Category'"
-    :route="'admin.createCategory'"
+    :route="'category.store'"
     :method="'POST'"
     :id="'createCategory' "
     :modalTitle="'Creater new Category?'"
