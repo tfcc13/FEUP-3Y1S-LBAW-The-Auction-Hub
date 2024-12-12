@@ -15,6 +15,7 @@
         {{-- Add Money Form --}}
         <form id="add-money-form" class="flex flex-col space-y-4 w-min">
             @csrf
+            <input type="hidden" id="user-id" value="{{ auth()->user()->id }}">
             <input id="email" type="number" name="amount" min="1" placeholder="Enter amount" required autofocus
                 class="form-input">
             <button type="submit" class="bg-[#135d3b] text-white rounded-lg py-2 active:scale-95 hover:bg-[#135d3b]/85 transition-all duration-150 ease-out">
@@ -83,8 +84,9 @@
             const formData = new FormData(form);
             const messageElement = document.getElementById('message');
             const balanceDisplay = document.getElementById('balance-display');
+            const userId = document.getElementById('user-id').value;
 
-            fetch('/user/add-money', {
+            fetch('/user/' + userId + '/deposit-money', {
                     method: 'POST',
                     headers: {
                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
@@ -98,7 +100,7 @@
                         messageElement.style.color = 'red';
                     } else {
                         showNotification(data.message);
-                        balanceDisplay.textContent = `$${number_format(data.balance, 2, '.', ' ')}`;
+                        //balanceDisplay.textContent = `$${number_format(data.balance, 2, '.', ' ')}`;
                         form.reset();
                     }
                 })

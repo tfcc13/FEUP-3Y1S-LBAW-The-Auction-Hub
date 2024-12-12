@@ -6,6 +6,7 @@ use App\Models\Auction;
 use App\Models\Category;
 use App\Models\Report;
 use App\Models\User;
+use App\Models\MoneyManager;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -222,5 +223,10 @@ class AdminController extends Controller
       DB::rollBack();
       return redirect()->back()->with('error', 'Failed to delete the Category. Please try again.');
     }
+  }
+
+  public function showTransactions() {
+    $transactions = MoneyManager::all()->sortByDesc('operation_date');
+    return view('pages.admin.dashboard.transactions', compact('transactions'));
   }
 }
