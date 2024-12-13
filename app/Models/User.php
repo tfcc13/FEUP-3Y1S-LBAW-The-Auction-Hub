@@ -62,12 +62,6 @@ class User extends Authenticatable
         return $this->notifications()->get();
     }
 
-
-    public function followsAuction()
-    {
-        return $this->belongsToMany(Auction::class, 'follows', 'user_id', 'auction_id');
-    }
-
     public function ownAuction()
     {
         return $this->hasMany(Auction::class, 'owner_id')->orderBy('state', 'asc');
@@ -113,7 +107,7 @@ class User extends Authenticatable
         return $query;
     }
 
-    public function follows()
+    public function followsAuction()
     {
         return $this->belongsToMany(Auction::class, 'follows_auction', 'user_id', 'auction_id');
     }

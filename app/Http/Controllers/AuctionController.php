@@ -26,7 +26,7 @@ class AuctionController extends Controller
       // Retrieve the search term from the request
       $searchTerm = $request->input('search');
       $categories = $request->get('category', []);
-      
+
       // Check if the search term is provided
       if (!$searchTerm || empty($searchTerm)) {
         return response()->json([
@@ -50,7 +50,7 @@ class AuctionController extends Controller
         }
 
         dd($categories);
-        
+
         // Apply category filtering (assuming category field exists in Auction model)
         $query->whereIn('category_id', $categories);
       }
@@ -387,5 +387,20 @@ class AuctionController extends Controller
 
       return redirect()->back()->with('error', 'An unexpected error occurred. Please try again later.');
     }
+  }
+
+  public function toggleFollow(Auction $auction)
+  {
+    $user = Auth::user();
+    
+    if ($user->followsAuction()->where('auction_id', $auction->id)->exists()) {
+      $user->followsAuction()->detach($auction->id);
+      $message = 'Auction unfollowed successfully.';
+    } else {
+      $user->followsAuction()->attach($auction->id);
+      $message = 'Auction followed successfully.';
+    }
+
+    return redirect()->back()->with('success', $message);
   }
 }

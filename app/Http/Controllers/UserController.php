@@ -147,10 +147,10 @@ class UserController extends Controller
     return view('pages.user.dashboard.bids', compact('bidsMade'));
   }
 
-  public function followAuctions()
+  public function followedAuctions()
   {
     $user = auth()->user();
-    $followed = $user->follows;  // Retrieves auctions directly
+    $followed = $user->followsAuction;  // Changed from follows to followsAuction
     return view('pages.auctions.follow', compact('followed'));
   }
 
