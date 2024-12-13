@@ -3,8 +3,8 @@
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\AdminController;
-use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\AuctionController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\UserController;
@@ -67,8 +67,8 @@ Route::middleware(['auth', 'not.banned'])->group(function () {
 });
 
 Route::middleware(['auth', 'admin'])->group(function () {
-    Route::post('/categories', [CategoryController::class, 'store'])->name('category.store'); // Use CategoryController here
-    Route::delete('/categories/{id}', [CategoryController::class, 'destroy'])->name('category.destroy'); // Use CategoryController here
+  Route::post('/categories', [CategoryController::class, 'store'])->name('category.store');  // Use CategoryController here
+  Route::delete('/categories/{id}', [CategoryController::class, 'destroy'])->name('category.destroy');  // Use CategoryController here
 });
 
 // need to add admin middleware
@@ -76,6 +76,7 @@ Route::prefix('admin')->group(function () {
   Route::middleware(['auth', 'admin'])->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
     Route::get('/dashboard/users', [AdminController::class, 'dashboardUsers'])->name('dashboard.users');
+    Route::get('/dashboard/auctions', [AdminController::class, 'dashboardAuctions'])->name('dashboard.auctions');
     Route::get('/dashboard/categories', [AdminController::class, 'dashboardCategorie'])->name('dashboard.categories');
     Route::delete('/delete/user/{id}', [AdminController::class, 'deleteUser'])->name('deleteUser');
     Route::put('/ban/user/{id}', [AdminController::class, 'banUser'])->name('banUser');
