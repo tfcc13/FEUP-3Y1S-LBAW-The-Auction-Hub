@@ -66,7 +66,8 @@ Route::get('/dashboard/financial', [UserController::class, 'showFinancial'])->na
 Route::post('/user/add-money', [UserController::class, 'addMoney'])->name('user.add-money');
 Route::get('/user/follow', [UserController::class, 'followAuctions'])->name('follow.auctions');
 Route::get('/dashboard/bids', [UserController::class, 'showBids'])->name('user.dash.bids');
-Route::post('/user/{userId}/deposit-money', [MoneyController::class, 'addMoney'])->name('user.deposit-money');
+Route::post('/user/{userId}/deposit-money', [MoneyController::class, 'depositMoney'])->name('user.deposit-money');
+Route::post('/user/{userId}/withdraw-money', [MoneyController::class, 'withdrawMoney'])->name('user.withdraw-money');
 // need to add admin middleware
 Route::prefix('admin')->group(function () {
     Route::middleware(['auth', 'admin'])->name('admin.')->group(function () {

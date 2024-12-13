@@ -10,12 +10,32 @@ use Illuminate\Http\Request;
 
 class MoneyController extends Controller
 {
-
-    public function addMoney(Request $request, $userId)
+    public function depositMoney(Request $request, $userId)
     {
-        $request->validate(['amount' => 'required|numeric|min:1']);
+        return $this->updateMoney($request, $userId, 'Deposit');
+    }
+
+    public function withdrawMoney(Request $request, $userId)
+    {
+        return $this->updateMoney($request, $userId, 'Withdraw');
+    }
+    public function updateMoney(Request $request, $userId, $operationType)
+    {
+        $request->validate([
+            'amount' => 'required|numeric|min:1',
+            'operationType' => 'required|in:Deposit,Withdraw',
+        ]);
 
         $user = User::findOrFail($userId);
+        
+
+        if($operationType === 'Withdraw'&& $user->credit_balance < $request->amount){
+            return response()->json(['error' => "You don't have sufficient funds"]);
+        }
+
+        if($operationType === 'Deposit'&&  $request->amount > 100000){
+            return response()->json(['error' => "Deposit amount above limit deposit of 100000$"]);
+        }
 
         try {
             DB::beginTransaction();
@@ -24,14 +44,14 @@ class MoneyController extends Controller
             $transaction = DB::table('money_manager')->insert([
                 'amount' => $request->amount,
                 'state' => 'Pending',
-                'type' => 'Deposit',
+                'type' => $request->operationType,
                 'user_id' => $user->id,
                 'operation_date' => now(),
             ]);
 
             DB::commit();
 
-            return response()->json(['message' => 'Deposit request created successfully. Awaiting admin approval.']);
+            return response()->json(['message' => $operationType . ' request created successfully. Awaiting admin approval.']);
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json(['message' => 'An error occurred: ' . $e->getMessage()], 500);
