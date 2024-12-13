@@ -6,6 +6,7 @@ use App\Models\Auction;
 use App\Models\Category;
 use App\Models\Report;
 use App\Models\User;
+use App\Models\MoneyManager;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -23,12 +24,29 @@ class AdminController extends Controller
   public function dashboardUsers()
   {
     $reportsPerOwner = Report::join('auction', 'report.auction_id', '=', 'auction.id')
-      ->join('users', 'users.id','=','auction.owner_id')
+      ->join('users', 'users.id', '=', 'auction.owner_id')
       ->select('auction.owner_id', DB::raw('COUNT(*) as report_count'), 'users.name as name', 'users.username as username')
-      ->groupBy('auction.owner_id','users.name','username')
+      ->groupBy('auction.owner_id', 'users.name', 'username')
       ->orderBy('report_count', 'DESC')
       ->get();
     return view('pages.admin.dashboard.users', compact('reportsPerOwner'));
+  }
+
+  public function dashboardAuctions()
+  {
+    $reportsPerAuction = Report::join('auction', 'report.auction_id', '=', 'auction.id')
+      ->join('users', 'users.id', '=', 'auction.owner_id')
+      ->select(
+        'auction.id as auction_id',
+        'auction.title as title',
+        DB::raw('COUNT(*) as report_count'),
+        'users.name as owner_name',
+        'users.username as owner_username'
+      )
+      ->groupBy('auction.id', 'auction.title', 'users.name', 'users.username')
+      ->orderBy('report_count', 'DESC')
+      ->get();
+    return view('pages.admin.dashboard.auctions', compact('reportsPerAuction'));
   }
 
   public function dashboardCategorie()
@@ -222,5 +240,10 @@ class AdminController extends Controller
       DB::rollBack();
       return redirect()->back()->with('error', 'Failed to delete the Category. Please try again.');
     }
+  }
+
+  public function showTransactions() {
+    $transactions = MoneyManager::all()->sortByDesc('operation_date');
+    return view('pages.admin.dashboard.transactions', compact('transactions'));
   }
 }

@@ -28,7 +28,10 @@ class User extends Authenticatable
         'password',
         'birth_date',
         'rating',
-        'description'
+        'description',
+        'birth_date',
+        'credit_balance',
+        'is_admin'
     ];
 
     /**

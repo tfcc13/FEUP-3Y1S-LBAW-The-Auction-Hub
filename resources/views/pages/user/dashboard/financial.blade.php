@@ -12,15 +12,21 @@
             </span>
         </div>
 
-        {{-- Add Money Form --}}
-        <form id="add-money-form" class="flex flex-col space-y-4 w-min">
+        {{-- Money Form --}}
+        <form id="money-form" class="flex flex-col space-y-4 w-min">
             @csrf
+            <input type="hidden" id="user-id" value="{{ auth()->user()->id }}">
             <input id="email" type="number" name="amount" min="1" placeholder="Enter amount" required autofocus
                 class="form-input">
-            <button type="submit" class="bg-[#135d3b] text-white rounded-lg py-2 active:scale-95 hover:bg-[#135d3b]/85 transition-all duration-150 ease-out">
-                Fund Account
-            </button>
+                <button type="submit" id="deposit-button" class="bg-[#135d3b] text-white rounded-lg py-2 active:scale-95 hover:bg-[#135d3b]/85 transition-all duration-150 ease-out">
+                    Deposit
+                </button>
+                <button type="submit" id="withdraw-button" class="bg-[#b1353b] text-white rounded-lg py-2 active:scale-95 hover:bg-[#b1353b]/85 transition-all duration-150 ease-out">
+                    Withdraw
+                </button>
         </form>
+
+       
 
         {{-- Message --}}
         <p id="message"></p>
@@ -75,16 +81,43 @@
             // Reset financial content margin
             financialContent.style.marginTop = '0';
         }
+        
+        let operationType = '';
 
-        document.getElementById('add-money-form').addEventListener('submit', function(e) {
+        document.getElementById('deposit-button').addEventListener('click', function () {
+            operationType = 'Deposit';
+        });
+
+        document.getElementById('withdraw-button').addEventListener('click', function () {
+            operationType = 'Withdraw';
+        });
+
+
+        document.getElementById('money-form').addEventListener('submit', function(e) {
             e.preventDefault();
 
-            const form = e.target;
+            const form =  e.target.closest('form');
             const formData = new FormData(form);
+            formData.append('operationType', operationType);
             const messageElement = document.getElementById('message');
             const balanceDisplay = document.getElementById('balance-display');
+            const userId = document.getElementById('user-id').value;
 
-            fetch('/user/add-money', {
+            let url;
+
+            if(operationType === 'Deposit') {
+                url = '/user/' + userId + '/deposit-money';
+            }   
+            else if (operationType === 'Withdraw') {
+                url = '/user/' + userId + '/withdraw-money';
+            } else {
+                console.error('Unknown operation type:', operationType);
+                return;
+            }
+
+            
+
+            fetch(url, {
                     method: 'POST',
                     headers: {
                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
@@ -98,7 +131,7 @@
                         messageElement.style.color = 'red';
                     } else {
                         showNotification(data.message);
-                        balanceDisplay.textContent = `$${number_format(data.balance, 2, '.', ' ')}`;
+                        //balanceDisplay.textContent = `$${number_format(data.balance, 2, '.', ' ')}`;
                         form.reset();
                     }
                 })

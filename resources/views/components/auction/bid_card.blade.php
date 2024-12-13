@@ -20,7 +20,7 @@
     </div>
 
     <!-- Bid Form -->
-    @if (!$owner)
+    @if (!$owner && !Auth::user()->is_admin)
         <form class="flex flex-col space-y-4" method="POST" action="{{ route('auction.bid', $auction->id) }}">
             @csrf
             <input type="hidden" name="auction_id" value="{{ $auction->id }}">

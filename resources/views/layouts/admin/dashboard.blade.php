@@ -23,7 +23,7 @@
         </a>
       </li>
       <li>
-        <a href="#"
+        <a href="{{route('admin.dashboard.auctions')}}"
           class="block px-4 py-3 hover:bg-white hover:text-[rgb(19,93,59)] rounded transition 
                               {{ request()->routeIs('admin.auctions') ? 'bg-white text-[rgb(19,93,59)]' : '' }}">
           🛒 Manage Auctions
@@ -41,6 +41,13 @@
           class="block px-4 py-3 hover:bg-white hover:text-[rgb(19,93,59)] rounded transition 
                               {{ request()->routeIs('admin.reports') ? 'bg-white text-[rgb(19,93,59)]' : '' }}">
           🔠 Categories
+        </a>
+      </li>
+      <li>
+        <a href="{{ route('admin.dashboard.transactions') }}"
+          class="block px-4 py-3 hover:bg-white hover:text-[rgb(19,93,59)] rounded transition 
+                              {{ request()->routeIs('admin.transactions') ? 'bg-white text-[rgb(19,93,59)]' : '' }}">
+          💵 Manage Transactions
         </a>
       </li>
       <li>

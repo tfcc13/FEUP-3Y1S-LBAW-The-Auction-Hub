@@ -1,7 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="max-w-2xl mx-auto bg-white shadow-md rounded p-6 mt-6">
+    <form class="flex flex-col p-6 space-y-8 items-center w-full" method="POST"
+        action="{{ route('auctions.submit_auction') }}" enctype="multipart/form-data">
         <h2 class="text-xl font-semibold text-gray-800">Create a New Auction</h2>
 
         @if (session('success'))
@@ -16,74 +17,114 @@
             </div>
         @endif
 
-        <form class="flex flex-col" method="POST" action="{{ route('auctions.submit_auction') }}"
-            enctype="multipart/form-data">
-            @csrf
-            <div class="mb-4">
-                <label for="title" class="block text-gray-700 font-semibold mb-2">Auction Title</label>
-                <input type="text" id="title" name="title" value="{{ old('title') }}"
-                    class="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    required>
-                @error('title')
-                    <div class="text-red-600 text-sm mt-1">{{ $message }}</div>
-                @enderror
+
+
+        @csrf
+        <div
+            class="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-16 md:space-x-48 lg:space-x-80 w-full">
+            <div class="flex flex-col space-y-4 w-full sm:w-[32rem]">
+                {{-- Auction Title --}}
+                <div class="flex flex-col justify-start space-y-1 w-full">
+                    <label for="title" class="block text-gray-700 font-semibold">Auction Title</label>
+                    <input type="text" id="title" name="title" value="{{ old('title') }}" class="form-input"
+                        required>
+                    @error('title')
+                        <div class="text-red-600 text-sm mt-1">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                {{-- Auction Description --}}
+                <div class="flex flex-col justify-start space-y-1 w-full">
+                    <label for="description" class="block text-gray-700 font-semibold">Auction Description</label>
+                    <textarea id="description" name="description" rows="4" class="form-input" required>{{ old('description') }}</textarea>
+                    @error('description')
+                        <div class="text-red-600 text-sm mt-1">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                {{-- Start Price --}}
+                <div class="flex flex-col justify-start space-y-1 w-full">
+                    <label for="start_price" class="block text-gray-700 font-semibold">Start Price</label>
+                    <input type="number" id="start_price" name="start_price" value="{{ old('start_price') }}"
+                        min="0" step="0.01" class="form-input" required>
+                    @error('start_price')
+                        <div class="text-red-600 text-sm mt-1">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                {{-- Category Selection --}}
+                <div class="flex flex-col justify-start space-y-1 w-full">
+                    <label for="category_id" class="block text-gray-700 font-semibold">Select Category</label>
+                    <select id="category_id" name="category_id" class="form-input" required>
+                        <option value="">-- Select Category --</option>
+                        @foreach ($categories as $category)
+                            <option value="{{ $category->id }}"
+                                {{ old('category_id') == $category->id ? 'selected' : '' }}>
+                                {{ $category->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                    @error('category_id')
+                        <div class="text-red-600 text-sm mt-1">{{ $message }}</div>
+                    @enderror
+                </div>
             </div>
 
-            <div class="mb-4">
-                <label for="description" class="block text-gray-700 font-semibold mb-2">Auction Description</label>
-                <textarea id="description" name="description" rows="4"
-                    class="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    required>{{ old('description') }}</textarea>
-                @error('description')
-                    <div class="text-red-600 text-sm mt-1">{{ $message }}</div>
-                @enderror
-            </div>
+            {{-- Image Upload Field --}}
+            <div class="flex flex-col space-y-2 w-full sm:w-[32rem]">
+                {{-- Image Preview (hidden by default) --}}
+                <div id="imagePreview" class="hidden w-full aspect-[4/3] bg-gray-100 mb-4 rounded-lg overflow-hidden">
+                    <img id="previewImage" class="w-full h-full object-cover hidden select-none" alt="Preview"
+                        onload="adjustImageFit(this)">
+                </div>
 
-            <div class="mb-4">
-                <label for="start_price" class="block text-gray-700 font-semibold mb-2">Start Price</label>
-                <input type="number" id="start_price" name="start_price" value="{{ old('start_price') }}" min="0"
-                    step="0.01"
-                    class="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    required>
-                @error('start_price')
-                    <div class="text-red-600 text-sm mt-1">{{ $message }}</div>
-                @enderror
-            </div>
-            <!-- Category Selection -->
-            <div class="mb-4">
-                <label for="category_id" class="block text-gray-700 font-semibold mb-2">Select Category</label>
-                <select id="category_id" name="category_id"
-                    class="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    required>
-                    <option value="">-- Select Category --</option>
-                    @foreach ($categories as $category)
-                        <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>
-                            {{ $category->name }}
-                        </option>
-                    @endforeach
-                </select>
-                @error('category_id')
-                    <div class="text-red-600 text-sm mt-1">{{ $message }}</div>
-                @enderror
-            </div>
-            <!-- Image Upload Field -->
-            <div class="mb-4">
-                <label for="files" class="block text-gray-700 font-semibold mb-2">Upload Images</label>
-                <input 
-                    type="file" 
-                    id="files" 
-                    name="files[]" 
-                    multiple 
-                    class="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <input name="type" type="text" value="auction" hidden>
+                <label for="files" class="block text-gray-700 font-semibold">Upload Images</label>
+
+                <input type="file" id="files" name="files[]" multiple class="form-input"
+                    accept=".jpg,.jpeg,.png,.webp" required>
+                <input name="type" type="text" value="auction" hidden>
                 @error('files')
                     <div class="text-red-600 text-sm mt-1">{{ $message }}</div>
                 @enderror
             </div>
-            <button type="submit" 
-                    class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-                Create Auction
-            </button>
-        </form>
-    </div>
+        </div>
+
+        {{-- Submit Button --}}
+        <button type="submit" class="bg-[#135d3b] text-white px-4 py-2 rounded-lg hover:bg-[#135d3b]/85">
+            Create Auction
+        </button>
+    </form>
+
+
+    <script>
+        document.getElementById('files').addEventListener('change', function(event) {
+            const previewContainer = document.getElementById('imagePreview');
+            const preview = document.getElementById('previewImage');
+            const files = event.target.files;
+
+            if (files && files[0]) {
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.classList.remove('hidden');
+                    previewContainer.classList.remove('hidden'); // Show the container
+                }
+
+                reader.readAsDataURL(files[0]);
+            } else {
+                preview.classList.add('hidden');
+                previewContainer.classList.add('hidden'); // Hide the container
+                preview.src = '';
+            }
+        });
+
+        function adjustImageFit(img) {
+            if (img.naturalHeight > img.naturalWidth) {
+                img.style.objectFit = 'scale-down';
+            } else {
+                img.style.objectFit = 'cover';
+            }
+        }
+    </script>
 @endsection

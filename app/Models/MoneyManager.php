@@ -11,10 +11,15 @@ class MoneyManager extends Model
 
     public $timestamps = false;
 
+    protected $table = 'money_manager';
+
     protected $fillable = [
         'amount',
         'type',
         'recipient_user_id',
+        'state',
+        'user_id',
+        'operation_date',
     ];
 
     // Relationships
