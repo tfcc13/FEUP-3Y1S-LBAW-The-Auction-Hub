@@ -72,8 +72,16 @@
 
             {{-- Image Upload Field --}}
             <div class="flex flex-col space-y-2 w-full sm:w-[32rem]">
+                {{-- Image Preview (hidden by default) --}}
+                <div id="imagePreview" class="hidden w-full aspect-[4/3] bg-gray-100 mb-4 rounded-lg overflow-hidden">
+                    <img id="previewImage" class="w-full h-full object-cover hidden select-none" alt="Preview"
+                        onload="adjustImageFit(this)">
+                </div>
+
                 <label for="files" class="block text-gray-700 font-semibold">Upload Images</label>
-                <input type="file" id="files" name="files[]" multiple class="form-input">
+
+                <input type="file" id="files" name="files[]" multiple class="form-input"
+                    accept=".jpg,.jpeg,.png,.webp" required>
                 <input name="type" type="text" value="auction" hidden>
                 @error('files')
                     <div class="text-red-600 text-sm mt-1">{{ $message }}</div>
@@ -82,8 +90,41 @@
         </div>
 
         {{-- Submit Button --}}
-        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+        <button type="submit" class="bg-[#135d3b] text-white px-4 py-2 rounded-lg hover:bg-[#135d3b]/85">
             Create Auction
         </button>
     </form>
+
+
+    <script>
+        document.getElementById('files').addEventListener('change', function(event) {
+            const previewContainer = document.getElementById('imagePreview');
+            const preview = document.getElementById('previewImage');
+            const files = event.target.files;
+
+            if (files && files[0]) {
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.classList.remove('hidden');
+                    previewContainer.classList.remove('hidden'); // Show the container
+                }
+
+                reader.readAsDataURL(files[0]);
+            } else {
+                preview.classList.add('hidden');
+                previewContainer.classList.add('hidden'); // Hide the container
+                preview.src = '';
+            }
+        });
+
+        function adjustImageFit(img) {
+            if (img.naturalHeight > img.naturalWidth) {
+                img.style.objectFit = 'scale-down';
+            } else {
+                img.style.objectFit = 'cover';
+            }
+        }
+    </script>
 @endsection

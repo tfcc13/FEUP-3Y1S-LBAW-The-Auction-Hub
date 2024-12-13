@@ -107,16 +107,16 @@ class AuctionController extends Controller
 
     $currentUser = Auth::user();
     if ($currentUser->credit_balance < $validatedData['amount']) {
-        return redirect()->back()->withErrors(['amount' => 'Insufficient balance to place this bid.']);
+      return redirect()->back()->withErrors(['amount' => 'Insufficient balance to place this bid.']);
     }
 
 
     try {
       DB::beginTransaction();
 
-      if($currentHighestBid) {
+      if ($currentHighestBid) {
         $previous_bidder = User::findOrFail($currentHighestBid->user_id);
-        if($previous_bidder) {
+        if ($previous_bidder) {
           $previous_bidder->credit_balance += $currentHighestBid->amount;
           $previous_bidder->save();
         }
@@ -165,7 +165,12 @@ class AuctionController extends Controller
       'description' => 'required|string',
       'start_price' => 'required|numeric|min:0',
       'category_id' => 'required|exists:category,id',
-      'files.*' => 'required|image|mimes:png,jpg,jpeg,gif|max:4196',
+      'files.*' => [
+        'required',
+        'image',
+        'mimes:jpeg,png,jpg,webp',
+        'max:2048', // maximum file size in kilobytes
+      ],
     ]);
 
     // dd($validatedData);
@@ -348,15 +353,15 @@ class AuctionController extends Controller
 
   public function getAuctionState($id)
   {
-      $auction = Auction::findOrFail($id);
-      return response()->json(['state' => $auction->state]);
+    $auction = Auction::findOrFail($id);
+    return response()->json(['state' => $auction->state]);
   }
 
   public function report(Request $request, $auctionId)
   {
     $userId = Auth::id();
     $text = $request->input('text');
-    
+
     try {
       Report::create([
         'user_id' => $userId,
