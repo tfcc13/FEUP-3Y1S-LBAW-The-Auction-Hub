@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuctionController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\UserController;
@@ -27,18 +28,30 @@ Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 // Authentication
 Route::controller(LoginController::class)->group(function () {
-    Route::get('/login', 'showLoginForm')->name('login');
-    Route::post('/login', 'authenticate');
-    Route::get('/logout', 'logout')->name('logout');
+  Route::get('/login', 'showLoginForm')->name('login');
+  Route::post('/login', 'authenticate');
+  Route::get('/logout', 'logout')->name('logout');
 });
 
 Route::controller(RegisterController::class)->group(function () {
-    Route::get('/register', 'showRegistrationForm')->name('register');
-    Route::post('/register', 'register');
+  Route::get('/register', 'showRegistrationForm')->name('register');
+  Route::post('/register', 'register');
 });
 
-// Auctions
-Route::prefix('auctions')->group(function () {
+Route::middleware(['auth', 'not.banned'])->group(function () {
+  // User
+  Route::get('/dashboard', function () {
+    return view('pages.user.dashboard.dashboard');
+  })->name('dashboard');
+  Route::put('/user/description', [UserController::class, 'updateDescription'])->name('user.updateDescription');
+  Route::get('/profile/{username}', [UserController::class, 'showProfile'])->name('user.profile.other');
+  Route::get('/dashboard/stats', [UserController::class, 'showStatistics'])->name('user.dash.stats');
+  Route::get('/dashboard/financial', [UserController::class, 'showFinancial'])->name('user.dash.financial');
+  Route::post('/user/add-money', [UserController::class, 'addMoney'])->name('user.add-money');
+  Route::get('/user/follow', [UserController::class, 'followAuctions'])->name('follow.auctions');
+  Route::get('/dashboard/bids', [UserController::class, 'showBids'])->name('user.dash.bids');
+  // Auctions
+  Route::prefix('auctions')->group(function () {
     Route::get('/auction/{id}', [AuctionController::class, 'showAuction'])->name('auctions.show');
     Route::post('/auction/{id}/bid', [AuctionController::class, 'bidAuction'])->name('auction.bid');
     Route::get('/create_auction', [AuctionController::class, 'createAuction'])->name('auctions.create_auction');
@@ -50,6 +63,8 @@ Route::prefix('auctions')->group(function () {
     Route::get('/search/upcoming', [AuctionController::class, 'upcomingAuctions'])->name('search.upcoming');
     Route::get('/auction-state/{id}', [AuctionController::class, 'getAuctionState'])->name('auction_state.fetch');
     Route::post('/report/{id}', [AuctionController::class, 'report'])->name('auction.report');
+  });
+  Route::get('search', [SearchController::class, 'searchView'])->name('search.view');
 });
 
 Route::get('search', [SearchController::class, 'searchView'])->name('search.view');
@@ -68,6 +83,12 @@ Route::get('/user/follow', [UserController::class, 'followAuctions'])->name('fol
 Route::get('/dashboard/bids', [UserController::class, 'showBids'])->name('user.dash.bids');
 Route::post('/user/{userId}/deposit-money', [MoneyController::class, 'depositMoney'])->name('user.deposit-money');
 Route::post('/user/{userId}/withdraw-money', [MoneyController::class, 'withdrawMoney'])->name('user.withdraw-money');
+
+Route::middleware(['auth', 'admin'])->group(function () {
+  Route::post('/categories', [CategoryController::class, 'store'])->name('category.store');  // Use CategoryController here
+  Route::delete('/categories/{id}', [CategoryController::class, 'destroy'])->name('category.destroy');  // Use CategoryController here
+});
+
 // need to add admin middleware
 Route::prefix('admin')->group(function () {
     Route::middleware(['auth', 'admin'])->name('admin.')->group(function () {

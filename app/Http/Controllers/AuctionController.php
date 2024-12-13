@@ -3,13 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Auction;
-use App\Models\User;
 use App\Models\Bid;
 use App\Models\Category;
 use App\Models\Report;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class AuctionController extends Controller
 {
@@ -24,8 +25,8 @@ class AuctionController extends Controller
     try {
       // Retrieve the search term from the request
       $searchTerm = $request->input('search');
-      $categoryId = $request->get('category');
-
+      $categories = $request->get('category', []);
+      
       // Check if the search term is provided
       if (!$searchTerm || empty($searchTerm)) {
         return response()->json([
@@ -42,8 +43,16 @@ class AuctionController extends Controller
 
       $query = Auction::with('images')->search($searchTerm);
 
-      if ($categoryId) {
-        $query->where('category_id', $categoryId);  // Assuming 'category_id' is the column for category in the auctions table
+      if ($categories) {
+
+        if (is_string($categories)) {
+          $categories = explode('||', $categories);  // Split if passed as a single string with '||'
+        }
+
+        dd($categories);
+        
+        // Apply category filtering (assuming category field exists in Auction model)
+        $query->whereIn('category_id', $categories);
       }
       $query->where('end_date', '>', now());
       // Execute the query
@@ -109,7 +118,6 @@ class AuctionController extends Controller
     if ($currentUser->credit_balance < $validatedData['amount']) {
       return redirect()->back()->withErrors(['amount' => 'Insufficient balance to place this bid.']);
     }
-
 
     try {
       DB::beginTransaction();
@@ -200,41 +208,41 @@ class AuctionController extends Controller
   }
 
   /*   public function submitAuction(Request $request)
-                {
-                  // Validate the form data
-                  $validatedData = $request->validate([
-                    'title' => 'required|string|max:255',
-                    'description' => 'required|string',
-                    'start_price' => 'required|numeric|min:0',
-                    'category_id' => 'required|exists:category,id',
-                    'files' => 'required|image|mimes:png,jpg,jpeg,gif|max:4196',
-                  ]);
+                              {
+                                // Validate the form data
+                                $validatedData = $request->validate([
+                                  'title' => 'required|string|max:255',
+                                  'description' => 'required|string',
+                                  'start_price' => 'required|numeric|min:0',
+                                  'category_id' => 'required|exists:category,id',
+                                  'files' => 'required|image|mimes:png,jpg,jpeg,gif|max:4196',
+                                ]);
 
-                  //dd($validatedData);
+                                //dd($validatedData);
 
-                  try {
-                    DB::beginTransaction();
-                    // Create a new auction
-                    $auction = new Auction();
-                    $auction->title = $validatedData['title'];
-                    $auction->description = $validatedData['description'];
-                    $auction->start_price = $validatedData['start_price'];
-                    $auction->category_id = $validatedData['category_id'];
-                    $auction->owner_id = Auth::id();
-                    $auction->save();
-                    DB::commit();
+                                try {
+                                  DB::beginTransaction();
+                                  // Create a new auction
+                                  $auction = new Auction();
+                                  $auction->title = $validatedData['title'];
+                                  $auction->description = $validatedData['description'];
+                                  $auction->start_price = $validatedData['start_price'];
+                                  $auction->category_id = $validatedData['category_id'];
+                                  $auction->owner_id = Auth::id();
+                                  $auction->save();
+                                  DB::commit();
 
-                    if ($request->hasFile('files')) {
-                      //dd($request);
-                      //dd($fileRequest, $request);
-                      app(FileController::class)->upload($request, $auction->id);
-                  }
+                                  if ($request->hasFile('files')) {
+                                    //dd($request);
+                                    //dd($fileRequest, $request);
+                                    app(FileController::class)->upload($request, $auction->id);
+                                }
 
-                    return redirect()->route('auctions.show', $auction->id)->with('success', 'Auction created successfully!');
-                  } catch (\Exception $e) {
-                    return redirect()->route('auctions.create_auction')->with('error', 'An error occurred while creating the auction: ' . $e->getMessage());
-                  }
-                } */
+                                  return redirect()->route('auctions.show', $auction->id)->with('success', 'Auction created successfully!');
+                                } catch (\Exception $e) {
+                                  return redirect()->route('auctions.create_auction')->with('error', 'An error occurred while creating the auction: ' . $e->getMessage());
+                                }
+                              } */
 
   public function cancelAuction($auction_id)
   {
@@ -287,8 +295,8 @@ class AuctionController extends Controller
 
     // not neeeded it redirects to a 403 page because of the auction policy
     /*         if (Auth::user()->id !== $auction->owner_id) {
-                                                                            return redirect()->back()->with('message', 'You do not have permission to edit this auction.');
-                                                                        } */
+                                                                                                        return redirect()->back()->with('message', 'You do not have permission to edit this auction.');
+                                                                                                    } */
 
     $validatedData = $request->validate([
       'title' => 'required|string|max:255',
