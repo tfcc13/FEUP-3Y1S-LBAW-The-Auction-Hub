@@ -25,8 +25,4 @@
             {{ $auction->user->rating ? number_format($auction->user->rating, 1) : 'No rating' }}
         </span>
     </div>
-
-    {{-- Report Button --}}
-    <x-toast.confirm :buttonText="'Report'" :route="'auction.report'" :method="'POST'" :id="$auction->id" :modalTitle="'Report this auction?'"
-        :modalMessage="'Are you sure you want to report the user?'" :textFlag="true" :object="$auction" />
 </div>
