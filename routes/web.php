@@ -48,7 +48,7 @@ Route::middleware(['auth', 'not.banned'])->group(function () {
   Route::get('/dashboard/stats', [UserController::class, 'showStatistics'])->name('user.dash.stats');
   Route::get('/dashboard/financial', [UserController::class, 'showFinancial'])->name('user.dash.financial');
   Route::post('/user/add-money', [UserController::class, 'addMoney'])->name('user.add-money');
-  Route::get('/user/follow', [UserController::class, 'followAuctions'])->name('follow.auctions');
+  Route::get('/user/follow', [UserController::class, 'followedAuctions'])->name('follow.auctions');
   Route::get('/dashboard/bids', [UserController::class, 'showBids'])->name('user.dash.bids');
   // Auctions
   Route::prefix('auctions')->group(function () {
@@ -80,7 +80,7 @@ Route::get('/profile/{username}', [UserController::class, 'showProfile'])->name(
 Route::get('/dashboard/stats', [UserController::class, 'showStatistics'])->name('user.dash.stats');
 Route::get('/dashboard/financial', [UserController::class, 'showFinancial'])->name('user.dash.financial');
 Route::post('/user/add-money', [UserController::class, 'addMoney'])->name('user.add-money');
-Route::get('/user/follow', [UserController::class, 'followAuctions'])->name('follow.auctions');
+Route::get('/user/follow', [UserController::class, 'followedAuctions'])->name('follow.auctions');
 Route::get('/dashboard/bids', [UserController::class, 'showBids'])->name('user.dash.bids');
 Route::post('/user/{userId}/deposit-money', [MoneyController::class, 'depositMoney'])->name('user.deposit-money');
 Route::post('/user/{userId}/withdraw-money', [MoneyController::class, 'withdrawMoney'])->name('user.withdraw-money');
