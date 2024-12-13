@@ -44,6 +44,13 @@
         </a>
       </li>
       <li>
+        <a href="{{ route('admin.dashboard.transactions') }}"
+          class="block px-4 py-3 hover:bg-white hover:text-[rgb(19,93,59)] rounded transition 
+                              {{ request()->routeIs('admin.transactions') ? 'bg-white text-[rgb(19,93,59)]' : '' }}">
+          💵 Manage Transactions
+        </a>
+      </li>
+      <li>
         <a href="#"
           class="block px-4 py-3 hover:bg-white hover:text-[rgb(19,93,59)] rounded transition 
                               {{ request()->routeIs('admin.settings') ? 'bg-white text-[rgb(19,93,59)]' : '' }}">

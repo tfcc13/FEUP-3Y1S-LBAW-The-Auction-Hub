@@ -7,6 +7,7 @@ use App\Http\Controllers\AuctionController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\MoneyController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -65,7 +66,8 @@ Route::get('/dashboard/financial', [UserController::class, 'showFinancial'])->na
 Route::post('/user/add-money', [UserController::class, 'addMoney'])->name('user.add-money');
 Route::get('/user/follow', [UserController::class, 'followAuctions'])->name('follow.auctions');
 Route::get('/dashboard/bids', [UserController::class, 'showBids'])->name('user.dash.bids');
-
+Route::post('/user/{userId}/deposit-money', [MoneyController::class, 'depositMoney'])->name('user.deposit-money');
+Route::post('/user/{userId}/withdraw-money', [MoneyController::class, 'withdrawMoney'])->name('user.withdraw-money');
 // need to add admin middleware
 Route::prefix('admin')->group(function () {
     Route::middleware(['auth', 'admin'])->name('admin.')->group(function () {
@@ -79,5 +81,8 @@ Route::prefix('admin')->group(function () {
         Route::put('/unban/user/{id}', [AdminController::class, 'unbanUser'])->name('unbanUser');
         Route::put('/promote/user/{id}', [AdminController::class, 'promoteUser'])->name('promoteUser');
         Route::get('search', [SearchController::class, 'searchView'])->name('search.view');
+        Route::get('dashboard/transactions', [AdminController::class, 'showTransactions'])->name('dashboard.transactions');
+        Route::patch('/dashboard/transactions/approve/{transactionId}', [MoneyController::class, 'approveTransaction'])->name('transactions.approve');
+        Route::patch('/dashboard/transactions/reject/{transactionId}', [MoneyController::class, 'rejectTransaction'])->name('transactions.reject');
     });
 });
