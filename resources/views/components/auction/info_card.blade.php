@@ -47,27 +47,23 @@
     <!-- Follow Button -->
     @auth
         @if (Auth::id() !== $auction->owner_id)
-            <div class="flex items-center justify-between">
-                <span class="text-gray-600 text-lg">Follow Auction:</span>
-                <form action="{{ route('auctions.follow', $auction) }}" method="POST" class="inline">
-                    @csrf
-                    <button type="submit" class="flex items-center space-x-2 text-gray-800 hover:text-gray-600 focus:outline-none">
-                        @if (Auth::user()->followsAuction()->where('auction_id', $auction->id)->exists())
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
-                                <path fill-rule="evenodd"
-                                    d="M5.25 9a6.75 6.75 0 0113.5 0v.75c0 2.123.8 4.057 2.118 5.52a.75.75 0 01-.297 1.206c-1.544.57-3.16.99-4.831 1.243a3.75 3.75 0 11-7.48 0 24.585 24.585 0 01-4.831-1.244.75.75 0 01-.298-1.205A8.217 8.217 0 005.25 9.75V9zm4.502 8.9a2.25 2.25 0 104.496 0 25.057 25.057 0 01-4.496 0z"
-                                    clip-rule="evenodd" />
-                            </svg>
-                        @else
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                                stroke="currentColor" class="w-6 h-6">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
-                            </svg>
-                        @endif
-                    </button>
-                </form>
-            </div>
+            <form class="flex items-center w-full" action="{{ route('auctions.follow', $auction) }}" method="POST">
+                @csrf
+                <button type="submit"
+                    class="w-full flex items-center justify-center space-x-8 py-1 text-gray-800 hover:bg-[#135d3b]/15 rounded-lg focus:outline-none active:scale-95 transition-all duration-150 ease-out
+                    {{ Auth::user()->followsAuction()->where('auction_id', $auction->id)->exists()? 'border border-[#135d3b]': '' }}">
+                    <span class="text-gray-600 text-lg">Follow Auction</span>
+                    @if (Auth::user()->followsAuction()->where('auction_id', $auction->id)->exists())
+                        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">
+                            notifications_active
+                        </span>
+                    @else
+                        <span class="material-symbols-outlined">
+                            notifications
+                        </span>
+                    @endif
+                </button>
+            </form>
         @endif
     @endauth
 
