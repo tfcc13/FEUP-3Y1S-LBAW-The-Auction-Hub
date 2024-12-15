@@ -49,7 +49,6 @@ class AuctionController extends Controller
           $categories = explode('||', $categories);  // Split if passed as a single string with '||'
         }
 
-        dd($categories);
         
         // Apply category filtering (assuming category field exists in Auction model)
         $query->whereIn('category_id', $categories);

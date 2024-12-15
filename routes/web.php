@@ -98,10 +98,10 @@ Route::prefix('admin')->group(function () {
         Route::delete('/delete/user/{id}', [AdminController::class, 'deleteUser'])->name('deleteUser');
         Route::delete('/delete/category/{id}', [AdminController::class, 'deleteCategory'])->name('deleteCategory');
         Route::put('/ban/user/{id}', [AdminController::class, 'banUser'])->name('banUser');
+        Route::get('/dashboard/auctions', [AdminController::class, 'dashboardAuctions'])->name('dashboard.auctions');
         Route::post('/create/category', [AdminController::class, 'createCategory'])->name('createCategory');
         Route::put('/unban/user/{id}', [AdminController::class, 'unbanUser'])->name('unbanUser');
         Route::put('/promote/user/{id}', [AdminController::class, 'promoteUser'])->name('promoteUser');
-        Route::get('search', [SearchController::class, 'searchView'])->name('search.view');
         Route::get('dashboard/transactions', [AdminController::class, 'showTransactions'])->name('dashboard.transactions');
         Route::patch('/dashboard/transactions/approve/{transactionId}', [MoneyController::class, 'approveTransaction'])->name('transactions.approve');
         Route::patch('/dashboard/transactions/reject/{transactionId}', [MoneyController::class, 'rejectTransaction'])->name('transactions.reject');

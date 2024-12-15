@@ -7,26 +7,12 @@ use Illuminate\Support\Facades\Auth;
 
 class SearchController extends Controller
 {
-  public function searchView(Request $request)
-  {
-    $searchTerm = $request->input('search');
-    if (Auth::check()) {
-      if (!Auth::user()->is_admin) {
+    public function searchView(Request $request)
+    {
+        $searchTerm = $request->input('search');
         return view('search.search')->with([
-          'searchTerm' => $searchTerm,
-          'categories' => $this->getCategories(),
+            'searchTerm' => $searchTerm,
+            'categories' => $this->getCategories(),
         ]);
-      } else {
-        return view('pages.admin.search.search')->with([
-          'searchTerm' => $searchTerm,
-          'categories' => $this->getCategories(),
-        ]);
-      }
-    } else {
-      return view('pages.admin.search.search')->with([
-        'searchTerm' => $searchTerm,
-        'categories' => $this->getCategories(),
-      ]);
     }
-  }
 }
