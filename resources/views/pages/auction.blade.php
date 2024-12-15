@@ -14,18 +14,6 @@
             @endforeach
         </div>
     @endif
-    @if (session('success'))
-        <div class="alert alert-success">
-            {{ session('success') }}
-        </div>
-    @endif
-
-    @if (session('error'))
-        <div class="alert alert-danger">
-            {{ session('error') }}
-        </div>
-        </div>
-    @endif
 
 
     <main class="flex flex-col sm:flex-row bg-gray-100 items-center sm:items-start p-6 min-h-[calc(100vh-5rem)]">

@@ -44,9 +44,34 @@
         </span>
     </div>
 
-    <!-- Report Button -->
-    <x-toast.confirm :buttonText="'Report Auction'" :route="'auction.report'" :method="'POST'" :id="$auction->id"
-        :modalTitle="'Report this auction?'" :modalMessage="'Are you sure you want to report the user?'" :textFlag="true"
-        :object="$auction" />
-</div>
+    <!-- Follow Button -->
+    @auth
+        @if (Auth::id() !== $auction->owner_id)
+            <form class="flex items-center w-full" action="{{ route('auctions.follow', $auction) }}" method="POST">
+                @csrf
+                <button type="submit"
+                    class="w-full flex items-center justify-center space-x-4 py-1 text-gray-800 hover:bg-[#135d3b]/15 rounded-lg focus:outline-none active:scale-95 transition-all duration-150 ease-out
+                    {{ Auth::user()->followsAuction()->where('auction_id', $auction->id)->exists()? 'border border-[#135d3b]': '' }}">
+                    <span class="text-lg">Follow Auction</span>
+                    @if (Auth::user()->followsAuction()->where('auction_id', $auction->id)->exists())
+                        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">
+                            notifications_active
+                        </span>
+                    @else
+                        <span class="material-symbols-outlined">
+                            notifications
+                        </span>
+                    @endif
+                </button>
+            </form>
+        @endif
+    @endauth
 
+    <!-- Report Button -->
+    @if (Auth::check() && Auth::id() !== $auction->owner_id)
+        <x-toast.confirm :buttonText="'Report Auction'" :route="'auction.report'" :method="'POST'" :id="$auction->id" :modalTitle="'Report this auction?'"
+            :modalMessage="'Are you sure you want to report the user?'" :textFlag="true" :object="$auction"
+            class="flex items-center justify-center py-1 text-gray-800 text-lg bg-white border border-red-500 hover:bg-red-500/15 
+            rounded-lg w-full active:scale-95 transition-all duration-150 ease-out" />
+    @endif
+</div>

@@ -48,7 +48,7 @@ Route::middleware(['auth', 'not.banned'])->group(function () {
   Route::get('/dashboard/stats', [UserController::class, 'showStatistics'])->name('user.dash.stats');
   Route::get('/dashboard/financial', [UserController::class, 'showFinancial'])->name('user.dash.financial');
   Route::post('/user/add-money', [UserController::class, 'addMoney'])->name('user.add-money');
-  Route::get('/user/follow', [UserController::class, 'followAuctions'])->name('follow.auctions');
+  Route::get('/user/follow', [UserController::class, 'followedAuctions'])->name('follow.auctions');
   Route::get('/dashboard/bids', [UserController::class, 'showBids'])->name('user.dash.bids');
   // Auctions
   Route::prefix('auctions')->group(function () {
@@ -63,6 +63,7 @@ Route::middleware(['auth', 'not.banned'])->group(function () {
     Route::get('/search/upcoming', [AuctionController::class, 'upcomingAuctions'])->name('search.upcoming');
     Route::get('/auction-state/{id}', [AuctionController::class, 'getAuctionState'])->name('auction_state.fetch');
     Route::post('/report/{id}', [AuctionController::class, 'report'])->name('auction.report');
+    Route::post('/auctions/{auction}/follow', [AuctionController::class, 'toggleFollow'])->name('auctions.follow')->middleware('auth');
   });
   Route::get('search', [SearchController::class, 'searchView'])->name('search.view');
 });
@@ -79,7 +80,7 @@ Route::get('/profile/{username}', [UserController::class, 'showProfile'])->name(
 Route::get('/dashboard/stats', [UserController::class, 'showStatistics'])->name('user.dash.stats');
 Route::get('/dashboard/financial', [UserController::class, 'showFinancial'])->name('user.dash.financial');
 Route::post('/user/add-money', [UserController::class, 'addMoney'])->name('user.add-money');
-Route::get('/user/follow', [UserController::class, 'followAuctions'])->name('follow.auctions');
+Route::get('/user/follow', [UserController::class, 'followedAuctions'])->name('follow.auctions');
 Route::get('/dashboard/bids', [UserController::class, 'showBids'])->name('user.dash.bids');
 Route::post('/user/{userId}/deposit-money', [MoneyController::class, 'depositMoney'])->name('user.deposit-money');
 Route::post('/user/{userId}/withdraw-money', [MoneyController::class, 'withdrawMoney'])->name('user.withdraw-money');
@@ -91,19 +92,19 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
 // need to add admin middleware
 Route::prefix('admin')->group(function () {
-    Route::middleware(['auth', 'admin'])->name('admin.')->group(function () {
-        Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
-        Route::get('/dashboard/users', [AdminController::class, 'dashboardUsers'])->name('dashboard.users');
-        Route::get('/dashboard/categories', [AdminController::class, 'dashboardCategorie'])->name('dashboard.categories');
-        Route::delete('/delete/user/{id}', [AdminController::class, 'deleteUser'])->name('deleteUser');
-        Route::delete('/delete/category/{id}', [AdminController::class, 'deleteCategory'])->name('deleteCategory');
-        Route::put('/ban/user/{id}', [AdminController::class, 'banUser'])->name('banUser');
-        Route::post('/create/category', [AdminController::class, 'createCategory'])->name('createCategory');
-        Route::put('/unban/user/{id}', [AdminController::class, 'unbanUser'])->name('unbanUser');
-        Route::put('/promote/user/{id}', [AdminController::class, 'promoteUser'])->name('promoteUser');
-        Route::get('search', [SearchController::class, 'searchView'])->name('search.view');
-        Route::get('dashboard/transactions', [AdminController::class, 'showTransactions'])->name('dashboard.transactions');
-        Route::patch('/dashboard/transactions/approve/{transactionId}', [MoneyController::class, 'approveTransaction'])->name('transactions.approve');
-        Route::patch('/dashboard/transactions/reject/{transactionId}', [MoneyController::class, 'rejectTransaction'])->name('transactions.reject');
-    });
+  Route::middleware(['auth', 'admin'])->name('admin.')->group(function () {
+    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
+    Route::get('/dashboard/users', [AdminController::class, 'dashboardUsers'])->name('dashboard.users');
+    Route::get('/dashboard/categories', [AdminController::class, 'dashboardCategorie'])->name('dashboard.categories');
+    Route::delete('/delete/user/{id}', [AdminController::class, 'deleteUser'])->name('deleteUser');
+    Route::delete('/delete/category/{id}', [AdminController::class, 'deleteCategory'])->name('deleteCategory');
+    Route::put('/ban/user/{id}', [AdminController::class, 'banUser'])->name('banUser');
+    Route::post('/create/category', [AdminController::class, 'createCategory'])->name('createCategory');
+    Route::put('/unban/user/{id}', [AdminController::class, 'unbanUser'])->name('unbanUser');
+    Route::put('/promote/user/{id}', [AdminController::class, 'promoteUser'])->name('promoteUser');
+    Route::get('search', [SearchController::class, 'searchView'])->name('search.view');
+    Route::get('dashboard/transactions', [AdminController::class, 'showTransactions'])->name('dashboard.transactions');
+    Route::patch('/dashboard/transactions/approve/{transactionId}', [MoneyController::class, 'approveTransaction'])->name('transactions.approve');
+    Route::patch('/dashboard/transactions/reject/{transactionId}', [MoneyController::class, 'rejectTransaction'])->name('transactions.reject');
+  });
 });
