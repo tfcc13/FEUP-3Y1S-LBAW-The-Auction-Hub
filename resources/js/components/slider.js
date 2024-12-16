@@ -70,7 +70,7 @@ export default class Slider {
     const outer = this.container.getBoundingClientRect();
     const inner = this.inner.getBoundingClientRect();
     const maxScroll = inner.width - outer.width;
-    let newLeft = this.initialSliderLeft + walk;
+    let newLeft = this.initialSliderLeft + (walk * 1.5);
 
     if (newLeft > 0) {
       newLeft = newLeft * 0.3;
@@ -87,7 +87,7 @@ export default class Slider {
     const inner = this.inner.getBoundingClientRect();
     const maxScroll = inner.width - outer.width;
 
-    this.inner.style.transition = "left 0.3s ease-out";
+    this.inner.style.transition = "left 0.2s ease-out";
 
     if (parseInt(this.inner.style.left) > 0) {
       this.inner.style.left = "0px";
@@ -96,7 +96,7 @@ export default class Slider {
     }
 
     setTimeout(() => {
-      this.inner.style.transition = "left 0.1s ease-out";
-    }, 300);
+      this.inner.style.transition = "left 0.05s ease-out";
+    }, 200);
   }
 }
