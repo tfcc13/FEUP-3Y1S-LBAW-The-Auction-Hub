@@ -27,8 +27,8 @@
 
             {{-- Terms and Policies --}}
             <div class="flex flex-col items-end space-y-4">
-                <a href="#" class="hover:underline">Terms of service</a>
-                <a href="#" class="hover:underline">Privacy policy</a>
+                <a href="{{ route('terms') }}" class="hover:underline">Terms of service</a>
+                <a href="{{ route('privacy') }}" class="hover:underline">Privacy policy</a>
             </div>
         </div>
 

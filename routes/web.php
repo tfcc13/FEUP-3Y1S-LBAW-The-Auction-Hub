@@ -117,3 +117,12 @@ Route::prefix('admin')->group(function () {
     Route::patch('/dashboard/transactions/reject/{transactionId}', [MoneyController::class, 'rejectTransaction'])->name('transactions.reject');
   });
 });
+
+// Terms and Privacy routes
+Route::get('/terms', function () {
+    return view('pages.terms');
+})->name('terms');
+
+Route::get('/privacy', function () {
+    return view('pages.privacy');
+})->name('privacy');
