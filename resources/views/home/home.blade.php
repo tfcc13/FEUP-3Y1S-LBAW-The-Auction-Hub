@@ -12,5 +12,10 @@
 
         <!-- Slide section -->
         <x-slide.slide :items="$slideItems" />
+
+        <div class="h-8"></div>
+
+        <!-- Brands section -->
+        <x-brands.brands />
     </main>
 @endsection
