@@ -15,7 +15,6 @@
         </div>
     @endif
 
-
     <main class="flex flex-col sm:flex-row bg-gray-100 items-center sm:items-start p-6 min-h-[calc(100vh-5rem)]">
         <div class="flex flex-col w-full sm:w-2/3 text-center space-y-4 ">
             <h1 class="text-2xl sm:text-4xl font-bold text-gray-800">{{ $auction->title }}</h1>
