@@ -1,21 +1,20 @@
 <?php
 
 namespace App\Policies;
-use App\Models\User;
+
 use App\Models\Auction;
+use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class AuctionPolicy 
+class AuctionPolicy
 {
-    public function update(User $user, Auction $auction)
-    {
-        return $user->id === $auction->owner_id;
-    }
+  public function update(User $user, Auction $auction)
+  {
+    return ($user->id === $auction->owner_id || $user->is_admin);
+  }
 
-    public function delete(User $user, Auction $auction)
-    {
-        return $user->id === $auction->owner_id ;
-    }
+  public function delete(User $user, Auction $auction)
+  {
+    return ($user->id === $auction->owner_id || $user->is_admin);
+  }
 }
-
-
