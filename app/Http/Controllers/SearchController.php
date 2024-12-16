@@ -17,7 +17,7 @@ class SearchController extends Controller
     }
     public function searchDash(Request $request)
     {
-        $searchTerm = $request->input('search');
+        return app(AdminController::class)->dashboardUsers($request);
 
     }
 }

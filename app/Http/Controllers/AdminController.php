@@ -21,9 +21,33 @@ class AdminController extends Controller
         return view('pages.admin.dashboard.notification', compact('reports'));
     }
 
-    public function dashboardUsers()
+    public function dashboardUsers($request = null)
     {
-        $users = User::all();
+        if ($request == null) {
+            $users = User::all();
+        } else {
+            $response = $this->search($request);
+            if ($response) {
+                $decodedResponse = json_decode($response->getContent(), true);
+
+                // Check if 'data' is present and is an array
+                if (isset($decodedResponse['data']) && is_array($decodedResponse['data'])) {
+                    $userIds = [];
+                    foreach ($decodedResponse['data'] as $userData) {
+                        // Add the user ID to the list (you can also add more conditions here if needed)
+                        $userIds[] = $userData['id'];
+                    }
+
+                    // Fetch the users that match the IDs from the database
+                    $users = User::whereIn('id', $userIds)->get();
+                } else {
+                    $users = User::all();
+                }
+            } else {
+                // If no response or an invalid response, return an empty collection
+                $users = collect();
+            }
+        }
 
         // Get the report count for each owner as an associative array
         $reportsPerOwner = Report::join('auction', 'report.auction_id', '=', 'auction.id')
@@ -35,7 +59,7 @@ class AdminController extends Controller
 
         // Attach report counts to users
         $users = $users->map(function ($user) use ($reportsPerOwner) {
-            $user->report_count = $reportsPerOwner[$user->id] ?? 0; 
+            $user->report_count = $reportsPerOwner[$user->id] ?? 0;
             return $user;
         });
 
@@ -195,7 +219,7 @@ class AdminController extends Controller
             return response()->json([
                 'error' => 'An unexpected error occurred.',
                 'details' => $e->getMessage()
-            ], 500);  
+            ], 500);
         }
     }
 
