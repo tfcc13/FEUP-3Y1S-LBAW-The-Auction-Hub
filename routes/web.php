@@ -45,6 +45,7 @@ Route::middleware(['auth', 'not.banned'])->group(function () {
     return view('pages.user.dashboard.dashboard');
   })->name('dashboard');
   Route::put('/user/description', [UserController::class, 'updateDescription'])->name('user.updateDescription');
+  Route::delete('/user/delete-account', [UserController::class, 'deleteAccount'])->name('user.deleteAccount');
   Route::get('/profile/{username}', [UserController::class, 'showProfile'])->name('user.profile.other');
   Route::get('/dashboard/stats', [UserController::class, 'showStatistics'])->name('user.dash.stats');
   Route::get('/dashboard/financial', [UserController::class, 'showFinancial'])->name('user.dash.financial');
