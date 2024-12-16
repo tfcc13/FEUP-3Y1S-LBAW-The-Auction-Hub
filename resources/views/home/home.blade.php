@@ -19,6 +19,5 @@
         <x-brands.brands />
     </main>
 
-    <!-- Footer section -->
-    <x-footer.footer />
+    @include('layouts.footer')
 @endsection

@@ -39,4 +39,4 @@
             <p>THE AUCTION HUB</p>
         </div>
     </section>
-</div>
+</div> 
