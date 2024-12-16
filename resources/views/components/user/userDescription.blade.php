@@ -27,7 +27,7 @@
 
         <!-- Modal to change description -->
         <div id="edit-description-modal"
-            class="fixed inset-0 bg-gray-500 bg-opacity-50 justify-center items-center hidden z-50">
+            class="fixed inset-0 bg-gray-400 bg-opacity-50 justify-center items-center hidden z-50">
             <div class="bg-white rounded-lg p-6 shadow-lg max-w-lg w-full">
                 <h2 class="text-xl font-semibold text-gray-900 mb-4">Edit Description</h2>
 
@@ -56,6 +56,12 @@
             </div>
         </div>
     </div>
+
+    {{-- Delete Account --}}
+    <x-toast.confirm :buttonText="'Delete Account'" :route="'user.deleteAccount'" :method="'DELETE'" :id="auth()->user()->id" :modalTitle="'Delete Account'"
+        :modalMessage="'Are you sure you want to delete your account? This action is irreversible.'" :textFlag="true" :object="auth()->user()"
+        class="flex items-center justify-center py-1 px-3 text-red-500 bg-white border border-red-500 hover:bg-red-500/15 
+            rounded-lg active:scale-95 transition-all duration-150 ease-out w-min sm:w-auto mt-10 text-nowrap" />
 </div>
 
 <script>

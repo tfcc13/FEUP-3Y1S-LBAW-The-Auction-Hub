@@ -15,12 +15,12 @@
     <div class="flex items-baseline justify-between">
         <span class="text-gray-600 text-xl">Current Bid: </span>
         <span class="text-gray-800 text-xl font-bold">
-          {{ $auction->bids->count() > 0 ? '$ ' . number_format($auction->bids->max('amount'), 2) : 'No bids yet' }}
+            {{ $auction->bids->count() > 0 ? '$ ' . number_format($auction->bids->max('amount'), 2) : 'No bids yet' }}
         </span>
     </div>
 
     <!-- Bid Form -->
-    @if (!$owner && !Auth::user()->is_admin)
+    @if (!$owner && !Auth::user()->is_admin && $auction->state === 'Ongoing')
         <form class="flex flex-col space-y-4" method="POST" action="{{ route('auction.bid', $auction->id) }}">
             @csrf
             <input type="hidden" name="auction_id" value="{{ $auction->id }}">
@@ -34,7 +34,7 @@
                 Place Bid
             </button>
         </form>
-    @else
+    @elseif ($owner || Auth::user()->is_admin)
         <button
             class="w-full bg-[#135d3b] text-white rounded-lg py-2 active:scale-95 hover:bg-[#135d3b]/85 transition-all duration-150 ease-out"
             onclick="window.location.href='{{ route('auction.edit_auction', $auction->id) }}'">

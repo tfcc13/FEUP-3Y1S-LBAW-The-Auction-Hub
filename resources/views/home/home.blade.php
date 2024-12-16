@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <main class="flex flex-col items-center py-4 px-6 space-y-8">
+    <main class="flex flex-col items-center py-4 px-6 space-y-8 mb-16">
         <!-- Categories section -->
         <x-categories.categories :categories="$categories" />
 
@@ -12,5 +12,12 @@
 
         <!-- Slide section -->
         <x-slide.slide :items="$slideItems" />
+
+        <div class="h-8"></div>
+
+        <!-- Brands section -->
+        <x-brands.brands />
     </main>
+
+    @include('layouts.footer')
 @endsection

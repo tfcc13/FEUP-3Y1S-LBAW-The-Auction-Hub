@@ -27,6 +27,6 @@
         gap: 10px;
         position: relative;
         left: 0;
-        transition: left 0.1s ease-out;
+        transition: left 0.05s ease-out;
     }
 </style>

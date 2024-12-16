@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -147,11 +149,33 @@ class UserController extends Controller
     return view('pages.user.dashboard.bids', compact('bidsMade'));
   }
 
-  public function followAuctions()
+  public function followedAuctions()
   {
     $user = auth()->user();
-    $followed = $user->follows;  // Retrieves auctions directly
+    $followed = $user->followsAuction;  // Changed from follows to followsAuction
     return view('pages.auctions.follow', compact('followed'));
+  }
+
+  public function deleteAccount()
+  {
+    $user = auth()->user();
+    
+    try {
+      DB::beginTransaction();
+      
+      // Set user state to 'Deleted' which will trigger the anonymization
+      $user->state = 'Deleted';
+      $user->save();
+      
+      // Logout the user
+      Auth::logout();
+      
+      DB::commit();
+      return redirect()->route('login')->with('success', 'Your account has been deleted successfully.');
+    } catch (\Exception $e) {
+      DB::rollBack();
+      return redirect()->back()->with('error', 'Failed to delete your account. Please try again.');
+    }
   }
 
 }
