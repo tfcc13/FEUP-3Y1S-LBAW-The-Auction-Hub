@@ -112,7 +112,7 @@ Route::prefix('admin')->group(function () {
         Route::post('/create/category', [AdminController::class, 'createCategory'])->name('createCategory');
         Route::put('/unban/user/{id}', [AdminController::class, 'unbanUser'])->name('unbanUser');
         Route::put('/promote/user/{id}', [AdminController::class, 'promoteUser'])->name('promoteUser');
-        Route::get('search', [SearchController::class, 'searchView'])->name('search.view');
+        Route::get('search', [SearchController::class, 'searchDash'])->name('search.dash');
         Route::get('dashboard/transactions', [AdminController::class, 'showTransactions'])->name('dashboard.transactions');
         Route::patch('/dashboard/transactions/approve/{transactionId}', [MoneyController::class, 'approveTransaction'])->name('transactions.approve');
         Route::patch('/dashboard/transactions/reject/{transactionId}', [MoneyController::class, 'rejectTransaction'])->name('transactions.reject');

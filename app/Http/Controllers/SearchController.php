@@ -15,4 +15,9 @@ class SearchController extends Controller
             'categories' => $this->getCategories(),
         ]);
     }
+    public function searchDash(Request $request)
+    {
+        $searchTerm = $request->input('search');
+
+    }
 }

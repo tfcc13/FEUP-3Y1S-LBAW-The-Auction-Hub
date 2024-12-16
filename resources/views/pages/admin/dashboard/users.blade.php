@@ -10,6 +10,23 @@
 <div class="container mx-auto p-6">
   <h2 class="text-xl font-semibold mb-4">Manage Transactions</h2>
 
+  <div class="flex w-1/2 md:w-1/4">
+    <form
+      action="{{ route('admin.search.dash') }}"
+      method="GET" class="relative w-full m-0">
+      <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+        <svg class="w-4 h-4 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+          stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
+            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+      </span>
+      <input id="search-navbar" type="text" name="search" placeholder="Search..."
+        class="form-input text-sm w-full !pl-10">
+    </form>
+
+  </div>
+
   <!-- Responsive Table Wrapper -->
   <div class="mt-4 overflow-x-auto">
     <table class="min-w-full table-auto border-collapse border border-gray-200">

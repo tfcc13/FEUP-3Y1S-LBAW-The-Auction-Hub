@@ -274,7 +274,7 @@ class AuctionController extends Controller
         $categories = Category::all();
         $auction = Auction::findOrFail($auction_id);
 
-        if (Auth::user()->id !== $auction->owner_id) {
+        if (Auth::user()->id !== $auction->owner_id && !Auth::user()->is_admin) {
             return redirect()->back()->with('message', 'You do not have permission to edit this auction.');
         }
 

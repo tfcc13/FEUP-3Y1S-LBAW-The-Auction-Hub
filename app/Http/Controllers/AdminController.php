@@ -156,8 +156,6 @@ class AdminController extends Controller
 
             return redirect()->route('admin.dashboard')->with('success', 'User deleted successfully.');
         } catch (\Exception $e) {
-            dd($e);
-
             DB::rollBack();
             return redirect()->back()->with('error', 'Failed to delete the user. Please try again.');
         }
@@ -166,17 +164,14 @@ class AdminController extends Controller
     public function search(Request $request)
     {
         try {
-            // Retrieve the search term from the request
             $searchTerm = $request->input('search');
 
-            // Check if the search term is provided
             if (!$searchTerm || empty($searchTerm)) {
                 return response()->json([
                     'error' => 'Search term is required.'
                 ], 400);  // Bad Request
             }
 
-            // Ensure the search term is a string
             if (!is_string($searchTerm)) {
                 return response()->json([
                     'error' => 'Search term must be a valid string.'
@@ -185,7 +180,6 @@ class AdminController extends Controller
 
             $users = User::search($searchTerm)->get();
 
-            // Check if results are empty
             if ($users->isEmpty()) {
                 return response()->json([
                     'message' => 'No results found for the search term.',
@@ -193,17 +187,15 @@ class AdminController extends Controller
                 ], 200);  // OK
             }
 
-            // Return the search results as JSON
             return response()->json([
                 'message' => 'Search successful.',
                 'data' => $users
             ], 200);  // OK
         } catch (\Exception $e) {
-            // Handle unexpected errors
             return response()->json([
                 'error' => 'An unexpected error occurred.',
                 'details' => $e->getMessage()
-            ], 500);  // Internal Server Error
+            ], 500);  
         }
     }
 
