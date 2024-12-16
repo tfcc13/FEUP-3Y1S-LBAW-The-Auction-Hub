@@ -23,7 +23,7 @@
     </div>
 
 
-    <ul class="flex w-auto space-x-4" id="navbar-default">
+    <ul class="flex w-auto items-center space-x-4" id="navbar-default">
         @if (Auth::check())
             @if (!Auth::user()->is_admin)
                 <li class="hidden md:flex items-center justify-center">
@@ -41,11 +41,21 @@
                     </a>
                 </li>
             @endif
+
+            <li class="hidden md:flex items-center justify-center">
+                <a href="{{ route('notifications.index') }}"
+                    class="flex p-2 font-semibold text-white bg-[#135d3b] hover:bg-[#0f4a2f] rounded-full items-center justify-center transition-all active:scale-95">
+                    <span class="material-symbols-outlined" style="font-size: 1.5rem;">
+                        notifications
+                    </span>
+                </a>
+            </li>
+
             <li class="flex items-center justify-center list-none">
                 <x-popup.popup position="bottom-left" width="w-52">
                     <x-slot:trigger>
                         <button onclick="togglePopup(this)"
-                            class="w-10 h-10 rounded-full overflow-hidden transition-all duration-150 active:scale-95 
+                            class="flex w-10 h-10 rounded-full overflow-hidden transition-all duration-150 active:scale-95 
                                     hover:shadow-lg focus:outline-none">
                             <x-user.image class="w-full h-full object-cover" />
                         </button>
@@ -73,6 +83,13 @@
                                         <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
                                     </svg>
                                     <span>Following</span>
+                                </a>
+                                <a href="/user/follow"
+                                    class="md:hidden flex items-center space-x-2 -ml-[0.10rem] py-2 px-4 text-gray-800 hover:bg-[#135d3b]/15 rounded-lg">
+                                    <span class="material-symbols-outlined" style="font-size: 1.5rem;">
+                                        notifications
+                                    </span>
+                                    <span>Notifications</span>
                                 </a>
                                 {{-- Mobile Navigation --}}
 
