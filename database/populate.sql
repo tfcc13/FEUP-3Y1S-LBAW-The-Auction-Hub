@@ -205,7 +205,8 @@ INSERT INTO money_manager (amount, operation_date, state, type, user_id) VALUES
 (1800, '2024-12-25 12:30:00', 'Approved', 'Deposit', 16),
 (700, '2024-12-30 10:45:00', 'Approved', 'Deposit', 17),
 (1200, '2025-01-05 09:15:00', 'Approved', 'Withdraw', 18),
-(2200, '2025-01-10 15:30:00', 'Pending', 'Deposit', 19),
 (900, '2025-01-15 11:00:00', 'Approved', 'Deposit', 20);
 
+INSERT INTO money_manager (reference, amount, operation_date, state, type, user_id) VALUES
+('notPeter', 2200, '2025-01-10 15:30:00', 'Pending', 'Deposit', 19);
 

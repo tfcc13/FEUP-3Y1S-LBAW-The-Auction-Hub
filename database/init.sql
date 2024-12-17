@@ -240,6 +240,7 @@ CREATE TABLE notification (
 -- MoneyManager Table
 CREATE TABLE money_manager (
     id SERIAL PRIMARY KEY,
+    reference VARCHAR(255) DEFAULT NULL,
     amount FLOAT CHECK (amount > 0) NOT NULL,
     operation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     state money_state NOT NULL DEFAULT 'Pending',
