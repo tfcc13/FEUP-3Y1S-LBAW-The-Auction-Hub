@@ -93,7 +93,7 @@ DROP TRIGGER IF EXISTS trigger_set_default_end_date ON auction;
 
 
 -- AuctionState Enum
-CREATE TYPE auction_state AS ENUM ('Ongoing', 'Resumed', 'Canceled');
+CREATE TYPE auction_state AS ENUM ('Ongoing', 'Closed', 'Canceled');
 
 -- UserState Enum
 CREATE TYPE user_state AS ENUM ('Active', 'Deleted', 'Banned');

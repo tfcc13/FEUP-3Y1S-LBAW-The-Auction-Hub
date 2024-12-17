@@ -54,13 +54,13 @@ INSERT INTO category (name) VALUES
 
 -- Populate Auctions
 INSERT INTO auction (title, description, start_price, current_bid, start_date, end_date, state, owner_id, category_id) VALUES
-('Vintage Car Auction', 'Auction for a vintage car', 5000, NULL, '2024-10-30 10:00:00', '2024-12-13 08:53:10', 'Ongoing', 1,1),
-('Antique Painting Auction', 'Rare antique painting', 2000, NULL, '2024-10-15 12:00:00', NULL, 'Resumed', 2,1),
-('Rare Comic Book Collection', 'Collection of rare comic books', 3000, NULL, '2024-10-20 09:00:00', NULL, 'Resumed', 4,1),
-('Diamond Necklace', 'Exquisite diamond necklace', 10000, NULL, '2024-10-25 14:00:00', NULL, 'Resumed', 5,1),
-('Signed Football Jersey', 'Jersey signed by famous player', 1500, NULL, '2024-11-01 11:00:00', NULL, 'Resumed', 6,1),
-('Antique Clock', 'Rare antique grandfather clock', 4000, NULL, '2024-11-05 13:00:00', NULL, 'Resumed', 7,1),
-('Vintage Camera', 'Classic film camera from the 1960s', 1200, NULL, '2024-11-10 10:00:00', NULL, 'Resumed', 8,1),
+('Vintage Car Auction', 'Auction for a vintage car', 5000, NULL, '2024-10-30 10:00:00', '2024-12-17 23:55:59', 'Ongoing', 1,1),
+('Antique Painting Auction', 'Rare antique painting', 2000, NULL, '2024-10-15 12:00:00', NULL, 'Closed', 2,1),
+('Rare Comic Book Collection', 'Collection of rare comic books', 3000, NULL, '2024-10-20 09:00:00', NULL, 'Closed', 4,1),
+('Diamond Necklace', 'Exquisite diamond necklace', 10000, NULL, '2024-10-25 14:00:00', NULL, 'Closed', 5,1),
+('Signed Football Jersey', 'Jersey signed by famous player', 1500, NULL, '2024-11-01 11:00:00', NULL, 'Closed', 6,1),
+('Antique Clock', 'Rare antique grandfather clock', 4000, NULL, '2024-11-05 13:00:00', NULL, 'Closed', 7,1),
+('Vintage Camera', 'Classic film camera from the 1960s', 1200, NULL, '2024-11-10 10:00:00', NULL, 'Closed', 8,1),
 ('First Edition Book', 'Rare first edition of a classic novel', 2500, NULL, '2024-11-15 15:00:00', NULL, 'Ongoing', 9,1),
 ('Designer Handbag', 'Limited edition designer handbag', 3500, NULL, '2024-11-20 12:00:00', NULL, 'Ongoing', 10,1),
 ('Vintage Record Player', 'Fully restored vintage record player', 1800, NULL, '2024-11-25 14:00:00', NULL, 'Ongoing', 1,1),
