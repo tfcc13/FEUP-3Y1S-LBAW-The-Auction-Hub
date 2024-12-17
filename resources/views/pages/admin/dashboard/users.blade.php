@@ -8,7 +8,7 @@
 </div>
 @endif
 <div class="container mx-auto p-6">
-  <h2 class="text-xl font-semibold mb-4">Manage Transactions</h2>
+  <h2 class="text-xl font-semibold mb-4">Manage Users</h2>
 
   <div class="flex w-1/2 md:w-1/4">
     <form
@@ -104,6 +104,5 @@
       </tbody>
     </table>
   </div>
-</div>
 </div>
 @endsection

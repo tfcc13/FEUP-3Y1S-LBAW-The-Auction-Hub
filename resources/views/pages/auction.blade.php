@@ -6,12 +6,9 @@
   {{ session('success') }}
 </div>
 @endif
-
-@if ($errors->any())
-<div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-  @foreach ($errors->all() as $error)
-  <p>{{ $error }}</p>
-  @endforeach
+@if (session('error'))
+<div class="alert alert-danger text-red-500 bg-red-100 border border-red-400 rounded p-4">
+  {{ session('error') }}
 </div>
 @endif
 
