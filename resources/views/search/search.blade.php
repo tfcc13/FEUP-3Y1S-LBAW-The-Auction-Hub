@@ -104,7 +104,7 @@
       let url = `/api/${type}/search?search=${encodeURIComponent(searchTerm)}`;
       if (selectedCategories.length > 0) {
         selectedCategories.forEach(id => {
-          url += `&category=${id}`;
+          url += `&category[]=${id}`;
         });
       }
       console.log(url)
