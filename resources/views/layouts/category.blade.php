@@ -16,7 +16,6 @@
     <h1 class="text-2xl sm:text-4xl sm:font-semibold text-gray-800 text-center whitespace-nowrap">Upcoming Auctions
     </h1>
 
-    <!-- Upcoming Auctions Description -->
     <p class="text-base text-gray-400 text-center">
       These auctions will end in the next 7 days
     </p>
