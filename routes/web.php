@@ -55,6 +55,7 @@ Route::middleware(['auth', 'not.banned'])->group(function () {
     // Auctions
     Route::prefix('auctions')->group(function () {
         Route::get('/auction/{id}', [AuctionController::class, 'showAuction'])->name('auctions.show');
+        Route::get('/category/{id}', [AuctionController::class, 'showCategory'])->name('category.show');
         Route::post('/auction/{id}/bid', [AuctionController::class, 'bidAuction'])->name('auction.bid');
         Route::get('/create_auction', [AuctionController::class, 'createAuction'])->name('auctions.create_auction');
         Route::post('/submit_auction', [AuctionController::class, 'submitAuction'])->name('auctions.submit_auction');

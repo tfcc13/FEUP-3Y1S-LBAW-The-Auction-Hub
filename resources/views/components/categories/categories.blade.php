@@ -36,7 +36,7 @@
 
     <div class="hidden sm:contents">
         @foreach ($mappedCategories as $category)
-            <x-categories.category-item :id="$category->id" :text="$category->name" :icon="$iconMap[$category->name]"/>
+            <x-categories.category-item :id="$category->id" :text="$category->name" :icon="$iconMap[$category->name]" :onClick="'window.location.href=\'' . route('category.show', $category->id) . '\''" />
         @endforeach
     </div>
 
