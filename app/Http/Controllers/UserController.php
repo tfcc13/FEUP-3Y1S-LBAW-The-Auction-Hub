@@ -104,6 +104,13 @@ class UserController extends Controller
     }
   }
 
+  public function showUserAuctions()
+  {
+    $user = auth()->user();
+    $auctions = $user->ownAuctions()->get();
+    return view('pages.user.dashboard.auctions', ['auctions' => $auctions]);
+  }
+
   public function showStatistics()
   {
     $user = auth()->user();
@@ -159,17 +166,17 @@ class UserController extends Controller
   public function deleteAccount()
   {
     $user = auth()->user();
-    
+
     try {
       DB::beginTransaction();
-      
+
       // Set user state to 'Deleted' which will trigger the anonymization
       $user->state = 'Deleted';
       $user->save();
-      
+
       // Logout the user
       Auth::logout();
-      
+
       DB::commit();
       return redirect()->route('login')->with('success', 'Your account has been deleted successfully.');
     } catch (\Exception $e) {
@@ -177,5 +184,4 @@ class UserController extends Controller
       return redirect()->back()->with('error', 'Failed to delete your account. Please try again.');
     }
   }
-
 }

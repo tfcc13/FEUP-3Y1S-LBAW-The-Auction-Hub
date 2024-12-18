@@ -52,7 +52,7 @@
                 <button type="submit"
                     class="w-full flex items-center justify-center space-x-4 py-1 text-gray-800 hover:bg-[#135d3b]/15 rounded-lg focus:outline-none active:scale-95 transition-all duration-150 ease-out
                     {{ Auth::user()->followsAuction()->where('auction_id', $auction->id)->exists()? 'border border-[#135d3b]': '' }}">
-                    <span class="text-lg">Follow Auction</span>
+                    <span class="text-lg">{{ Auth::user()->followsAuction()->where('auction_id', $auction->id)->exists() ? 'Unfollow' : 'Follow' }}</span>
                     @if (Auth::user()->followsAuction()->where('auction_id', $auction->id)->exists())
                         <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">
                             notifications_active

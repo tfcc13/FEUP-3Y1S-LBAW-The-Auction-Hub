@@ -52,6 +52,7 @@ Route::middleware(['auth', 'not.banned'])->group(function () {
     Route::post('/user/add-money', [UserController::class, 'addMoney'])->name('user.add-money');
     Route::get('/user/follow', [UserController::class, 'followedAuctions'])->name('follow.auctions');
     Route::get('/dashboard/bids', [UserController::class, 'showBids'])->name('user.dash.bids');
+    Route::get('/dashboard/auctions', [UserController::class, 'showUserAuctions'])->name('user.dash.auctions');
     // Auctions
     Route::prefix('auctions')->group(function () {
         Route::get('/auction/{id}', [AuctionController::class, 'showAuction'])->name('auctions.show');
