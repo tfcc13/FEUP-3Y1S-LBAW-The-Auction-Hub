@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Auction;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -62,9 +63,9 @@ class User extends Authenticatable
         return $this->notifications()->get();
     }
 
-    public function ownAuction()
+    public function ownAuctions()
     {
-        return $this->hasMany(Auction::class, 'owner_id')->orderBy('state', 'asc');
+        return $this->hasMany(Auction::class, 'owner_id');
     }
 
     public function userImage()

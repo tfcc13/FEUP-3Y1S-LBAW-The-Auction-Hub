@@ -17,7 +17,7 @@
             @csrf
             <input type="hidden" id="user-id" value="{{ auth()->user()->id }}">
 
-            <div id="deposit-section">
+            <div id="deposit-section" class="flex flex-col space-y-4 w-min">
                 <input id="deposit-amount" type="number" name="amount" min="1" placeholder="Enter amount" required autofocus class="form-input">
                 <input id="deposit-reference" type="text" name="reference" placeholder="Enter reference" required class="form-input">
                 <button type="submit" id="deposit-button" class="bg-[#135d3b] text-white rounded-lg py-2 active:scale-95 hover:bg-[#135d3b]/85 transition-all duration-150 ease-out">
@@ -32,7 +32,7 @@
             @csrf
             <input type="hidden" id="user-id" value="{{ auth()->user()->id }}">
 
-            <div id="withdraw-section">
+            <div id="withdraw-section" class="flex flex-col space-y-4 w-min">
                 <input id="withdraw-amount" type="number" name="amount" min="1" placeholder="Enter amount" required class="form-input">
                 <div id="iban-container">
                     <input id="iban" type="text" name="iban" placeholder="Enter IBAN" class="form-input" pattern="^[A-Za-z]{2}\d{21}$" title="IBAN should be two letters followed by 21 digits" required>

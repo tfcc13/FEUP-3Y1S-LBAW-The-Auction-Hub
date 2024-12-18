@@ -57,8 +57,7 @@
             {{-- Bid button --}}
             <button
                 class="text-white {{ $searchResults ? 'px-3 py-1' : 'px-6 py-2' }} rounded border-none bg-[#135d3b] hover:bg-[#135d3b]/75 transition-colors flex items-center active:scale-95 select-none"
-                aria-label="Place bid for {{ $title }}"
-                onclick="window.location.href='{{ !$isOwner ? $buttonAction : route('auctions.show', $auction->id) }}'">
+                aria-label="Place bid for {{ $title }}" onclick="window.location.href='{{ $buttonAction }}'">
                 {{ !$isOwner ? 'Bid Now' : 'View Details' }}
             </button>
         </footer>
