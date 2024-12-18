@@ -93,7 +93,7 @@ DROP TRIGGER IF EXISTS trigger_set_default_end_date ON auction;
 
 
 -- AuctionState Enum
-CREATE TYPE auction_state AS ENUM ('Ongoing', 'Resumed', 'Canceled');
+CREATE TYPE auction_state AS ENUM ('Ongoing', 'Closed', 'Canceled');
 
 -- UserState Enum
 CREATE TYPE user_state AS ENUM ('Active', 'Deleted', 'Banned');
@@ -240,6 +240,7 @@ CREATE TABLE notification (
 -- MoneyManager Table
 CREATE TABLE money_manager (
     id SERIAL PRIMARY KEY,
+    reference VARCHAR(255) DEFAULT NULL,
     amount FLOAT CHECK (amount > 0) NOT NULL,
     operation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     state money_state NOT NULL DEFAULT 'Pending',

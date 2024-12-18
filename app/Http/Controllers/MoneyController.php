@@ -26,6 +26,8 @@ class MoneyController extends Controller
             'operationType' => 'required|in:Deposit,Withdraw',
         ]);
 
+
+
         $user = User::findOrFail($userId);
         
 
@@ -42,6 +44,7 @@ class MoneyController extends Controller
 
             // Create a new transaction record
             $transaction = DB::table('money_manager')->insert([
+                'reference' => $request->reference,
                 'amount' => $request->amount,
                 'state' => 'Pending',
                 'type' => $request->operationType,

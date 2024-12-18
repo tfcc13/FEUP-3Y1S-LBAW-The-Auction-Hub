@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             if (!remainingTimeElement || !statusElement) return;
 
-            if (statusElement.textContent.trim() === "Resumed") {
+            if (statusElement.textContent.trim() === "Closed") {
                 remainingTimeElement.textContent = "Auction ended.";
             } else if (remainingTime > 0) {
                 const days = Math.floor(remainingTime / (1000 * 60 * 60 * 24));
@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     remainingTimeElement.textContent = `${seconds}s`;
                 }
             } else {
-                remainingTimeElement.textContent = "Auction ended.";
+                remainingTimeElement.textContent = "Auction Closing.";
             }
         });
     }

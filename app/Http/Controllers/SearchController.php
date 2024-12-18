@@ -15,4 +15,12 @@ class SearchController extends Controller
             'categories' => $this->getCategories(),
         ]);
     }
+    public function searchDash(Request $request)
+    {
+        return app(AdminController::class)->dashboardUsers($request);
+    }
+    public function searchAuctions(Request $request)
+    {
+        return app(AdminController::class)->dashboardAuctions($request);
+    }
 }
