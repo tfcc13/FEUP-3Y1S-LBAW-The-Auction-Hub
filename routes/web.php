@@ -115,8 +115,8 @@ Route::prefix('admin')->group(function () {
         Route::get('search', [SearchController::class, 'searchDash'])->name('search.dash');
         Route::get('search/auctions', [SearchController::class, 'searchAuctions'])->name('search.auction');
         Route::get('dashboard/transactions', [AdminController::class, 'showTransactions'])->name('dashboard.transactions');
-        Route::patch('/dashboard/transactions/approve/{transactionId}', [MoneyController::class, 'approveTransaction'])->name('transactions.approve');
-        Route::patch('/dashboard/transactions/reject/{transactionId}', [MoneyController::class, 'rejectTransaction'])->name('transactions.reject');
+        Route::patch('/dashboard/transactions/approve/{id}', [MoneyController::class, 'approveTransaction'])->name('transactions.approve');
+        Route::patch('/dashboard/transactions/reject/{id}', [MoneyController::class, 'rejectTransaction'])->name('transactions.reject');
     });
 });
 

@@ -14,6 +14,7 @@ class MoneyManager extends Model
     protected $table = 'money_manager';
 
     protected $fillable = [
+        'reference',
         'amount',
         'type',
         'recipient_user_id',

@@ -36,7 +36,7 @@ class Kernel extends ConsoleKernel
 
         foreach ($auction_ids as $id) {
             DB::transaction(function () use ($id) {
-                Auction::where('id', $id)->update(['state' => 'Resumed']);
+                Auction::where('id', $id)->update(['state' => 'Closed']);
                 
                 $auction = Auction::find($id);
                 if ($auction) {

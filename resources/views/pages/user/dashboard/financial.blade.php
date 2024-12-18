@@ -12,18 +12,37 @@
             </span>
         </div>
 
-        {{-- Money Form --}}
-        <form id="money-form" class="flex flex-col space-y-4 w-min">
+        {{-- Deposit Form --}}
+        <form id="deposit-form" action="/user/{{ auth()->user()->id }}/deposit-money" method="POST" class="flex flex-col space-y-4 w-min">
             @csrf
             <input type="hidden" id="user-id" value="{{ auth()->user()->id }}">
-            <input id="email" type="number" name="amount" min="1" placeholder="Enter amount" required autofocus
-                class="form-input">
+
+            <div id="deposit-section">
+                <input id="deposit-amount" type="number" name="amount" min="1" placeholder="Enter amount" required autofocus class="form-input">
+                <input id="deposit-reference" type="text" name="reference" placeholder="Enter reference" required class="form-input">
                 <button type="submit" id="deposit-button" class="bg-[#135d3b] text-white rounded-lg py-2 active:scale-95 hover:bg-[#135d3b]/85 transition-all duration-150 ease-out">
                     Deposit
                 </button>
+                <p id="deposit-error-message" class="text-red-500 text-sm hidden">Deposit amount cannot exceed $100,000</p>
+             </div>
+        </form>
+
+        {{-- Withdraw Form --}}
+        <form id="withdraw-form" action="/user/{{ auth()->user()->id }}/withdraw-money" method="POST" class="flex flex-col space-y-4 w-min">
+            @csrf
+            <input type="hidden" id="user-id" value="{{ auth()->user()->id }}">
+
+            <div id="withdraw-section">
+                <input id="withdraw-amount" type="number" name="amount" min="1" placeholder="Enter amount" required class="form-input">
+                <div id="iban-container">
+                    <input id="iban" type="text" name="iban" placeholder="Enter IBAN" class="form-input" pattern="^[A-Za-z]{2}\d{21}$" title="IBAN should be two letters followed by 21 digits" required>
+                    <p id="iban-error-message" class="text-red-500 text-sm hidden">IBAN is invalid.</p>
+                </div>
                 <button type="submit" id="withdraw-button" class="bg-[#b1353b] text-white rounded-lg py-2 active:scale-95 hover:bg-[#b1353b]/85 transition-all duration-150 ease-out">
                     Withdraw
                 </button>
+                <p id="withdraw-error-message" class="text-red-500 text-sm hidden">Withdraw amount cannot exceed $100,000</p>
+            </div>
         </form>
 
        
@@ -84,63 +103,95 @@
         
         let operationType = '';
 
-        document.getElementById('deposit-button').addEventListener('click', function () {
-            operationType = 'Deposit';
-        });
-
-        document.getElementById('withdraw-button').addEventListener('click', function () {
-            operationType = 'Withdraw';
-        });
-
-
-        document.getElementById('money-form').addEventListener('submit', function(e) {
+        // Handle Deposit Form Submit
+        document.getElementById('deposit-form').addEventListener('submit', function(e) {
             e.preventDefault();
 
-            const form =  e.target.closest('form');
+            const form = e.target;
             const formData = new FormData(form);
-            formData.append('operationType', operationType);
+            const referenceField = document.getElementById('deposit-reference').value;
+            formData.append('operationType', 'Deposit');
+            formData.append('reference', referenceField);
             const messageElement = document.getElementById('message');
             const balanceDisplay = document.getElementById('balance-display');
             const userId = document.getElementById('user-id').value;
+            const depositAmount = parseFloat(document.getElementById('deposit-amount').value);
 
-            let url;
-
-            if(operationType === 'Deposit') {
-                url = '/user/' + userId + '/deposit-money';
-            }   
-            else if (operationType === 'Withdraw') {
-                url = '/user/' + userId + '/withdraw-money';
-            } else {
-                console.error('Unknown operation type:', operationType);
-                return;
+            if (!checkAmountLimit(depositAmount, 'Deposit')) {
+                return;  
             }
 
-            
+            // Fetch URL for Deposit
+            const url = '/user/' + userId + '/deposit-money';
 
             fetch(url, {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                    },
-                    body: formData,
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.error) {
-                        messageElement.textContent = data.error;
-                        messageElement.style.color = 'red';
-                    } else {
-                        showNotification(data.message);
-                        //balanceDisplay.textContent = `$${number_format(data.balance, 2, '.', ' ')}`;
-                        form.reset();
-                    }
-                })
-                .catch(error => {
-                    messageElement.textContent = 'An error occurred. Please try again.';
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                },
+                body: formData,
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    messageElement.textContent = data.error;
                     messageElement.style.color = 'red';
-                    console.error('Error:', error);
-                });
+                } else {
+                    showNotification(data.message);
+                    form.reset();
+                }
+            })
+            .catch(error => {
+                messageElement.textContent = 'An error occurred. Please try again.';
+                messageElement.style.color = 'red';
+                console.error('Error:', error);
+            });
         });
+
+        // Handle Withdraw Form Submit
+        document.getElementById('withdraw-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const form = e.target;
+            const formData = new FormData(form);
+            formData.append('operationType', 'Withdraw');
+            const messageElement = document.getElementById('message');
+            const balanceDisplay = document.getElementById('balance-display');
+            const userId = document.getElementById('user-id').value;
+            const amount = parseFloat(document.getElementById('withdraw-amount').value);
+
+            if (!checkAmountLimit(amount, 'Withdraw')) {
+                return;  
+            }
+
+            // Fetch URL for Withdraw
+            const url = '/user/' + userId + '/withdraw-money';
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                },
+                body: formData,
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    messageElement.textContent = data.error;
+                    messageElement.style.color = 'red';
+                } else {
+                    showNotification(data.message);
+                    form.reset();
+                }
+            })
+            .catch(error => {
+                messageElement.textContent = 'An error occurred. Please try again.';
+                messageElement.style.color = 'red';
+                console.error('Error:', error);
+            });
+        });
+
+
 
         // Helper function to format numbers like PHP's number_format
         function number_format(number, decimals, dec_point, thousands_sep) {
@@ -164,5 +215,47 @@
             }
             return s.join(dec);
         }
+
+
+        document.getElementById('iban').addEventListener('input', function() {
+            const ibanValue = this.value;
+            const withdrawButton = document.getElementById('withdraw-button');
+            const ibanPattern = /^[A-Za-z]{2}\d{21}$/;
+            const ibanErrorMessage = document.getElementById('iban-error-message');
+
+            if (ibanPattern.test(ibanValue)) {
+                withdrawButton.disabled = false; 
+                ibanErrorMessage.classList.add('hidden'); // Hide error message
+            } else {
+                withdrawButton.disabled = true; 
+                ibanErrorMessage.classList.remove('hidden'); // Show error message
+            }
+        });
+
+        function checkAmountLimit(amount, operationType) {
+
+            let current = 'withdraw';
+
+            if(operationType === 'Deposit' ){
+                current = 'deposit';
+            }
+
+
+            const errorMessageElement = document.getElementById(current+'-error-message');
+
+           
+            if (amount > 100000) {
+                errorMessageElement.classList.remove('hidden');
+                
+                setTimeout(() => {
+                    errorMessageElement.classList.add('hidden');
+                }, 3000);
+                
+                return false;  
+            } else {
+                errorMessageElement.classList.add('hidden');
+                return true; 
+            }
+}
     </script>
 @endsection
