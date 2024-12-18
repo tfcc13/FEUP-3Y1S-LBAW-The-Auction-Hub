@@ -31,6 +31,7 @@
           <th class="px-4 py-2 border border-gray-300 text-left font-semibold">Owner Username</th>
           <th class="px-4 py-2 border border-gray-300 text-left font-semibold">Owner Name</th>
           <th class="px-4 py-2 border border-gray-300 text-left font-semibold">Delete Auction</th>
+          <th class="px-4 py-2 border border-gray-300 text-left font-semibold">Cancel Auction</th>
         </tr>
       </thead>
       <tbody class="divide-y divide-gray-200">
@@ -52,6 +53,16 @@
               :id="'delete'.$auction->id"
               :modalTitle="'Delete this Auction?'"
               :modalMessage="'Are you sure you want to delete this? This action is irreversible.'"
+              :object="$auction" />
+          </td>
+          <td class="px-4 py-2 border border-gray-300 text-center">
+            <x-toast.confirm
+              :buttonText="'Cancel Auction'"
+              :route="'auction.cancel_auction'"
+              :method="'POST'"
+              :id="'cancel_auction'.$auction->id"
+              :modalTitle="'Delete this Auction?'"
+              :modalMessage="'Are you sure you want to cancel this auction? This action only works if no bidders exist.'"
               :object="$auction" />
           </td>
         </tr>

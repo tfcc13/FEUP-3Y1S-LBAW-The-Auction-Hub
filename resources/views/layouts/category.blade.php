@@ -2,16 +2,13 @@
 
 @section('content')
 
-<!-- Header Section -->
-<div class="flex flex-col sm:flex-row items-center justify-center w-full space-x-0 sm:space-x-6 space-y-2 sm:space-y-0">
-  <h1 class="text-2xl sm:text-4xl sm:font-semibold text-gray-800 text-center whitespace-nowrap">Category {{$name}}</h1>
-</div>
 
 <main class="flex flex-col items-center py-4 px-6 space-y-8">
   <!-- Categories section -->
   <x-categories.categories :categories="$categories" />
 
   <div class="flex flex-col space-y-4">
+<<<<<<< HEAD
     <!-- Upcoming Auctions Title -->
     <h1 class="text-2xl sm:text-4xl sm:font-semibold text-gray-800 text-center whitespace-nowrap">Upcoming Auctions
     </h1>
@@ -19,6 +16,9 @@
     <p class="text-base text-gray-400 text-center">
       These auctions will end in the next 7 days
     </p>
+=======
+  <h1 class="text-2xl sm:text-4xl sm:font-semibold text-gray-800 text-center whitespace-nowrap">Category {{$name}}</h1>
+>>>>>>> admin
   </div>
 
   @if (isset($error))

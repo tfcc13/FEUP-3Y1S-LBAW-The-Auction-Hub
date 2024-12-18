@@ -1,9 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="flex h-screen">
+<div class="flex h-screen overflow-hidden">
   <!-- Sidebar -->
-  <div class="w-64 bg-[rgb(19,93,59)] text-white shadow-lg flex-shrink-0 overflow-y-auto">
+  <div class="w-64 bg-[rgb(19,93,59)] text-white shadow-lg flex-shrink-0 h-full overflow-y-auto">
     <div class="p-6">
       <h4 class="text-lg font-semibold border-b border-white/50 pb-2">Admin Dashboard</h4>
     </div>
@@ -61,7 +61,7 @@
   </div>
 
   <!-- Main Content -->
-  <div class="flex-1 p-8 bg-white">
+  <div class="flex-1 p-8 bg-white overflow-y-auto">
     @yield('Display')
   </div>
 </div>
