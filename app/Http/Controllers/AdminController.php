@@ -205,25 +205,13 @@ class AdminController extends Controller
     try {
       $searchTerm = $request->input('search');
 
-      if (!$searchTerm || empty($searchTerm)) {
-        return response()->json([
-          'error' => 'Search term is required.'
-        ], 400);  // Bad Request
-      }
-
-      if (!is_string($searchTerm)) {
-        return response()->json([
-          'error' => 'Search term must be a valid string.'
-        ], 400);  // Bad Request
-      }
-
       $users = User::search($searchTerm)->where('state', '!=', 'Deleted')->get();
 
       if ($users->isEmpty()) {
         return response()->json([
           'message' => 'No results found for the search term.',
           'data' => []
-        ], 200);  // OK
+        ], 200);
       }
 
       return response()->json([

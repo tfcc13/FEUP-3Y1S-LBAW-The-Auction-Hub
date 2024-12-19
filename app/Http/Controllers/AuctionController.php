@@ -45,20 +45,6 @@ class AuctionController extends Controller
       $searchTerm = $request->input('search');
       $categories = $request->get('category', []);
 
-      // Check if the search term is provided
-      if (!$searchTerm || empty($searchTerm)) {
-        return response()->json([
-          'error' => 'Search term is required.'
-        ], 200);  // Bad Request
-      }
-
-      // Ensure the search term is a string
-      if (!is_string($searchTerm)) {
-        return response()->json([
-          'error' => 'Search term must be a valid string.'
-        ], 200);  // Bad Request
-      }
-
       $query = Auction::with('images')->search($searchTerm);
 
       if (!empty($categories)) {
@@ -267,8 +253,8 @@ class AuctionController extends Controller
 
     // not neeeded it redirects to a 403 page because of the auction policy
     /*         if (Auth::user()->id !== $auction->owner_id) {
-                                                                                                                                    return redirect()->back()->with('message', 'You do not have permission to edit this auction.');
-                                                                                                                                } */
+                                                                                                                                        return redirect()->back()->with('message', 'You do not have permission to edit this auction.');
+                                                                                                                                    } */
 
     $validatedData = $request->validate([
       'title' => 'required|string|max:255',
@@ -294,8 +280,8 @@ class AuctionController extends Controller
     $auction = Auction::findOrFail($auction_id);
     $this->authorize('delete', $auction);
 
-    if ($auction->bids()->count() > 0) {
-      return redirect()->back()->with('error', 'Cannot delete an auction with bids.');
+    if ($auction->bids()->count() > 0 && $auction->state==="Ongoing") {
+      return redirect()->back()->with('error', 'Cannot delete an ongoing auction with bids.');
     }
 
     try {

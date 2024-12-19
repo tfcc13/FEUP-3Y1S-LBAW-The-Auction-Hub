@@ -66,20 +66,6 @@ class UserController extends Controller
       // Retrieve the search term from the request
       $searchTerm = $request->input('search');
 
-      // Check if the search term is provided
-      if (!$searchTerm || empty($searchTerm)) {
-        return response()->json([
-          'error' => 'Search term is required.'
-        ], 400);  // Bad Request
-      }
-
-      // Ensure the search term is a string
-      if (!is_string($searchTerm)) {
-        return response()->json([
-          'error' => 'Search term must be a valid string.'
-        ], 400);  // Bad Request
-      }
-
       $users = User::search($searchTerm)->where('state', '!=', 'Banned')->get();
 
       // Check if results are empty
@@ -162,5 +148,4 @@ class UserController extends Controller
     $followed = $user->followsAuction;  // Changed from follows to followsAuction
     return view('pages.auctions.follow', compact('followed'));
   }
-
 }
