@@ -10,6 +10,7 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
+use App\Models\Auction;
 
 class AuctionBid implements ShouldBroadcast
 {
@@ -33,12 +34,12 @@ class AuctionBid implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        Log::info('Broadcasting on auction-channel');
         return ['the-auction-hub'];
     }
 
     public function broadcastAs() {
-        return 'notification-bid';
+        Log::info('BidPlaced event triggered in auction id', ['bid' => $this->auction_id]);
+        return 'notification-bid-'.$this->auction_id;
     }
 
 }

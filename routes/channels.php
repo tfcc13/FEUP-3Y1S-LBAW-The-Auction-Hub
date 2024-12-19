@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Broadcast;
 use App\Models\Auction;
+use App\Broadcasting\AuctionChannel;
 
 /*
 |--------------------------------------------------------------------------

@@ -414,4 +414,20 @@ class AuctionController extends Controller
 
     return redirect()->back()->with('success', $message);
   }
+
+  public function relatedAuctions(Request $request)
+  { 
+    $user = Auth::user();
+    //dd($request);
+    if (!$user) {
+      return response()->json([], 200);
+    }
+    
+    $auctionIds = $user->ownsBids()->pluck('auction_id')
+                      ->merge($user->followsAuction()->pluck('auction_id'))
+                      ->unique();
+    
+    Log::info('Related auction IDs:', context: ['auction_ids' => $auctionIds]);
+    return response()->json($auctionIds->values());
+  }
 }

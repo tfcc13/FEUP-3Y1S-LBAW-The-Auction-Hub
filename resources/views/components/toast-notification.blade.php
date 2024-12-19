@@ -18,6 +18,10 @@
 </div>
 
 <script>
+
+    const userId = '{{ auth()->user()->id }}';
+
+    
     const pusher = new Pusher(pusherAppKey, {
         cluster: pusherCluster,
         encrypted: true,
@@ -26,28 +30,51 @@
 
     const channel = pusher.subscribe('the-auction-hub');
 
-    channel.bind('notification-bid', function(data) {
-        const message = data.message;
-        const auctionId = data.auction_id;
+fetch('/auctions/related-auctions', {
+    headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+        },
+    })
+        .then(response => {
+            
+            console.log('Response status:', response.status, response.statusText);
+            if (!response.ok) throw new Error('Failed to fetch related auctions');
+            return response.json();
+        })
+        .then(relatedAuctions => {
+            if (relatedAuctions.length === 0) {
+                console.log('No auctions to subscribe to (user may not be logged in).');
+                return;
+            }
 
+            relatedAuctions.forEach(auction => {
+                console.log(`notification-bid-${auction}`);
+
+                channel.bind(`notification-bid-${auction}`, data => {
+                    showNotification(data.message, `/auctions/auction/${data.auction_id}`);
+                });
+            });
+        })
+        .catch(error => console.error('Error fetching related auctions:', error));
+
+    // Function to show notifications
+    function showNotification(message, auctionLink) {
         const toast = document.getElementById('notificationToast');
-        const closeToastBtn = document.getElementById('closeToast');
-        const goToAuctionBtn = document.getElementById('goToAuction');
-        
         document.getElementById('toastMessage').innerText = message;
 
         toast.classList.remove('hidden');
-        
-        closeToastBtn.addEventListener('click', () => {
-            toast.classList.add('hidden');
-        });
 
-        goToAuctionBtn.addEventListener('click', () => {
-            window.location.href = '/auctions/auction/'+auctionId; 
-        });
+        document.getElementById('closeToast').onclick = () => {
+            toast.classList.add('hidden');
+        };
+
+        document.getElementById('goToAuction').onclick = () => {
+            window.location.href = auctionLink;
+        };
 
         setTimeout(() => {
             toast.classList.add('hidden');
-        }, 10000); 
-    });
+        }, 10000);
+    }
+    
 </script>
