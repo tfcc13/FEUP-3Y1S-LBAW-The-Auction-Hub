@@ -108,4 +108,5 @@ class Auction extends Model
   {
     return $this->hasMany(FollowAuction::class, 'auction_id');
   }
+
 }
