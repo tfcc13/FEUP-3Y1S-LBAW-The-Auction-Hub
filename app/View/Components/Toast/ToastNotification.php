@@ -21,6 +21,6 @@ class ToastNotification extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.toast-notification');
+        return view('components.toast.toast-notification');
     }
 }

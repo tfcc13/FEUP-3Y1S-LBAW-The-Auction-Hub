@@ -53,6 +53,9 @@ fetch('/auctions/related-auctions', {
                 channel.bind(`notification-bid-${auction}`, data => {
                     showNotification(data.message, `/auctions/auction/${data.auction_id}`);
                 });
+                channel.bind(`notification-auction-ended-${auction}`, data => {
+                    showNotification(data.message, `/auctions/auction/${data.auction_id}`);
+                });
             });
         })
         .catch(error => console.error('Error fetching related auctions:', error));
