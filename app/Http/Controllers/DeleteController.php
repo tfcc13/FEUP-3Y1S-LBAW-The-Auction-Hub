@@ -57,7 +57,7 @@ class DeleteController extends Controller
                 return redirect()->back()->with('error', 'Cannot delete account with money remaining.');
             }
             if ($user->activeBids()) {
-                return redirect()->back()->with('error', 'Cannot delete account In account with bids.');
+                return redirect()->back()->with('error', 'Cannot delete account having bids in other auctions.');
             }
 
             $user->name = 'anonymous';
@@ -75,19 +75,4 @@ class DeleteController extends Controller
     }
 
     // Delete auction
-    public function deleteAuction(Auction $auction)
-    {
-        // Ensure only the owner or admin can delete the auction
-        $this->authorize('delete', $auction);
-
-        // Ensure no active bids on the auction
-        if ($auction->bids()->exists()) {
-            return redirect()->back()->with('error', 'Cannot delete auction with active bids.');
-        }
-
-        // Delete the auction
-        $auction->delete();
-
-        return redirect()->route('admin.dashboard')->with('success', 'Auction deleted successfully.');
-    }
 }

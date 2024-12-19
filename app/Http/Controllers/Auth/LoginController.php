@@ -16,7 +16,7 @@ class LoginController extends Controller
   public function showLoginForm()
   {
     if (Auth::check()) {
-      return redirect('/login');
+      return redirect('/home');
     } else {
       return view('auth.login');
     }
@@ -27,6 +27,7 @@ class LoginController extends Controller
    */
   public function authenticate(Request $request): RedirectResponse
   {
+
     $credentials = $request->validate([
       'email' => ['required', 'email'],
       'password' => ['required'],
