@@ -47,20 +47,6 @@ class AuctionController extends Controller
       $searchTerm = $request->input('search');
       $categories = $request->get('category', []);
 
-      // Check if the search term is provided
-      if (!$searchTerm || empty($searchTerm)) {
-        return response()->json([
-          'error' => 'Search term is required.'
-        ], 200);  // Bad Request
-      }
-
-      // Ensure the search term is a string
-      if (!is_string($searchTerm)) {
-        return response()->json([
-          'error' => 'Search term must be a valid string.'
-        ], 200);  // Bad Request
-      }
-
       $query = Auction::with('images')->search($searchTerm);
 
       if (!empty($categories)) {
@@ -165,7 +151,6 @@ class AuctionController extends Controller
       event(new AuctionBid($bid, $auction));
       return redirect()->back()->with('success', 'Your bid has been placed successfully!');
     } catch (\Exception $e) {
-      // dd($request->all());
       // dd($e->getMessage(), $e->getTrace());
       DB::rollBack();
       return redirect()->back()->with('error', 'An error occurred while placing your bid: ' . $e->getMessage());
@@ -221,43 +206,6 @@ class AuctionController extends Controller
     }
   }
 
-  /*   public function submitAuction(Request $request)
-                                            {
-                                              // Validate the form data
-                                              $validatedData = $request->validate([
-                                                'title' => 'required|string|max:255',
-                                                'description' => 'required|string',
-                                                'start_price' => 'required|numeric|min:0',
-                                                'category_id' => 'required|exists:category,id',
-                                                'files' => 'required|image|mimes:png,jpg,jpeg,gif|max:4196',
-                                              ]);
-
-                                              //dd($validatedData);
-
-                                              try {
-                                                DB::beginTransaction();
-                                                // Create a new auction
-                                                $auction = new Auction();
-                                                $auction->title = $validatedData['title'];
-                                                $auction->description = $validatedData['description'];
-                                                $auction->start_price = $validatedData['start_price'];
-                                                $auction->category_id = $validatedData['category_id'];
-                                                $auction->owner_id = Auth::id();
-                                                $auction->save();
-                                                DB::commit();
-
-                                                if ($request->hasFile('files')) {
-                                                  //dd($request);
-                                                  //dd($fileRequest, $request);
-                                                  app(FileController::class)->upload($request, $auction->id);
-                                              }
-
-                                                return redirect()->route('auctions.show', $auction->id)->with('success', 'Auction created successfully!');
-                                              } catch (\Exception $e) {
-                                                return redirect()->route('auctions.create_auction')->with('error', 'An error occurred while creating the auction: ' . $e->getMessage());
-                                              }
-                                            } */
-
   public function cancelAuction($auction_id)
   {
     $auction = Auction::findOrFail($auction_id);
@@ -309,8 +257,8 @@ class AuctionController extends Controller
 
     // not neeeded it redirects to a 403 page because of the auction policy
     /*         if (Auth::user()->id !== $auction->owner_id) {
-                                                                                                                                    return redirect()->back()->with('message', 'You do not have permission to edit this auction.');
-                                                                                                                                } */
+                                                                                                                                        return redirect()->back()->with('message', 'You do not have permission to edit this auction.');
+                                                                                                                                    } */
 
     $validatedData = $request->validate([
       'title' => 'required|string|max:255',
@@ -336,8 +284,8 @@ class AuctionController extends Controller
     $auction = Auction::findOrFail($auction_id);
     $this->authorize('delete', $auction);
 
-    if ($auction->bids()->count() > 0) {
-      return redirect()->back()->with('error', 'Cannot delete an auction with bids.');
+    if ($auction->bids()->count() > 0 && $auction->state==="Ongoing") {
+      return redirect()->back()->with('error', 'Cannot delete an ongoing auction with bids.');
     }
 
     try {

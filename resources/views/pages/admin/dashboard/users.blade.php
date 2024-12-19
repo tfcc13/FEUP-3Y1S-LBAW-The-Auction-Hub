@@ -35,6 +35,7 @@
           <th class="px-4 py-2 border border-gray-300 text-left font-semibold">ID</th>
           <th class="px-4 py-2 border border-gray-300 text-left font-semibold">Name</th>
           <th class="px-4 py-2 border border-gray-300 text-left font-semibold">Username</th>
+          <th class="px-4 py-2 border border-gray-300 text-left font-semibold">Email</th>
           <th class="px-4 py-2 border border-gray-300 text-left font-semibold">Nº of Reported Auction</th>
           <th class="px-4 py-2 border border-gray-300 text-center font-semibold">Ban</th>
           <th class="px-4 py-2 border border-gray-300 text-center font-semibold">Delete</th>
@@ -49,6 +50,7 @@
             <a href="{{ route('user.profile.other', ['username' => $user->username]) }}" class="text-blue-500 hover:underline">{{ $user->name }}</a>
           </td>
           <td class="px-4 py-2 border border-gray-300">{{ $user->username }}</td>
+          <td class="px-4 py-2 border border-gray-300">{{ $user->email }}</td>
           <td class="px-4 py-2 border border-gray-300">{{ $user->report_count }}</td>
           <td class="px-4 py-2 border border-gray-300 text-center">
             @if($user->state !== 'Banned')

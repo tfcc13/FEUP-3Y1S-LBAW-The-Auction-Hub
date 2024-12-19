@@ -107,7 +107,6 @@
           url += `&category[]=${id}`;
         });
       }
-      console.log(url)
 
       const response = await fetch(url);
 

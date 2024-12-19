@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
@@ -65,20 +65,6 @@ class UserController extends Controller
     try {
       // Retrieve the search term from the request
       $searchTerm = $request->input('search');
-
-      // Check if the search term is provided
-      if (!$searchTerm || empty($searchTerm)) {
-        return response()->json([
-          'error' => 'Search term is required.'
-        ], 400);  // Bad Request
-      }
-
-      // Ensure the search term is a string
-      if (!is_string($searchTerm)) {
-        return response()->json([
-          'error' => 'Search term must be a valid string.'
-        ], 400);  // Bad Request
-      }
 
       $users = User::search($searchTerm)->where('state', '!=', 'Banned')->get();
 
@@ -161,27 +147,5 @@ class UserController extends Controller
     $user = auth()->user();
     $followed = $user->followsAuction;  // Changed from follows to followsAuction
     return view('pages.auctions.follow', compact('followed'));
-  }
-
-  public function deleteAccount()
-  {
-    $user = auth()->user();
-
-    try {
-      DB::beginTransaction();
-
-      // Set user state to 'Deleted' which will trigger the anonymization
-      $user->state = 'Deleted';
-      $user->save();
-
-      // Logout the user
-      Auth::logout();
-
-      DB::commit();
-      return redirect()->route('login')->with('success', 'Your account has been deleted successfully.');
-    } catch (\Exception $e) {
-      DB::rollBack();
-      return redirect()->back()->with('error', 'Failed to delete your account. Please try again.');
-    }
   }
 }
