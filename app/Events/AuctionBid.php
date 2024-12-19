@@ -16,12 +16,12 @@ class AuctionBid implements ShouldBroadcast
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $bid;
-    public $auction;
+    public $auction_id;
     public $message;
     public function __construct($bid, $auction)
     {
         $this ->bid = $bid;
-        $this ->auction = $auction;
+        $this ->auction_id = $auction->id;
         $this -> message = 'Someone has bidded ' . $auction->title . '!';
         Log::info('BidPlaced event triggered', ['bid' => $bid]);
     }

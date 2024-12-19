@@ -35,6 +35,7 @@
             @include('layouts.navbar')
         </header>
         <section id="content">
+            <x-toast-notification />
             @yield('content')
         </section>
     </main>
