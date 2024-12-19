@@ -23,32 +23,33 @@ class AdminController extends Controller
 
   public function dashboardUsers($request = null)
   {
-    if ($request == null) {
-      $users = User::all();
+    if ($request === null || !$request->has('search')) {
+      $users = User::where('state', '!=', 'Deleted')->get();
     } else {
+      // If a search term is provided, use the search method to get users
       $response = $this->search($request);
-      if ($response) {
+
+      if ($response->getStatusCode() === 200) {
         $decodedResponse = json_decode($response->getContent(), true);
 
         // Check if 'data' is present and is an array
         if (isset($decodedResponse['data']) && is_array($decodedResponse['data'])) {
           $userIds = [];
           foreach ($decodedResponse['data'] as $userData) {
-            // Add the user ID to the list (you can also add more conditions here if needed)
-            $userIds[] = $userData['id'];
+            $userIds[] = $userData['id'];  // Add the user ID to the list
           }
 
-          // Fetch the users that match the IDs from the database
+          // Fetch the users that match the IDs from the database and exclude 'Deleted' users
           $users = User::whereIn('id', $userIds)->get();
         } else {
-          $users = User::all();
+          // If no results from search, fetch all users where state != 'Deleted'
+          $users = User::where('state', '!=', 'Deleted')->get();
         }
       } else {
-        // If no response or an invalid response, return an empty collection
-        $users = collect();
+        // If the search response is not OK, return an empty collection
+        $users = User::where('state', '!=', 'Deleted')->get();
       }
     }
-
     // Get the report count for each owner as an associative array
     $reportsPerOwner = Report::join('auction', 'report.auction_id', '=', 'auction.id')
       ->join('users', 'users.id', '=', 'auction.owner_id')
@@ -115,7 +116,7 @@ class AdminController extends Controller
 
       return $auction;
     });
-    
+
     return view('pages.admin.dashboard.auctions', compact('auctions'));
   }
 
@@ -135,13 +136,15 @@ class AdminController extends Controller
 
     try {
       DB::beginTransaction();
-      $user->delete();
-
+      $user->name = 'anonymous';
+      $user->username = 'anonymous';
+      $user->email = 'anonymous';
+      $user->state = 'Deleted';
+      $user->save();
       DB::commit();
       return redirect()->route('admin.dashboard')->with('success', 'User deleted successfully.');
     } catch (\Exception $e) {
       dd($e);
-
       DB::rollBack();
       return redirect()->back()->with('error', 'Failed to delete the user. Please try again.');
     }
@@ -238,7 +241,7 @@ class AdminController extends Controller
         ], 400);  // Bad Request
       }
 
-      $users = User::search($searchTerm)->get();
+      $users = User::search($searchTerm)->where('state', '!=', 'Deleted')->get();
 
       if ($users->isEmpty()) {
         return response()->json([

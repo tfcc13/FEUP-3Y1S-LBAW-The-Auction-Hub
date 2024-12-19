@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
@@ -171,6 +171,9 @@ class UserController extends Controller
       DB::beginTransaction();
 
       // Set user state to 'Deleted' which will trigger the anonymization
+      $user->name = 'anonymous';
+      $user->username = 'anonymous';
+      $user->email = 'anonymous';
       $user->state = 'Deleted';
       $user->save();
 

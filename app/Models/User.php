@@ -98,11 +98,7 @@ class User extends Authenticatable
 
     public function scopeSearch($query, $searchTerm)
     {
-        Log::info('Initial Query', [$query->toSql()]);
-
         $query->whereRaw("to_tsvector('english', name) @@ plainto_tsquery(?)", [$searchTerm]);
-        Log::info('After Adding Full-text Search', [$query->toSql()]);
-
         $query->where('is_admin', '!=', true);
 
         return $query;

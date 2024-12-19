@@ -161,7 +161,6 @@ class AuctionController extends Controller
       // dd($e->getMessage(), $e->getTrace());
       return redirect()->back()->with('success', 'Your bid has been placed successfully!');
     } catch (\Exception $e) {
-      // dd($request->all());
       // dd($e->getMessage(), $e->getTrace());
       DB::rollBack();
       return redirect()->back()->with('error', 'An error occurred while placing your bid: ' . $e->getMessage());
