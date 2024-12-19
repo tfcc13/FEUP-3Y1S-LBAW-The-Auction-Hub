@@ -1,10 +1,11 @@
 <?php
 
 namespace App\Providers;
-use App\Models\User;
-use App\Policies\DeletionPolicy;
-use App\Models\Auction;
 
+use App\Models\Auction;
+use App\Models\User;
+use App\Policies\AuctionPolicy;
+use App\Policies\UserPolicy;
 // use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
@@ -15,9 +16,10 @@ class AuthServiceProvider extends ServiceProvider
      *
      * @var array<class-string, class-string>
      */
+
     protected $policies = [
-        User::class => DeletionPolicy::class,
-        Auction::class => DeletionPolicy::class,
+        Auction::class => AuctionPolicy::class,
+        User::class => UserPolicy::class,
     ];
 
     /**

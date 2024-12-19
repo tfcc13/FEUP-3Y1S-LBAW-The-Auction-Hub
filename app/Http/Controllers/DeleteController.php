@@ -15,7 +15,7 @@ class DeleteController extends Controller
     {
         $user = User::find($userId);
         // Authorize based on the policy
-        $this->authorize('deleteUser', $user);
+        $this->authorize('delete', $user);
 
         // Perform necessary checks before deletion
         $hasActiveAuctions = Bid::join('auction', 'bid.auction_id', '=', 'auction.id')
