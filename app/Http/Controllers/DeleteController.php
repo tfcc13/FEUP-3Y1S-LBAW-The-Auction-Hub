@@ -60,9 +60,6 @@ class DeleteController extends Controller
                 return redirect()->back()->with('error', 'Cannot delete account having bids in other auctions.');
             }
 
-            $user->name = 'anonymous';
-            $user->username = 'anonymous';
-            $user->email = 'anonymous';
             $user->state = 'Deleted';
             $user->save();
             DB::commit();

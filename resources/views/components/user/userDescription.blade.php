@@ -58,7 +58,7 @@
     </div>
 
     {{-- Delete Account --}}
-    <x-toast.confirm :buttonText="'Delete Account'" :route="'deleteUser.Delete'" :method="'DELETE'" :id="auth()->user()->id" :modalTitle="'Delete Account'"
+    <x-toast.confirm :buttonText="'Delete Account'" :route="'user.deleteUser'" :method="'DELETE'" :id="auth()->user()->id" :modalTitle="'Delete Account'"
         :modalMessage="'Are you sure you want to delete your account? This action is irreversible.'"  :object="auth()->user()"
         class="flex items-center justify-center py-1 px-3 text-red-500 bg-white border border-red-500 hover:bg-red-500/15 
             rounded-lg active:scale-95 transition-all duration-150 ease-out w-min sm:w-auto mt-10 text-nowrap" />

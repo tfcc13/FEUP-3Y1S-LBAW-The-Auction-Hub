@@ -789,7 +789,7 @@ BEGIN
 
     NEW.username := 'anonymous' || OLD.id;
     NEW.name := 'Anonymous';
-    NEW.email := 'anonymous' || OLD.id || '@theauctionhub.com';
+    NEW.email := 'anonymous';
     NEW.password := 'anonymous';
     NEW.birth_date := '1900-01-01';
     NEW.credit_balance := 0.00;

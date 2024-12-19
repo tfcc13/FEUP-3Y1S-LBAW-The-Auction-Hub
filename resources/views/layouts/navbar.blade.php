@@ -93,7 +93,7 @@
                                 </a>
                                 {{-- Mobile Navigation --}}
 
-                                <a href="{{ url('/dashboard') }}"
+                                <a href="{{ route('user.dashboard') }}"
                                     class="flex items-center space-x-2 py-2 px-4 text-gray-800 hover:bg-[#135d3b]/15 rounded-lg">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24"
                                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"

@@ -136,8 +136,8 @@ class AdminController extends Controller
 
     try {
       DB::beginTransaction();
-      $user->ownAuction()->delete();  // Assuming the User has created auctions
-      $user->ownsBids()->delete();  // Assuming the User has placed bids
+      $user->ownAuctions()->delete();  
+      $user->ownsBids()->delete();  
       $user->state = 'Banned';
       $user->save();
       DB::commit();
@@ -146,10 +146,9 @@ class AdminController extends Controller
 
       return redirect()->route('admin.dashboard')->with('success', 'User deleted successfully.');
     } catch (\Exception $e) {
-      dd($e);
 
       DB::rollBack();
-      return redirect()->back()->with('error', 'Failed to delete the user. Please try again.');
+      return redirect()->back()->with('error', 'Failed to ban the user. Please try again.');
     }
   }
 

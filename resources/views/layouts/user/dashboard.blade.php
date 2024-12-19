@@ -9,11 +9,11 @@
 
                     {{-- Dashboard --}}
                     <li class="w-full">
-                        <a href="{{ route('dashboard') }}"
-                            class="tab-link {{ request()->routeIs('dashboard') ? 'text-[#135d3b]' : 'text-gray-800' }} ">
+                        <a href="{{ route('user.dashboard') }}"
+                            class="tab-link {{ request()->routeIs('user.dashboard') ? 'text-[#135d3b]' : 'text-gray-800' }} ">
                             <span class="material-symbols-outlined">home</span>
                             <span class="hidden sm:inline">Dashboard</span>
-                            @if (request()->routeIs('dashboard'))
+                            @if (request()->routeIs('user.dashboard'))
                                 <div class="absolute bottom-0 left-0 w-full h-1 bg-[#135d3b]"></div>
                             @endif
                         </a>

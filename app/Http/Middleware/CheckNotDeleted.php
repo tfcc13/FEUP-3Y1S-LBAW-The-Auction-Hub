@@ -2,10 +2,10 @@
 
 namespace App\Http\Middleware;
 
-use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
+use Closure;
 
 class CheckNotDeleted
 {
@@ -16,10 +16,8 @@ class CheckNotDeleted
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (Auth::check() && Auth::user()->email === "anonymous") {
-            return response()->json([
-                'error' => 'Your account has been deleted. Access denied.'
-            ], 403);
+        if (Auth::check() && Auth::user()->email === 'anonymous') {
+            return redirect()->route('deleted');
         }
 
         return $next($request);

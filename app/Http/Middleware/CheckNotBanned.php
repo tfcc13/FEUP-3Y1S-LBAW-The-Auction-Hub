@@ -12,9 +12,7 @@ class CheckNotBanned
     public function handle(Request $request, Closure $next): Response
     {
         if (Auth::check() && Auth::user()->is_banned) {
-            return response()->json([
-                'error' => 'Your account is banned. Access denied.'
-            ], 403);
+            return redirect()->route('banned');
         }
 
         return $next($request);
