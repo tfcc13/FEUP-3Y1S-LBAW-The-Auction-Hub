@@ -54,7 +54,7 @@ INSERT INTO category (name) VALUES
 
 -- Populate Auctions
 INSERT INTO auction (title, description, start_price, current_bid, start_date, end_date, state, owner_id, category_id) VALUES
-('Vintage Car Auction', 'Auction for a vintage car', 5000, NULL, '2024-10-30 10:00:00', '2024-12-17 23:55:59', 'Ongoing', 1,1),
+('Vintage Car Auction', 'Auction for a vintage car', 5000, NULL, '2024-10-30 10:00:00', '2024-12-17 23:55:59', 'Closed', 1,1),
 ('Antique Painting Auction', 'Rare antique painting', 2000, NULL, '2024-10-15 12:00:00', NULL, 'Closed', 2,1),
 ('Rare Comic Book Collection', 'Collection of rare comic books', 3000, NULL, '2024-10-20 09:00:00', NULL, 'Closed', 4,1),
 ('Diamond Necklace', 'Exquisite diamond necklace', 10000, NULL, '2024-10-25 14:00:00', NULL, 'Closed', 5,1),
@@ -122,7 +122,6 @@ INSERT INTO bid (amount, bid_date, auction_id, user_id) VALUES
 (1300, '2024-11-11 11:30:00', 7, 4),
 (2600, '2024-11-16 16:15:00', 8, 7),
 (3600, '2024-11-21 13:00:00', 9, 9),
-(1900, '2024-11-26 15:45:00', 10, 8),
 (7800, '2024-12-02 10:00:00', 11, 12),
 (15500, '2024-12-06 12:30:00', 12, 14),
 (8200, '2024-12-11 11:45:00', 13, 16),

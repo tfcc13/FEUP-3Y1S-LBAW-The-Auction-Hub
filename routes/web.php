@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuctionController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\DeleteController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MoneyController;
 use App\Http\Controllers\NotificationController;
@@ -41,11 +42,11 @@ Route::controller(RegisterController::class)->group(function () {
 
 Route::middleware(['auth', 'not.banned'])->group(function () {
     // User
+    Route::delete('/delete/user/{id}', [DeleteController::class, 'deleteUser'])->name('deleteUser.Delete');
     Route::get('/dashboard', function () {
         return view('pages.user.dashboard.dashboard');
     })->name('dashboard');
     Route::put('/user/description', [UserController::class, 'updateDescription'])->name('user.updateDescription');
-    Route::delete('/user/delete-account', [UserController::class, 'deleteAccount'])->name('user.deleteAccount');
     Route::get('/profile/{username}', [UserController::class, 'showProfile'])->name('user.profile.other');
     Route::get('/dashboard/stats', [UserController::class, 'showStatistics'])->name('user.dash.stats');
     Route::get('/dashboard/financial', [UserController::class, 'showFinancial'])->name('user.dash.financial');
@@ -106,7 +107,7 @@ Route::prefix('admin')->group(function () {
         Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
         Route::get('/dashboard/users', [AdminController::class, 'dashboardUsers'])->name('dashboard.users');
         Route::get('/dashboard/categories', [AdminController::class, 'dashboardCategorie'])->name('dashboard.categories');
-        Route::delete('/delete/user/{id}', [AdminController::class, 'deleteUser'])->name('deleteUser');
+        Route::delete('/delete/user/{id}', [DeleteController::class, 'deleteUser'])->name('deleteUser.Delete');
         Route::delete('/delete/category/{id}', [AdminController::class, 'deleteCategory'])->name('deleteCategory');
         Route::put('/ban/user/{id}', [AdminController::class, 'banUser'])->name('banUser');
         Route::get('/dashboard/auctions', [AdminController::class, 'dashboardAuctions'])->name('dashboard.auctions');

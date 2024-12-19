@@ -1,12 +1,12 @@
 <?php
 
 namespace App\Http\Controllers;
-use Illuminate\Support\Facades\Auth;
-use App\Models\MoneyManager;
-use Illuminate\Support\Facades\DB;
-use App\Models\User;
 
+use App\Models\MoneyManager;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class MoneyController extends Controller
 {
@@ -19,6 +19,7 @@ class MoneyController extends Controller
     {
         return $this->updateMoney($request, $userId, 'Withdraw');
     }
+
     public function updateMoney(Request $request, $userId, $operationType)
     {
         $request->validate([
@@ -26,17 +27,14 @@ class MoneyController extends Controller
             'operationType' => 'required|in:Deposit,Withdraw',
         ]);
 
-
-
         $user = User::findOrFail($userId);
-        
 
-        if($operationType === 'Withdraw'&& $user->credit_balance < $request->amount){
+        if ($operationType === 'Withdraw' && $user->credit_balance < $request->amount) {
             return response()->json(['error' => "You don't have sufficient funds"]);
         }
 
-        if($operationType === 'Deposit'&&  $request->amount > 100000){
-            return response()->json(['error' => "Deposit amount above limit deposit of 100000$"]);
+        if ($operationType === 'Deposit' && $request->amount > 100000) {
+            return response()->json(['error' => 'Deposit amount above limit deposit of 100000$']);
         }
 
         try {
@@ -51,6 +49,7 @@ class MoneyController extends Controller
                 'user_id' => $user->id,
                 'operation_date' => now(),
             ]);
+            
 
             DB::commit();
 
@@ -65,7 +64,7 @@ class MoneyController extends Controller
     {
         $transaction = MoneyManager::findOrFail($transactionId);
 
-        if($transaction->state !== 'Pending') {
+        if ($transaction->state !== 'Pending') {
             return redirect()->back()->with('error', 'Cannot alter the state of a completed transaction');
         }
 
@@ -75,12 +74,16 @@ class MoneyController extends Controller
             $transaction->state = 'Approved';
             $transaction->save();
 
-            $user = $transaction->user; 
-            $user->credit_balance += $transaction->amount;
+            $user = $transaction->user;
+            if ($transaction->type === 'Withdraw') {
+                $user->credit_balance -= $transaction->amount;
+            } else {
+                $user->credit_balance += $transaction->amount;
+            }
             $user->save();
-    
+
             DB::commit();
-    
+
             return redirect()->back()->with('success', 'Transaction approved successfully.');
         } catch (\Exception $e) {
             DB::rollBack();
@@ -91,7 +94,7 @@ class MoneyController extends Controller
     public function rejectTransaction(Request $request, $transactionId)
     {
         $transaction = MoneyManager::findOrFail($transactionId);
-        if($transaction->state !== 'Pending') {
+        if ($transaction->state !== 'Pending') {
             return redirect()->back()->with('error', 'Cannot alter the state of a completed transaction');
         }
         try {
@@ -108,6 +111,4 @@ class MoneyController extends Controller
             return redirect()->back()->with('error', 'An error occurred: ' . $e->getMessage());
         }
     }
-
-
 }

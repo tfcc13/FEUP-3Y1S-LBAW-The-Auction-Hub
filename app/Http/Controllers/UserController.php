@@ -163,28 +163,4 @@ class UserController extends Controller
     return view('pages.auctions.follow', compact('followed'));
   }
 
-  public function deleteAccount()
-  {
-    $user = auth()->user();
-
-    try {
-      DB::beginTransaction();
-
-      // Set user state to 'Deleted' which will trigger the anonymization
-      $user->name = 'anonymous';
-      $user->username = 'anonymous';
-      $user->email = 'anonymous';
-      $user->state = 'Deleted';
-      $user->save();
-
-      // Logout the user
-      Auth::logout();
-
-      DB::commit();
-      return redirect()->route('login')->with('success', 'Your account has been deleted successfully.');
-    } catch (\Exception $e) {
-      DB::rollBack();
-      return redirect()->back()->with('error', 'Failed to delete your account. Please try again.');
-    }
-  }
 }

@@ -78,6 +78,16 @@ class User extends Authenticatable
         return $this->hasMany(Bid::class, 'user_id');
     }
 
+    public function activeBids()
+    {
+        return $this
+            ->ownsBids()
+            ->whereHas('auction', function ($query) {
+                $query->where('state', 'Ongoing');
+            })
+            ->count() > 0;
+    }
+
     public function auctionWon()
     {
         return $this

@@ -76,7 +76,7 @@
           <td class="px-4 py-2 border border-gray-300 text-center">
             <x-toast.confirm
               :buttonText="'Delete User'"
-              :route="'admin.deleteUser'"
+              :route="'admin.deleteUser.Delete'"
               :method="'DELETE'"
               :id="'delete'.$user->id"
               :modalTitle="'Delete this user?'"

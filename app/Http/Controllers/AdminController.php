@@ -126,30 +126,6 @@ class AdminController extends Controller
     return view('pages.admin.dashboard.categories', compact('categories'));
   }
 
-  public function deleteUser($userId)
-  {
-    $user = User::find($userId);
-
-    if (!$user) {
-      return redirect()->back()->with('error', 'User not found.');
-    }
-
-    try {
-      DB::beginTransaction();
-      $user->name = 'anonymous';
-      $user->username = 'anonymous';
-      $user->email = 'anonymous';
-      $user->state = 'Deleted';
-      $user->save();
-      DB::commit();
-      return redirect()->route('admin.dashboard')->with('success', 'User deleted successfully.');
-    } catch (\Exception $e) {
-      dd($e);
-      DB::rollBack();
-      return redirect()->back()->with('error', 'Failed to delete the user. Please try again.');
-    }
-  }
-
   public function banUser($userId)
   {
     $user = User::find($userId);
