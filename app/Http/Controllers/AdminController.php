@@ -278,4 +278,94 @@ class AdminController extends Controller
     $transactions = MoneyManager::all()->sortByDesc('operation_date');
     return view('pages.admin.dashboard.transactions', compact('transactions'));
   }
+
+  public function statistics()
+  {
+    // Count active and deleted users
+    $activeUsers = User::where('state', 'Active')->count();
+    $deletedUsers = User::where('state', 'Deleted')->count();
+
+    // Most active users by number of bids
+    $topBidders = DB::table('users')
+      ->join('bid', 'users.id', '=', 'bid.user_id')
+      ->select('users.username', DB::raw('COUNT(bid.id) as bid_count'))
+      ->groupBy('users.id', 'users.username')
+      ->orderByDesc('bid_count')
+      ->limit(5)
+      ->get();
+
+    // Auctions with the highest number of bids
+    $popularAuctions = DB::table('auction')
+      ->join('bid', 'auction.id', '=', 'bid.auction_id')
+      ->select('auction.title', DB::raw('COUNT(bid.id) as bid_count'))
+      ->groupBy('auction.id', 'auction.title')
+      ->orderByDesc('bid_count')
+      ->limit(5)
+      ->get();
+
+    // Most sold categories
+    $topCategories = DB::table('category')
+      ->join('auction', 'category.id', '=', 'auction.category_id')
+      ->join('auction_winner', 'auction.id', '=', 'auction_winner.auction_id')
+      ->select('category.name', DB::raw('COUNT(auction_winner.auction_id) as sold_count'))
+      ->groupBy('category.id', 'category.name')
+      ->orderByDesc('sold_count')
+      ->limit(5)
+      ->get();
+
+    // Total transaction value and count
+    $transactionStats = MoneyManager::select(
+      DB::raw('SUM(amount) as total_amount'),
+      DB::raw('COUNT(id) as total_transactions')
+    )
+      ->where('state', 'Approved')
+      ->first();
+
+    // Revenue from deposits and withdrawals
+    $revenue = MoneyManager::select(
+      DB::raw("SUM(CASE WHEN type = 'Deposit' THEN amount ELSE 0 END) as total_deposits"),
+      DB::raw("SUM(CASE WHEN type = 'Withdraw' THEN amount ELSE 0 END) as total_withdrawals")
+    )
+      ->where('state', 'Approved')
+      ->first();
+
+    $pending = MoneyManager::select(
+      DB::raw("SUM(CASE WHEN type = 'Withdraw' THEN amount ELSE 0 END) as total_withdrawals")
+    )
+      ->where('state', 'Pending')
+    ->first();
+      
+    // Average bid per auction
+    $averageBidPerAuction = DB::table('bid')
+      ->join('auction', 'bid.auction_id', '=', 'auction.id')
+      ->select(DB::raw('AVG(bid.amount) as avg_bid'))
+      ->first();
+
+    // Auction statistics for top categories
+    $topCategoryStats = DB::table('category')
+      ->join('auction', 'category.id', '=', 'auction.category_id')
+      ->select('category.name', DB::raw('COUNT(auction.id) as auction_count'))
+      ->groupBy('category.id', 'category.name')
+      ->orderByDesc('auction_count')
+      ->limit(5)
+      ->get();
+
+    // Adding more statistics if needed
+    // Example: Get total number of users
+    $totalUsers = User::count();
+
+    return view('pages.admin.dashboard.statistics', compact(
+      'activeUsers',
+      'deletedUsers',
+      'topBidders',
+      'popularAuctions',
+      'topCategories',
+      'transactionStats',
+      'revenue',
+      'averageBidPerAuction',
+      'topCategoryStats',
+      'totalUsers',
+      'pending'
+    ));
+  }
 }

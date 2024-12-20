@@ -30,7 +30,7 @@
         </a>
       </li>
       <li>
-        <a href="#"
+        <a href="{{route('admin.dashboard.statistics')}}"
           class="block px-4 py-3 hover:bg-white hover:text-[rgb(19,93,59)] rounded transition 
                               {{ request()->routeIs('admin.analytics') ? 'bg-white text-[rgb(19,93,59)]' : '' }}">
           📈 Analytics
