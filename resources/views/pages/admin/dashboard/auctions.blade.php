@@ -1,6 +1,11 @@
 @extends('layouts.admin.dashboard')
 
 @section('Display')
+@if(session('error'))
+<div class="alert alert-danger text-red-500 bg-red-100 border border-red-400 rounded p-4">
+  {{ session('error') }}
+</div>
+@endif
 <div class="container mx-auto p-6">
   <!-- Main Content -->
   <h2 class="text-xl font-semibold mb-4">Manage Auctions</h2>
