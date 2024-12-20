@@ -3,7 +3,7 @@
 @section('Display')
 <div class="container mx-auto p-6">
   <!-- Main Content -->
-  <h2 class="text-xl font-semibold mb-4">Manage Users</h2>
+  <h2 class="text-xl font-semibold mb-4">Manage Auctions</h2>
 
   <div class="flex w-1/2 md:w-1/4">
     <form
@@ -73,6 +73,9 @@
         @endforelse
       </tbody>
     </table>
+    <div class="mt-4">
+      {{ $auctions->links('pagination::tailwind') }}
+    </div>
   </div>
 </div>
 @endsection
