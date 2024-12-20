@@ -26,7 +26,7 @@
 
 
     <!-- Styles and Scripts -->
-    @vite(['resources/css/app.postcss', 'resources/js/app.js', 'resources/js/auction.js', 'resources/js/components/bid_card.js', 'resources/js/components/info_card.js'])
+    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/auction.js', 'resources/js/components/bid_card.js', 'resources/js/components/info_card.js'])
 </head>
 
 <body>
