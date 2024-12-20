@@ -11,6 +11,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Events\AuctionBid;
+
 
 class AuctionController extends Controller
 {
@@ -145,6 +147,8 @@ class AuctionController extends Controller
 
       $auction = $auction->fresh();
       // dd($e->getMessage(), $e->getTrace());
+
+      event(new AuctionBid($bid, $auction));
       return redirect()->back()->with('success', 'Your bid has been placed successfully!');
     } catch (\Exception $e) {
       // dd($e->getMessage(), $e->getTrace());
@@ -357,5 +361,20 @@ class AuctionController extends Controller
     }
 
     return redirect()->back()->with('success', $message);
+  }
+
+  public function relatedAuctions(Request $request)
+  { 
+    $user = Auth::user();
+    if (!$user) {
+      return response()->json([], 200);
+    }
+    
+    $auctionIds = $user->ownsBids()->pluck('auction_id')
+                      ->merge($user->followsAuction()->pluck('auction_id'))
+                      ->merge($user->ownAuctions()->pluck('id')) 
+                      ->unique();
+    
+    return response()->json($auctionIds->values());
   }
 }

@@ -710,7 +710,7 @@ DECLARE
 BEGIN
     SELECT is_admin INTO user_is_admin
     FROM users
-    WHERE id = NEW.id;
+    WHERE id = NEW.user_id;
 
     IF user_is_admin THEN
         IF TG_TABLE_NAME = 'bid' THEN

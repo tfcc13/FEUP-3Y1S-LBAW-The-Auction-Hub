@@ -9,6 +9,7 @@ use App\Models\AuctionWinner;
 use App\Models\Bid;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Events\AuctionEnded;
 
 class Kernel extends ConsoleKernel
 {
@@ -59,7 +60,7 @@ class Kernel extends ConsoleKernel
                     //dd($auction, $auction_owner);
 
                     DB::table('users')->where('id', $auction_owner)->increment('credit_balance', $highest_bid->amount);
-
+                    event(new AuctionEnded( $auction));
 
                 }
 

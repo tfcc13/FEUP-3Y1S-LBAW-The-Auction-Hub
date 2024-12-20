@@ -94,6 +94,7 @@ Route::middleware(['not.banned', 'not.deleted'])->group(function () {
             Route::get('/auction-state/{id}', [AuctionController::class, 'getAuctionState'])->name('auction_state.fetch');
             Route::post('/report/{id}', [AuctionController::class, 'report'])->name('auction.report');
             Route::post('/auctions/{auction}/follow', [AuctionController::class, 'toggleFollow'])->name('auctions.follow')->middleware('auth');
+            Route::get('/related-auctions', [AuctionController::class, 'relatedAuctions']);
         });
         // Notifications
         Route::prefix('notifications')->group(function () {

@@ -26,4 +26,3 @@ Route::get('/auctions/search', [AuctionController::class, 'search']);
 Route::get('/users/search', [UserController::class, 'search']);
 Route::get('/admin/search', [AdminController::class, 'search']);
 Route::get('/categories',[CategoryController::class,'search']);
-
