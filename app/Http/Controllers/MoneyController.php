@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\Notification;
+use App\Events\TransactionUpdate;
 
 class MoneyController extends Controller
 {
@@ -53,7 +54,6 @@ class MoneyController extends Controller
             
 
             DB::commit();
-
             return response()->json(['message' => $operationType . ' request created successfully. Awaiting admin approval.']);
         } catch (\Exception $e) {
             DB::rollBack();
@@ -94,7 +94,7 @@ class MoneyController extends Controller
             ]);
 
             DB::commit();
-
+            event(new TransactionUpdate($transaction));
             return redirect()->back()->with('success', 'Transaction approved successfully.');
         } catch (\Exception $e) {
             DB::rollBack();
@@ -117,7 +117,7 @@ class MoneyController extends Controller
             
             Notification::create([
                 'user_id' => $transaction->user_id,
-                'content' => "Your {$transaction->type} of {$transaction->amount}$ with ID {$transaction->id} has been approved.",
+                'content' => "Your {$transaction->type} of {$transaction->amount}$ with ID {$transaction->id} has been rejected.",
                 'type' => 'TransactionUpdate',
                 'view_status' => false,
                 'bid_id' => null,
@@ -128,7 +128,7 @@ class MoneyController extends Controller
 
     
             DB::commit();
-
+            event(new TransactionUpdate($transaction));
             return redirect()->back()->with('success', 'Transaction rejected successfully.');
         } catch (\Exception $e) {
             DB::rollBack();

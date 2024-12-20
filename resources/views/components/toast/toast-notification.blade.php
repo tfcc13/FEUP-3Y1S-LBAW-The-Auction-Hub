@@ -50,6 +50,13 @@
                         console.log('No auctions to subscribe to (user may not be logged in).');
                         return;
                     }
+                    
+
+                    console.log(`notification-transaction-state-${userId}`)
+                    channel.bind(`notification-transaction-state-${userId}`, data => {
+                                            showNotification(data.message, null);
+                     });
+
 
                     relatedAuctions.forEach(auction => {
                         console.log(`notification-bid-${auction}`);
@@ -67,16 +74,23 @@
             // Function to show notifications
             function showNotification(message, auctionLink) {
                 const toast = document.getElementById('notificationToast');
+                const goToAuctionButton = document.getElementById('goToAuction');
                 document.getElementById('toastMessage').innerText = message;
+                
+                if (auctionLink) {
+                    goToAuctionButton.classList.remove('hidden');
+                    goToAuctionButton.onclick = () => {
+                        window.location.href = auctionLink;
+                };
+                } else {
+                    goToAuctionButton.classList.add('hidden');
+                    goToAuctionButton.onclick = null; // Remove any previous event handlers
+                }
 
                 toast.classList.remove('hidden');
 
                 document.getElementById('closeToast').onclick = () => {
                     toast.classList.add('hidden');
-                };
-
-                document.getElementById('goToAuction').onclick = () => {
-                    window.location.href = auctionLink;
                 };
 
                 setTimeout(() => {
