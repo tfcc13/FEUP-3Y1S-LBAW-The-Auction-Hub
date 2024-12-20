@@ -148,6 +148,12 @@ class AuctionController extends Controller
       $auction = $auction->fresh();
       // dd($e->getMessage(), $e->getTrace());
 
+      $this->sendBidNotificationToBidders($auction, $bid);
+
+      // Notify the auction owner
+      $this->sendBidNotificationToOwner($auction, $bid);
+
+
       event(new AuctionBid($bid, $auction));
       return redirect()->back()->with('success', 'Your bid has been placed successfully!');
     } catch (\Exception $e) {
@@ -377,4 +383,43 @@ class AuctionController extends Controller
 
     return response()->json($auctionIds->values());
   }
+
+  private function sendBidNotificationToBidders($auction, $bid)
+  {
+      // Get all users who have placed a bid in the auction except for the current user
+      $bidders = $auction->bids()->where('user_id', '!=', Auth::id())->pluck('user_id')->toArray();
+
+      // Notify each bidder
+      foreach ($bidders as $userId) {
+          $user = User::find($userId);
+          if ($user) {
+              $user->notifications()->create([
+                  'content' => "A new bid of {$bid->amount} has been placed in the auction '{$auction->title}'.",
+                  'type' => 'BidUpdate',
+                  'user_id' => $user->id,
+                  'bid_id' => $bid->id,
+                  'view_status' => false,
+              ]);
+          }
+      }
+  }
+
+  private function sendBidNotificationToOwner($auction, $bid)
+  {
+      // Get the auction owner
+      $owner = $auction->user;
+
+      if ($owner) {
+          $owner->notifications()->create([
+              'content' => "A new bid of {$bid->amount} has been placed in your auction {$auction->title}.",
+              'type' => 'BidUpdate',
+              'user_id' => $owner->id,
+              'auction_id' => $auction->id,
+              'view_status' => false,
+          ]);
+      }
+}
+
+
+
 }

@@ -46,17 +46,18 @@
                     return response.json();
                 })
                 .then(relatedAuctions => {
-                    if (relatedAuctions.length === 0) {
-                        console.log('No auctions to subscribe to (user may not be logged in).');
-                        return;
-                    }
-                    
 
                     console.log(`notification-transaction-state-${userId}`)
                     channel.bind(`notification-transaction-state-${userId}`, data => {
                                             showNotification(data.message, null);
                      });
 
+
+                    if (relatedAuctions.length === 0) {
+                        console.log('No auctions to subscribe to (user may not be logged in).');
+                        return;
+                    }
+                    
 
                     relatedAuctions.forEach(auction => {
                         console.log(`notification-bid-${auction}`);
