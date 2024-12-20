@@ -1,9 +1,14 @@
 @extends('layouts.admin.dashboard')
 
 @section('Display')
+@if(session('error'))
+<div class="alert alert-danger text-red-500 bg-red-100 border border-red-400 rounded p-4">
+  {{ session('error') }}
+</div>
+@endif
 <div class="container mx-auto p-6">
   <!-- Main Content -->
-  <h2 class="text-xl font-semibold mb-4">Manage Users</h2>
+  <h2 class="text-xl font-semibold mb-4">Manage Auctions</h2>
 
   <div class="flex w-1/2 md:w-1/4">
     <form
@@ -73,6 +78,9 @@
         @endforelse
       </tbody>
     </table>
+    <div class="mt-4">
+      {{ $auctions->links('pagination::tailwind') }}
+    </div>
   </div>
 </div>
 @endsection

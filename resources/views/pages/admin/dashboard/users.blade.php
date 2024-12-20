@@ -105,6 +105,9 @@
         @endforelse
       </tbody>
     </table>
+    <div class="mt-4">
+      {{ $users->links('pagination::tailwind') }}
+    </div>
   </div>
 </div>
 @endsection

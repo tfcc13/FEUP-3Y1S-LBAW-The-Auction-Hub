@@ -24,7 +24,7 @@ class AdminController extends Controller
   public function dashboardUsers($request = null)
   {
     if ($request === null || !$request->has('search')) {
-      $users = User::where('state', '!=', 'Deleted')->get();
+      $users = User::where('state', '!=', 'Deleted')->paginate(8);  // Call paginate first
     } else {
       // If a search term is provided, use the search method to get users
       $response = $this->search($request);
@@ -40,16 +40,17 @@ class AdminController extends Controller
           }
 
           // Fetch the users that match the IDs from the database and exclude 'Deleted' users
-          $users = User::whereIn('id', $userIds)->get();
+          $users = User::whereIn('id', $userIds)->paginate(8);  // Call paginate here
         } else {
           // If no results from search, fetch all users where state != 'Deleted'
-          $users = User::where('state', '!=', 'Deleted')->get();
+          $users = User::where('state', '!=', 'Deleted')->paginate(8);
         }
       } else {
         // If the search response is not OK, return an empty collection
-        $users = User::where('state', '!=', 'Deleted')->get();
+        $users = User::where('state', '!=', 'Deleted')->paginate(8);
       }
     }
+
     // Get the report count for each owner as an associative array
     $reportsPerOwner = Report::join('auction', 'report.auction_id', '=', 'auction.id')
       ->join('users', 'users.id', '=', 'auction.owner_id')
@@ -58,19 +59,20 @@ class AdminController extends Controller
       ->orderBy('report_count', 'DESC')
       ->pluck('report_count', 'owner_id');  // Creates key-value pairs: owner_id => report_count
 
-    // Attach report counts to users
-    $users = $users->map(function ($user) use ($reportsPerOwner) {
+    // Attach report counts to users after pagination
+    $users->getCollection()->transform(function ($user) use ($reportsPerOwner) {
       $user->report_count = $reportsPerOwner[$user->id] ?? 0;
       return $user;
     });
 
+    // Return the users with pagination
     return view('pages.admin.dashboard.users', compact('users'));
   }
 
   public function dashboardAuctions($request = null)
   {
     if ($request == null) {
-      $auctions = Auction::all();
+      $auctions = Auction::paginate(8);
     } else {
       $response = app(AuctionController::class)->search($request);
       if ($response) {
@@ -101,14 +103,16 @@ class AdminController extends Controller
       ->orderBy('report_count', 'DESC')
       ->pluck('report_count', 'auction_id');  // Creates a key-value map
 
-    // Add report_count to each auction
-    $auctions = $auctions->map(function ($auction) use ($reportsPerAuction) {
+    $auctions->getCollection()->map(function ($auction) use ($reportsPerAuction) {
       $auction->report_count = $reportsPerAuction[$auction->id] ?? 0;
       return $auction;
     });
-    $users = User::all()->keyBy('id');  // Create a map of users with their IDs as keys
 
-    $auctions = $auctions->map(function ($auction) use ($users) {
+    // Create a map of users with their IDs as keys
+    $users = User::all()->keyBy('id');
+
+    // Add owner information to each auction
+    $auctions->getCollection()->map(function ($auction) use ($users) {
       $user = $users[$auction->owner_id] ?? null;
 
       $auction->owner_username = $user->username ?? 'Unknown';
@@ -136,8 +140,8 @@ class AdminController extends Controller
 
     try {
       DB::beginTransaction();
-      $user->ownAuctions()->delete();  
-      $user->ownsBids()->delete();  
+      $user->ownAuctions()->delete();
+      $user->ownsBids()->delete();
       $user->state = 'Banned';
       $user->save();
       DB::commit();
@@ -146,7 +150,6 @@ class AdminController extends Controller
 
       return redirect()->route('admin.dashboard')->with('success', 'User deleted successfully.');
     } catch (\Exception $e) {
-
       DB::rollBack();
       return redirect()->back()->with('error', 'Failed to ban the user. Please try again.');
     }
