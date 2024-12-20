@@ -52,7 +52,7 @@ class AuctionController extends Controller
       if (!empty($categories)) {
         $query->whereIn('category_id', $categories);
       }
-      $query->where('end_date', '>', now());
+      if(!Auth::user()->is_admin)$query->where('end_date', '>', now());
 
       $auctions = $query->get();
 

@@ -13,359 +13,359 @@ use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
 {
-  //
+    //
 
-  public function dashboard()
-  {
-    $reports = Report::all();
-    return view('pages.admin.dashboard.notification', compact('reports'));
-  }
+    public function dashboard()
+    {
+        $reports = Report::all();
+        return view('pages.admin.dashboard.notification', compact('reports'));
+    }
 
-  public function dashboardUsers($request = null)
-  {
-    if ($request === null || !$request->has('search')) {
-      $users = User::where('state', '!=', 'Deleted')->paginate(8);  // Call paginate first
-    } else {
-      // If a search term is provided, use the search method to get users
-      $response = $this->search($request);
-
-      if ($response->getStatusCode() === 200) {
-        $decodedResponse = json_decode($response->getContent(), true);
-
-        // Check if 'data' is present and is an array
-        if (isset($decodedResponse['data']) && is_array($decodedResponse['data'])) {
-          $userIds = [];
-          foreach ($decodedResponse['data'] as $userData) {
-            $userIds[] = $userData['id'];  // Add the user ID to the list
-          }
-
-          // Fetch the users that match the IDs from the database and exclude 'Deleted' users
-          $users = User::whereIn('id', $userIds)->paginate(8);  // Call paginate here
+    public function dashboardUsers($request = null)
+    {
+        if ($request === null || !$request->has('search')) {
+            $users = User::where('state', '!=', 'Deleted')->paginate(8);  // Call paginate first
         } else {
-          // If no results from search, fetch all users where state != 'Deleted'
-          $users = User::where('state', '!=', 'Deleted')->paginate(8);
+            // If a search term is provided, use the search method to get users
+            $response = $this->search($request);
+
+            if ($response->getStatusCode() === 200) {
+                $decodedResponse = json_decode($response->getContent(), true);
+
+                // Check if 'data' is present and is an array
+                if (isset($decodedResponse['data']) && is_array($decodedResponse['data'])) {
+                    $userIds = [];
+                    foreach ($decodedResponse['data'] as $userData) {
+                        $userIds[] = $userData['id'];  // Add the user ID to the list
+                    }
+
+                    // Fetch the users that match the IDs from the database and exclude 'Deleted' users
+                    $users = User::whereIn('id', $userIds)->paginate(8);  // Call paginate here
+                } else {
+                    // If no results from search, fetch all users where state != 'Deleted'
+                    $users = User::where('state', '!=', 'Deleted')->paginate(8);
+                }
+            } else {
+                // If the search response is not OK, return an empty collection
+                $users = User::where('state', '!=', 'Deleted')->paginate(8);
+            }
         }
-      } else {
-        // If the search response is not OK, return an empty collection
-        $users = User::where('state', '!=', 'Deleted')->paginate(8);
-      }
+
+        // Get the report count for each owner as an associative array
+        $reportsPerOwner = Report::join('auction', 'report.auction_id', '=', 'auction.id')
+            ->join('users', 'users.id', '=', 'auction.owner_id')
+            ->select('auction.owner_id', DB::raw('COUNT(*) as report_count'))
+            ->groupBy('auction.owner_id')
+            ->orderBy('report_count', 'DESC')
+            ->pluck('report_count', 'owner_id');  // Creates key-value pairs: owner_id => report_count
+
+        // Attach report counts to users after pagination
+        $users->getCollection()->transform(function ($user) use ($reportsPerOwner) {
+            $user->report_count = $reportsPerOwner[$user->id] ?? 0;
+            return $user;
+        });
+
+        // Return the users with pagination
+        return view('pages.admin.dashboard.users', compact('users'));
     }
 
-    // Get the report count for each owner as an associative array
-    $reportsPerOwner = Report::join('auction', 'report.auction_id', '=', 'auction.id')
-      ->join('users', 'users.id', '=', 'auction.owner_id')
-      ->select('auction.owner_id', DB::raw('COUNT(*) as report_count'))
-      ->groupBy('auction.owner_id')
-      ->orderBy('report_count', 'DESC')
-      ->pluck('report_count', 'owner_id');  // Creates key-value pairs: owner_id => report_count
-
-    // Attach report counts to users after pagination
-    $users->getCollection()->transform(function ($user) use ($reportsPerOwner) {
-      $user->report_count = $reportsPerOwner[$user->id] ?? 0;
-      return $user;
-    });
-
-    // Return the users with pagination
-    return view('pages.admin.dashboard.users', compact('users'));
-  }
-
-  public function dashboardAuctions($request = null)
-  {
-    if ($request == null) {
-      $auctions = Auction::paginate(8);
-    } else {
-      $response = app(AuctionController::class)->search($request);
-      if ($response) {
-        $decodedResponse = json_decode($response->getContent(), true);
-
-        if (isset($decodedResponse['data']) && is_array($decodedResponse['data'])) {
-          $auctionIds = [];
-          foreach ($decodedResponse['data'] as $auctionData) {
-            $auctionIds[] = $auctionData['id'];
-          }
-
-          $auctions = Auction::whereIn('id', $auctionIds)->get();
+    public function dashboardAuctions($request = null)
+    {
+        if ($request == null) {
+            $auctions = Auction::paginate(8);
         } else {
-          $auctions = Auction::all();
+            $response = app(AuctionController::class)->search($request);
+            if ($response) {
+                $decodedResponse = json_decode($response->getContent(), true);
+
+                if (isset($decodedResponse['data']) && is_array($decodedResponse['data'])) {
+                    $auctionIds = [];
+                    foreach ($decodedResponse['data'] as $auctionData) {
+                        $auctionIds[] = $auctionData['id'];
+                    }
+
+                    $auctions = Auction::whereIn('id', $auctionIds)->paginate(8);
+                } else {
+                    $auctions = Auction::paginate(8);
+                }
+            } else {
+                $auctions = Auction::paginate(8);
+            }
         }
-      } else {
-        $auctions = collect();
-      }
+
+        $reportsPerAuction = Report::join('auction', 'report.auction_id', '=', 'auction.id')
+            ->join('users', 'users.id', '=', 'auction.owner_id')
+            ->select(
+                'auction.id as auction_id',
+                DB::raw('COUNT(*) as report_count')
+            )
+            ->groupBy('auction.id')
+            ->orderBy('report_count', 'DESC')
+            ->pluck('report_count', 'auction_id');  // Creates a key-value map
+
+        $auctions->getCollection()->map(function ($auction) use ($reportsPerAuction) {
+            $auction->report_count = $reportsPerAuction[$auction->id] ?? 0;
+            return $auction;
+        });
+
+        // Create a map of users with their IDs as keys
+        $users = User::all()->keyBy('id');
+
+        // Add owner information to each auction
+        $auctions->getCollection()->map(function ($auction) use ($users) {
+            $user = $users[$auction->owner_id] ?? null;
+
+            $auction->owner_username = $user->username ?? 'Unknown';
+            $auction->owner_name = $user->name ?? 'Unknown';
+
+            return $auction;
+        });
+
+        return view('pages.admin.dashboard.auctions', compact('auctions'));
     }
 
-    $reportsPerAuction = Report::join('auction', 'report.auction_id', '=', 'auction.id')
-      ->join('users', 'users.id', '=', 'auction.owner_id')
-      ->select(
-        'auction.id as auction_id',
-        DB::raw('COUNT(*) as report_count')
-      )
-      ->groupBy('auction.id')
-      ->orderBy('report_count', 'DESC')
-      ->pluck('report_count', 'auction_id');  // Creates a key-value map
-
-    $auctions->getCollection()->map(function ($auction) use ($reportsPerAuction) {
-      $auction->report_count = $reportsPerAuction[$auction->id] ?? 0;
-      return $auction;
-    });
-
-    // Create a map of users with their IDs as keys
-    $users = User::all()->keyBy('id');
-
-    // Add owner information to each auction
-    $auctions->getCollection()->map(function ($auction) use ($users) {
-      $user = $users[$auction->owner_id] ?? null;
-
-      $auction->owner_username = $user->username ?? 'Unknown';
-      $auction->owner_name = $user->name ?? 'Unknown';
-
-      return $auction;
-    });
-
-    return view('pages.admin.dashboard.auctions', compact('auctions'));
-  }
-
-  public function dashboardCategorie()
-  {
-    $categories = Category::all();
-    return view('pages.admin.dashboard.categories', compact('categories'));
-  }
-
-  public function banUser($userId)
-  {
-    $user = User::find($userId);
-
-    if (!$user) {
-      return redirect()->back()->with('error', 'User not found.');
+    public function dashboardCategorie()
+    {
+        $categories = Category::all();
+        return view('pages.admin.dashboard.categories', compact('categories'));
     }
 
-    try {
-      DB::beginTransaction();
-      $user->ownAuctions()->delete();
-      $user->ownsBids()->delete();
-      $user->state = 'Banned';
-      $user->save();
-      DB::commit();
+    public function banUser($userId)
+    {
+        $user = User::find($userId);
 
-      // dd($user->state);
+        if (!$user) {
+            return redirect()->back()->with('error', 'User not found.');
+        }
 
-      return redirect()->route('admin.dashboard')->with('success', 'User deleted successfully.');
-    } catch (\Exception $e) {
-      DB::rollBack();
-      return redirect()->back()->with('error', 'Failed to ban the user. Please try again.');
-    }
-  }
+        try {
+            DB::beginTransaction();
+            $user->ownAuctions()->delete();
+            $user->ownsBids()->delete();
+            $user->state = 'Banned';
+            $user->save();
+            DB::commit();
 
-  public function unbanUser($userId)
-  {
-    $user = User::find($userId);
+            // dd($user->state);
 
-    if (!$user) {
-      return redirect()->back()->with('error', 'User not found.');
-    }
-
-    try {
-      DB::beginTransaction();
-      $user->state = 'Active';
-      $user->save();
-      DB::commit();
-
-      // dd($user->state);
-
-      return redirect()->route('admin.dashboard')->with('success', 'User deleted successfully.');
-    } catch (\Exception $e) {
-      dd($e);
-
-      DB::rollBack();
-      return redirect()->back()->with('error', 'Failed to delete the user. Please try again.');
-    }
-  }
-
-  public function promoteUser($userId)
-  {
-    $user = User::find($userId);
-
-    if (!$user) {
-      return redirect()->back()->with('error', 'User not found.');
+            return redirect()->route('admin.dashboard')->with('success', 'User deleted successfully.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Failed to ban the user. Please try again.');
+        }
     }
 
-    try {
-      DB::beginTransaction();
-      $user->is_admin = true;
-      $user->save();
-      DB::commit();
-      // dd($user->state);
+    public function unbanUser($userId)
+    {
+        $user = User::find($userId);
 
-      return redirect()->route('admin.dashboard')->with('success', 'User deleted successfully.');
-    } catch (\Exception $e) {
-      DB::rollBack();
-      return redirect()->back()->with('error', 'Failed to delete the user. Please try again.');
-    }
-  }
+        if (!$user) {
+            return redirect()->back()->with('error', 'User not found.');
+        }
 
-  public function search(Request $request)
-  {
-    try {
-      $searchTerm = $request->input('search');
+        try {
+            DB::beginTransaction();
+            $user->state = 'Active';
+            $user->save();
+            DB::commit();
 
-      $users = User::search($searchTerm)->where('state', '!=', 'Deleted')->get();
+            // dd($user->state);
 
-      if ($users->isEmpty()) {
-        return response()->json([
-          'message' => 'No results found for the search term.',
-          'data' => []
-        ], 200);
-      }
+            return redirect()->route('admin.dashboard')->with('success', 'User deleted successfully.');
+        } catch (\Exception $e) {
+            dd($e);
 
-      return response()->json([
-        'message' => 'Search successful.',
-        'data' => $users
-      ], 200);  // OK
-    } catch (\Exception $e) {
-      return response()->json([
-        'error' => 'An unexpected error occurred.',
-        'details' => $e->getMessage()
-      ], 500);
-    }
-  }
-
-  public function createCategory(Request $request)
-  {
-    $text = $request->input('text');
-    try {
-      $c = Category::create([
-        'name' => $text ? $text : 'New Category',
-      ]);
-      return redirect()->back();
-    } catch (\Illuminate\Database\QueryException $e) {
-      if ($e->getCode() == '23505') {
-        return redirect()->back()->with('error', 'There allready exists a category with this name.');
-      }
-      // Handle other database errors
-      return redirect()->back()->with('error', 'An unexpected error occurred. Please try again later.');
-    }
-  }
-
-  public function deleteCategory($categoryId)
-  {
-    $category = Category::find($categoryId);
-
-    if (!$category) {
-      return redirect()->back()->with('error', 'Category not found.');
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Failed to delete the user. Please try again.');
+        }
     }
 
-    try {
-      DB::beginTransaction();
+    public function promoteUser($userId)
+    {
+        $user = User::find($userId);
 
-      $auction = Auction::where('category_id', $category->id)->first();
+        if (!$user) {
+            return redirect()->back()->with('error', 'User not found.');
+        }
 
-      if ($auction) {
-        DB::rollBack();
+        try {
+            DB::beginTransaction();
+            $user->is_admin = true;
+            $user->save();
+            DB::commit();
+            // dd($user->state);
 
-        return redirect()->back()->with('error', 'This category cannot be deleted because there are associated auctions.');
-      }
-      $category->delete();
-
-      DB::commit();
-      return redirect()->route('admin.dashboard')->with('success', 'Category deleted successfully.');
-    } catch (\Exception $e) {
-      DB::rollBack();
-      return redirect()->back()->with('error', 'Failed to delete the Category. Please try again.');
+            return redirect()->route('admin.dashboard')->with('success', 'User deleted successfully.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Failed to delete the user. Please try again.');
+        }
     }
-  }
 
-  public function showTransactions()
-  {
-    $transactions = MoneyManager::all()->sortByDesc('operation_date');
-    return view('pages.admin.dashboard.transactions', compact('transactions'));
-  }
+    public function search(Request $request)
+    {
+        try {
+            $searchTerm = $request->input('search');
 
-  public function statistics()
-  {
-    // Count active and deleted users
-    $activeUsers = User::where('state', 'Active')->count();
-    $deletedUsers = User::where('state', 'Deleted')->count();
+            $users = User::search($searchTerm)->where('state', '!=', 'Deleted')->get();
 
-    // Most active users by number of bids
-    $topBidders = DB::table('users')
-      ->join('bid', 'users.id', '=', 'bid.user_id')
-      ->select('users.username', DB::raw('COUNT(bid.id) as bid_count'))
-      ->groupBy('users.id', 'users.username')
-      ->orderByDesc('bid_count')
-      ->limit(5)
-      ->get();
+            if ($users->isEmpty()) {
+                return response()->json([
+                    'message' => 'No results found for the search term.',
+                    'data' => []
+                ], 200);
+            }
 
-    // Auctions with the highest number of bids
-    $popularAuctions = DB::table('auction')
-      ->join('bid', 'auction.id', '=', 'bid.auction_id')
-      ->select('auction.title', DB::raw('COUNT(bid.id) as bid_count'))
-      ->groupBy('auction.id', 'auction.title')
-      ->orderByDesc('bid_count')
-      ->limit(5)
-      ->get();
+            return response()->json([
+                'message' => 'Search successful.',
+                'data' => $users
+            ], 200);  // OK
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'An unexpected error occurred.',
+                'details' => $e->getMessage()
+            ], 500);
+        }
+    }
 
-    // Most sold categories
-    $topCategories = DB::table('category')
-      ->join('auction', 'category.id', '=', 'auction.category_id')
-      ->join('auction_winner', 'auction.id', '=', 'auction_winner.auction_id')
-      ->select('category.name', DB::raw('COUNT(auction_winner.auction_id) as sold_count'))
-      ->groupBy('category.id', 'category.name')
-      ->orderByDesc('sold_count')
-      ->limit(5)
-      ->get();
+    public function createCategory(Request $request)
+    {
+        $text = $request->input('text');
+        try {
+            $c = Category::create([
+                'name' => $text ? $text : 'New Category',
+            ]);
+            return redirect()->back();
+        } catch (\Illuminate\Database\QueryException $e) {
+            if ($e->getCode() == '23505') {
+                return redirect()->back()->with('error', 'There allready exists a category with this name.');
+            }
+            // Handle other database errors
+            return redirect()->back()->with('error', 'An unexpected error occurred. Please try again later.');
+        }
+    }
 
-    // Total transaction value and count
-    $transactionStats = MoneyManager::select(
-      DB::raw('SUM(amount) as total_amount'),
-      DB::raw('COUNT(id) as total_transactions')
-    )
-      ->where('state', 'Approved')
-      ->first();
+    public function deleteCategory($categoryId)
+    {
+        $category = Category::find($categoryId);
 
-    // Revenue from deposits and withdrawals
-    $revenue = MoneyManager::select(
-      DB::raw("SUM(CASE WHEN type = 'Deposit' THEN amount ELSE 0 END) as total_deposits"),
-      DB::raw("SUM(CASE WHEN type = 'Withdraw' THEN amount ELSE 0 END) as total_withdrawals")
-    )
-      ->where('state', 'Approved')
-      ->first();
+        if (!$category) {
+            return redirect()->back()->with('error', 'Category not found.');
+        }
 
-    $pending = MoneyManager::select(
-      DB::raw("SUM(CASE WHEN type = 'Withdraw' THEN amount ELSE 0 END) as total_withdrawals")
-    )
-      ->where('state', 'Pending')
-    ->first();
-      
-    // Average bid per auction
-    $averageBidPerAuction = DB::table('bid')
-      ->join('auction', 'bid.auction_id', '=', 'auction.id')
-      ->select(DB::raw('AVG(bid.amount) as avg_bid'))
-      ->first();
+        try {
+            DB::beginTransaction();
 
-    // Auction statistics for top categories
-    $topCategoryStats = DB::table('category')
-      ->join('auction', 'category.id', '=', 'auction.category_id')
-      ->select('category.name', DB::raw('COUNT(auction.id) as auction_count'))
-      ->groupBy('category.id', 'category.name')
-      ->orderByDesc('auction_count')
-      ->limit(5)
-      ->get();
+            $auction = Auction::where('category_id', $category->id)->first();
 
-    // Adding more statistics if needed
-    // Example: Get total number of users
-    $totalUsers = User::count();
+            if ($auction) {
+                DB::rollBack();
 
-    return view('pages.admin.dashboard.statistics', compact(
-      'activeUsers',
-      'deletedUsers',
-      'topBidders',
-      'popularAuctions',
-      'topCategories',
-      'transactionStats',
-      'revenue',
-      'averageBidPerAuction',
-      'topCategoryStats',
-      'totalUsers',
-      'pending'
-    ));
-  }
+                return redirect()->back()->with('error', 'This category cannot be deleted because there are associated auctions.');
+            }
+            $category->delete();
+
+            DB::commit();
+            return redirect()->route('admin.dashboard')->with('success', 'Category deleted successfully.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Failed to delete the Category. Please try again.');
+        }
+    }
+
+    public function showTransactions()
+    {
+        $transactions = MoneyManager::all()->sortByDesc('operation_date');
+        return view('pages.admin.dashboard.transactions', compact('transactions'));
+    }
+
+    public function statistics()
+    {
+        // Count active and deleted users
+        $activeUsers = User::where('state', 'Active')->count();
+        $deletedUsers = User::where('state', 'Deleted')->count();
+
+        // Most active users by number of bids
+        $topBidders = DB::table('users')
+            ->join('bid', 'users.id', '=', 'bid.user_id')
+            ->select('users.username', DB::raw('COUNT(bid.id) as bid_count'))
+            ->groupBy('users.id', 'users.username')
+            ->orderByDesc('bid_count')
+            ->limit(5)
+            ->get();
+
+        // Auctions with the highest number of bids
+        $popularAuctions = DB::table('auction')
+            ->join('bid', 'auction.id', '=', 'bid.auction_id')
+            ->select('auction.title', DB::raw('COUNT(bid.id) as bid_count'))
+            ->groupBy('auction.id', 'auction.title')
+            ->orderByDesc('bid_count')
+            ->limit(5)
+            ->get();
+
+        // Most sold categories
+        $topCategories = DB::table('category')
+            ->join('auction', 'category.id', '=', 'auction.category_id')
+            ->join('auction_winner', 'auction.id', '=', 'auction_winner.auction_id')
+            ->select('category.name', DB::raw('COUNT(auction_winner.auction_id) as sold_count'))
+            ->groupBy('category.id', 'category.name')
+            ->orderByDesc('sold_count')
+            ->limit(5)
+            ->get();
+
+        // Total transaction value and count
+        $transactionStats = MoneyManager::select(
+            DB::raw('SUM(amount) as total_amount'),
+            DB::raw('COUNT(id) as total_transactions')
+        )
+            ->where('state', 'Approved')
+            ->first();
+
+        // Revenue from deposits and withdrawals
+        $revenue = MoneyManager::select(
+            DB::raw("SUM(CASE WHEN type = 'Deposit' THEN amount ELSE 0 END) as total_deposits"),
+            DB::raw("SUM(CASE WHEN type = 'Withdraw' THEN amount ELSE 0 END) as total_withdrawals")
+        )
+            ->where('state', 'Approved')
+            ->first();
+
+        $pending = MoneyManager::select(
+            DB::raw("SUM(CASE WHEN type = 'Withdraw' THEN amount ELSE 0 END) as total_withdrawals")
+        )
+            ->where('state', 'Pending')
+            ->first();
+
+        // Average bid per auction
+        $averageBidPerAuction = DB::table('bid')
+            ->join('auction', 'bid.auction_id', '=', 'auction.id')
+            ->select(DB::raw('AVG(bid.amount) as avg_bid'))
+            ->first();
+
+        // Auction statistics for top categories
+        $topCategoryStats = DB::table('category')
+            ->join('auction', 'category.id', '=', 'auction.category_id')
+            ->select('category.name', DB::raw('COUNT(auction.id) as auction_count'))
+            ->groupBy('category.id', 'category.name')
+            ->orderByDesc('auction_count')
+            ->limit(5)
+            ->get();
+
+        // Adding more statistics if needed
+        // Example: Get total number of users
+        $totalUsers = User::count();
+
+        return view('pages.admin.dashboard.statistics', compact(
+            'activeUsers',
+            'deletedUsers',
+            'topBidders',
+            'popularAuctions',
+            'topCategories',
+            'transactionStats',
+            'revenue',
+            'averageBidPerAuction',
+            'topCategoryStats',
+            'totalUsers',
+            'pending'
+        ));
+    }
 }
