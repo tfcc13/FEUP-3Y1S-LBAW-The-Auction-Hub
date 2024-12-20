@@ -1,7 +1,7 @@
 <div id="notificationToast" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-gray-900 bg-opacity-50">
     <div class="bg-[#135d3b] text-white p-6 rounded-lg shadow-lg w-full max-w-md flex items-center justify-between">
         <div>
-            <strong class="font-bold">New bid</strong>
+            <strong class="font-bold">New Notification</strong>
             <p class="text-sm" id="toastMessage">Your bid has been placed!</p>
         </div>
         <div class="flex space-x-4">

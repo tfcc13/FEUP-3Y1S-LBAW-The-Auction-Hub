@@ -15,17 +15,25 @@ class Notification extends Model
 
   protected $fillable = [//ask if admin can alter notifications
     'content',
-    'type',
-  ];
-
-  protected $guarded = [
     'notification_date',
+    'type',
     'view_status',
     'user_id',
     'bid_id',
     'report_user_id',
     'auction_id',
   ];
+
+  // protected $guarded = [
+  //   'content',
+  //   'notification_date',
+  //   'type',
+  //   'view_status',
+  //   'user_id',
+  //   'bid_id',
+  //   'report_user_id',
+  //   'auction_id',
+  // ];
 
   // Relationships
 
