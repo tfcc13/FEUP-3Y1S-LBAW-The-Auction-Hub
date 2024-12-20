@@ -123,13 +123,19 @@
         data,
         message
       } = await response.json();
-      if (data.length === 0) {
+      const now = new Date();
+      const validData = data.filter(auction => {
+        const endDate = new Date(auction.end_date);
+        return endDate > now; // Only keep auctions that haven't ended
+      });
+
+      if (validData.length === 0) {
         document.getElementById('results-container').innerHTML =
           `<p class="text-gray-600">${message || `No ${type} results found.`}</p>`;
         return;
       }
 
-      displayResults(data, type);
+      displayResults(validData, type);
 
     } catch (error) {
       // Catch unexpected errors, such as network issues
