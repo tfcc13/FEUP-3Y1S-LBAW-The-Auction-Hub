@@ -2,8 +2,17 @@
 
 @section('content')
     <main class="flex flex-col sm:flex-row w-full h-screen overflow-hidden">
-        <aside id="categories-container" class="bg-gray-100 w-full sm:w-64 h-full p-4 overflow-y-auto">
-            <h2 class="text-lg font-semibold text-gray-800 mb-4">Filters</h2>
+        <aside id="categories-container"
+            class="bg-gray-100 w-full sm:w-64 h-full p-6 overflow-y-auto space-y-6 transition-all duration-300">
+            <div class="flex items-center space-x-4">
+                <button id="collapse-filter"
+                    class="flex p-2 font-semibold text-gray-600 hover:bg-gray-200 rounded-full items-center 
+                    justify-center transition-all active:scale-95"
+                    aria-label="Toggle filters">
+                    <span class="material-symbols-outlined select-none transition-transform duration-300">menu</span>
+                </button>
+                <h2 class="text-lg font-semibold text-gray-800">Filters</h2>
+            </div>
             <nav aria-label="Product Categories" class="space-y-2" role="list">
                 @foreach ($categories as $category)
                     <div id="{{ $category->id }}" class="flex flex-col items-start" role="listitem">
@@ -42,11 +51,11 @@
                 class="absolute top-[40%] flex flex-col items-center text-gray-800 text-2xl space-y-4 error-message"
                 style="display: none;">
                 <span class="material-symbols-outlined" style="font-size: 9rem; font-weight: 200;">search_off</span>
-                <p></p>
+                <p class="text-center"></p>
             </div>
 
             <!-- Results Container -->
-            <div id="results-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            <div id="results-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 @if (isset($error) || isset($message))
                     <script>
                         document.addEventListener('DOMContentLoaded', () => {
@@ -74,6 +83,58 @@
 
     <script>
         let selectedCategories = [];
+        const categoriesContainer = document.getElementById('categories-container');
+        const collapseButton = document.getElementById('collapse-filter');
+        const menuIcon = collapseButton.querySelector('.material-symbols-outlined');
+        let isCollapsed = window.innerWidth < 768; // Initialize based on screen size
+        const resultsContainer = document.getElementById('results-container');
+
+        // Function to toggle sidebar
+        function toggleSidebar() {
+            isCollapsed = !isCollapsed;
+            updateSidebarState();
+        }
+
+        // Function to update sidebar state
+        function updateSidebarState() {
+            if (isCollapsed) {
+                categoriesContainer.classList.remove('sm:w-64', 'w-full', 'p-6');
+                categoriesContainer.classList.add('sm:w-20', 'w-20', 'px-2', 'py-6');
+                menuIcon.style.transform = 'rotate(180deg)';
+                resultsContainer.classList.remove('xl:grid-cols-3');
+                resultsContainer.classList.add('xl:grid-cols-4');
+                // Hide everything except the button
+                const elementsToHide = categoriesContainer.querySelectorAll('h2, nav');
+                elementsToHide.forEach(el => el.classList.add('hidden'));
+            } else {
+                categoriesContainer.classList.remove('sm:w-20', 'w-20', 'px-2', 'py-6');
+                categoriesContainer.classList.add('sm:w-64', 'w-full', 'p-6');
+                menuIcon.style.transform = 'rotate(0deg)';
+                resultsContainer.classList.remove('xl:grid-cols-4');
+                resultsContainer.classList.add('xl:grid-cols-3');
+                // Show everything back
+                const elementsToShow = categoriesContainer.querySelectorAll('h2, nav');
+                elementsToShow.forEach(el => el.classList.remove('hidden'));
+            }
+        }
+
+        // Toggle sidebar when collapse button is clicked
+        collapseButton.addEventListener('click', toggleSidebar);
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            const shouldBeCollapsed = window.innerWidth < 768;
+            if (shouldBeCollapsed !== isCollapsed) {
+                isCollapsed = shouldBeCollapsed;
+                updateSidebarState();
+            }
+        });
+
+        // Initial setup
+        document.addEventListener('DOMContentLoaded', () => {
+            updateSidebarState();
+        });
+
         document.querySelectorAll('[data-category]').forEach(button => {
             button.addEventListener('click', () => {
                 const categoryId = button.getAttribute('data-category');
@@ -95,18 +156,17 @@
         document.getElementById('toggle-auctions').addEventListener('click', () => {
             setActiveButton('toggle-auctions');
 
-            document.getElementById('categories-container').classList.remove('hidden'); // Show categories
+            resultsContainer.classList.remove('hidden'); // Show categories
             fetchResults('auctions');
         });
 
         document.getElementById('toggle-users').addEventListener('click', () => {
             setActiveButton('toggle-users');
-            document.getElementById('categories-container').classList.add('hidden'); // Hide categories
+            resultsContainer.classList.add('hidden'); // Hide categories
             fetchResults('users');
         });
 
         async function fetchResults(type, categoryId = '') {
-            const resultsContainer = document.getElementById('results-container');
             const errorMessage = document.getElementById('error-message');
 
             try {
@@ -155,19 +215,18 @@
         }
 
         function displayResults(results, type) {
-            const container = document.getElementById('results-container');
             const errorMessage = document.getElementById('error-message');
-            container.innerHTML = '';
+            resultsContainer.innerHTML = '';
 
             if (!results.length) {
                 errorMessage.style.display = 'flex';
                 errorMessage.querySelector('p').textContent = `No ${type} results found.`;
-                container.style.display = 'none';
+                resultsContainer.style.display = 'none';
                 return;
             }
 
             errorMessage.style.display = 'none';
-            container.style.display = 'grid';
+            resultsContainer.style.display = 'grid';
 
             results.forEach(item => {
                 if (type === 'auctions') {
@@ -206,14 +265,14 @@
                         button.replaceWith(link);
                     }
 
-                    container.appendChild(clone);
+                    resultsContainer.appendChild(clone);
                 } else {
                     const userDiv = document.createElement('div');
                     userDiv.innerHTML = `@include('search.user-card', [
                         'name' => '${item.name}',
                         'username' => '${item.username}',
                     ])`;
-                    container.appendChild(userDiv.firstElementChild);
+                    resultsContainer.appendChild(userDiv.firstElementChild);
                 }
             });
         }
