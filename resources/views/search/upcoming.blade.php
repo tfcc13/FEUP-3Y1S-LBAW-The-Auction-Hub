@@ -28,14 +28,11 @@
             </p>
         </div>
 
-        @if (isset($error))
-            <div class="bg-red-50 border-l-4 border-red-500 text-red-700 p-4 rounded mb-6">
-                <p class="font-bold">Error</p>
-                <p>{{ $error }}</p>
-            </div>
-        @elseif(isset($message))
-            <div class="bg-yellow-50 border-l-4 border-yellow-400 text-yellow-700 p-4 rounded mb-6">
-                <p>{{ $message }}</p>
+        <!-- Error or Message Section -->
+        @if (isset($error) || isset($message))
+            <div class="absolute top-[40%] flex flex-col items-center text-gray-800 text-2xl space-y-4 error-message">
+                <span class="material-symbols-outlined" style="font-size: 9rem; font-weight: 200;">search_off</span>
+                <p>{{ $error ?? $message }}</p>
             </div>
         @else
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
