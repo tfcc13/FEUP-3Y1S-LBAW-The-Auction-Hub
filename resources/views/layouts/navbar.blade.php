@@ -81,7 +81,7 @@
                                     </svg>
                                     <span>Following</span>
                                 </a>
-                                <a href="/user/follow"
+                                <a href="{{ route('notifications.index') }}"
                                     class="md:hidden flex items-center space-x-2 -ml-[0.10rem] py-2 px-4 text-gray-800 hover:bg-[#135d3b]/15 rounded-lg">
                                     <span class="material-symbols-outlined" style="font-size: 1.5rem;">
                                         notifications
