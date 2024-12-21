@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\MoneyManager;
+use App\Models\UserImage;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -164,4 +165,29 @@ class UserController extends Controller
     $followed = $user->followsAuction;  // Changed from follows to followsAuction
     return view('pages.auctions.follow', compact('followed'));
   }
+
+  public function updateProfilePicture(Request $request)
+{
+   
+    $request->validate([
+        'file' => 'required|image|mimes:jpeg,png,jpg,gif|max:10240',
+    ]);
+    
+    $user = Auth::user();
+    
+    if ($request->hasFile('file')) {
+      
+   
+        app(FileController::class)->uploadUserImage($request, $user->id);
+
+        return back()->with('success', 'Profile picture updated successfully.');
+    }
+
+    
+
+    return back()->with('error', 'Please select a valid image file.');
+}
+
+
+
 }

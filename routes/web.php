@@ -79,6 +79,7 @@ Route::middleware(['not.banned', 'not.deleted'])->group(function () {
             Route::post('{userId}/withdraw-money', [MoneyController::class, 'withdrawMoney'])->name('withdraw-money');
             Route::get('/dashboard/bids', [UserController::class, 'showBids'])->name('dash.bids');
             Route::get('/transactions', [UserController::class, 'getTransactions'])->name('user.transactions');
+            Route::post('/profile-picture', [UserController::class, 'updateProfilePicture'])->name('profile.picture.update');
         });
         // Auctions
         Route::prefix('auctions')->group(function () {

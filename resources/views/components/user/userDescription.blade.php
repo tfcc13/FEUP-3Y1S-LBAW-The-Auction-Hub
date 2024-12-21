@@ -5,6 +5,18 @@
         <div class="w-48 h-48 flex-shrink-0 items-center justify-center">
             <x-user.image class="w-full h-full object-cover rounded-full" />
         </div>
+        <form action="{{ route('user.profile.picture.update') }}" method="POST" enctype="multipart/form-data">
+            @csrf
+            <div class="form-group">
+                <label for="user">Choose Profile Picture</label>
+                <input type="file" name="file" id="file" class="form-control" required>
+                <input name="type" type="text" value="user" hidden>
+                @error('user')
+                    <small class="text-danger">{{ $message }}</small>
+                @enderror
+            </div>
+            <button type="submit" class="btn btn-primary mt-2">Upload</button>
+        </form>
 
         <!-- User Details and Rating -->
         <x-user.user-details :name="auth()->user()->name" :username="auth()->user()->username" :email="auth()->user()->email"

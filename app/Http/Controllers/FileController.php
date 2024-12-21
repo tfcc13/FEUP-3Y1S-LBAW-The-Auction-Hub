@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 use App\Models\Auction;
+use App\Models\User;
+use App\Models\UserImage;
 use App\Models\AuctionImage;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
@@ -14,6 +16,7 @@ class FileController extends Controller
 
     static $systemTypes = [
         'auction' => ['png', 'jpg', 'jpeg', 'gif'],
+        'user' => ['png', 'jpg', 'jpeg', 'gif'],
     ];
 
 
@@ -46,6 +49,11 @@ class FileController extends Controller
                 //$fileName = $auctionImage->path;
                 $fileName = Auction::find($id)->primaryImage();
                 break;
+            case'user':
+                $userImage = User::find($id)->userImage;
+                $fileName = $userImage ? $userImage->path :null;
+                break;
+                
             default:
                 return null;
         }
@@ -57,91 +65,66 @@ class FileController extends Controller
         $existingFileName = self::getFileName($type, $id);
         if ($existingFileName) {
             Storage::disk(self::$diskName)->delete($type . '/' . $existingFileName);
-
             switch($type) {
-                case 'profile':
-                    User::find($id)->profile_image = null;
-                    break;
-                case 'post':
-                    // other models
+                case 'user':
+                    User::findOrFail($id)->userImage = null;
                     break;
             }
         }
     }
-
-    function upload(Request $request, $id) {
+    function uploadUserImage(Request $request, $id) {
+        
         $validated = $request->validate([
             'type' => 'required|string',
-            'files' => 'required|image|mimes:png,jpg,jpeg,gif|max:4196',
+            'file' => 'required|image|mimes:png,jpg,jpeg,gif|max:10240',
         ]);
-
- 
-   /*      if ($request->hasFile('files')) {
-            dd($request->file('files')); // This should be an array of uploaded files
-        } */
-        // Validation: has file
-        if (!$request->hasFile('files')) {
+        
+        
+        if (!$request->hasFile('file')) {
             return redirect()->back()->with('error', 'Error: File not found');
         }
         
-
         // Validation: upload type
         if (!$this->isValidType($request->type)) {
             return redirect()->back()->with('error', 'Error: Unsupported upload type');
         }
-
-        // Validation: upload extension
-        $file = $request->file('files');
-        $type = $request->type;
-        $extension = $file->extension();
-        if (!$this->isValidExtension($type, $extension)) {
-            return redirect()->back()->with('error', 'Error: Unsupported upload extension');
-        }
-
-        // Prevent existing old files
-        $this->delete($type, $id);
-
-        // Generate unique filename
-        $fileName = $file->hashName();
-
-        // Validation: model
-        $error = null;
-        switch($request->type) {
-            case 'auction':
-                $auction = Auction::findOrFail($id);
-                if ($auction) {
-                    //$auction->profile_image = $fileName;
-                    $auctionImage = new AuctionImage([
-                        'path'  => $fileName,
-                        'auction_id' => $id,
-                    ]);
-                    $auctionImage->save();
-                } else {
-                    $error = "unknown auction";
-                }
-                break;
-            default:
-                redirect()->back()->with('error', 'Error: Unsupported upload object');
-        }
-
-        if ($error) {
-            redirect()->back()->with('error', `Error: {$error}`);
-        }
-
-
-        $path = "{$auction->id}";
         
+        $file = $request->file('file');
+
+        $type = $request->type;
+        
+        $extension = $file->extension();
+                if (!$this->isValidExtension($type, $extension)) {
+                    return redirect()->back()->with('error', 'Error: Unsupported upload extension');
+                }
+        $fileName = $file->hashName();
+        $user = User::findOrFail($id);
+                    if($user){
+                        if($user->userImage()->exists()) {
+                            $this->delete($type, $id);
+                            $user->userImage()->update(['path' => $fileName]);
+                        } else {
+                            $user->userImage()->create(['path' => $fileName]);
+                        }                    
+                    }
+                    else {
+                        redirect()->back()->with('error', "Error: Inexistent user");
+                    }
+        
+        $path = "user";
         $file->storeAs($path, $fileName, self::$diskName);
         
         return redirect()->back()->with('success', 'Success: upload completed!');
     }
 
     function uploadAuctionImages(Request $request, $id) {
+        
         $validated = $request->validate([
             'type' => 'required|string',
-            'files.*' => 'required|image|mimes:png,jpg,jpeg,gif|max:4196',
+            'files.*' => 'required|image|mimes:png,jpg,jpeg,gif|max:10240',
         ]);
 
+        
  
    /*      if ($request->hasFile('files')) {
             dd($request->file('files')); // This should be an array of uploaded files
@@ -162,7 +145,7 @@ class FileController extends Controller
         
 
         // Prevent existing old files
-        $this->delete($type, $id);
+        //$this->delete($type, $id);
 
         
         if ($request->hasFile('files')) {
@@ -186,7 +169,7 @@ class FileController extends Controller
                 } else {
                     redirect()->back()->with('error', 'Error: Unsupported upload object');
                 }
-                $path = "{$auction->id}";
+                $path = "auction/{$auction->id}";
                 
                 $file->storeAs($path, $fileName, self::$diskName);
                 
