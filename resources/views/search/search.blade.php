@@ -21,8 +21,7 @@
                             aria-label="{{ $category->name }}" title="{{ $category->name }}" id="{{ $category->id }}"
                             data-category="{{ $category->id }}">
                             <span>{{ $category->name }}</span>
-                            <span
-                                class="material-symbols-outlined text-white bg-[#135d3b] rounded-full hidden check-icon"
+                            <span class="material-symbols-outlined text-white bg-[#135d3b] rounded-full hidden check-icon"
                                 style="font-size: 1.2rem;">done</span>
                         </button>
                     </div>
@@ -34,8 +33,8 @@
 
             <!-- Header Section -->
             <div
-                class="flex flex-col sm:flex-row items-center justify-center w-full space-x-0 sm:space-x-6 space-y-2 sm:space-y-0">
-                <h1 class="text-2xl sm:text-4xl sm:font-semibold text-gray-800 text-center whitespace-nowrap">Search Results
+                class="flex flex-col md:flex-row items-center justify-center w-full space-y-2 space-x-0 md:space-y-0 md:space-x-6">
+                <h1 class="text-2xl md:text-3xl font-semibold text-gray-800 text-center whitespace-nowrap">Search Results
                 </h1>
 
                 <!-- Toggle Buttons -->
@@ -101,7 +100,7 @@
             if (width < 768) { // md
                 columns = 1;
             } else if (width < 1024) { // lg
-                columns = 2;
+                columns = isCollapsed ? 2 : 1;
             } else if (width < 1280) { // xl
                 columns = isCollapsed ? 3 : 2;
             } else { // 2xl and up
