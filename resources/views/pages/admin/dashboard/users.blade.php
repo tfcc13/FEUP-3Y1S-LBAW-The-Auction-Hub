@@ -7,8 +7,8 @@
             {{ session('error') }}
         </div>
     @endif
-    <div class="container mx-auto p-6">
-        <h2 class="text-xl font-semibold mb-4">Manage Users</h2>
+    <div class="flex flex-col space-y-6 w-full" id="admin-reports">
+        <h3 class="text-2xl font-semibold text-gray-800">Manage Users</h3>
 
         <div class="flex w-1/2 md:w-1/4">
             <form action="{{ route('admin.search.dash') }}" method="GET" class="relative w-full m-0">
