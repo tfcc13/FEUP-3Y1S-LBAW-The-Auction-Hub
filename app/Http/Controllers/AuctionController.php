@@ -35,7 +35,7 @@ class AuctionController extends Controller
       });
     $name = Category::find($id)->name;
     if ($auctions->isEmpty()) {
-      return view('layouts.category', ['name' => $name, 'auctions' => $auctions, 'categories' => $categories])->with('error', 'No Auction in this category');
+      return view('layouts.category', ['name' => $name, 'auctions' => $auctions, 'categories' => $categories])->with('error', 'No auction in this category');
     }
     return view('layouts.category', ['name' => $name, 'auctions' => $auctions, 'categories' => $categories]);
   }
