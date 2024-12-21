@@ -10,6 +10,7 @@ use App\Models\Auction;
 use App\Models\User;
 use App\Models\AuctionWinner;
 use App\Models\Bid;
+use App\Models\MoneyManager;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Events\AuctionEnded;
@@ -73,11 +74,16 @@ class Kernel extends ConsoleKernel
                         'view_status' => false,
                     ]);
 
+                    MoneyManager::create([
+                        'amount' => $highest_bid->amount,
+                        'user_id' => $highest_bid->user_id,
+                        'state' => 'Approved',
+                        'recipient_user_id' => $auction_owner->id,
+                        'type' => 'Transaction',
+                    ]);
                     
-                    //dd($auction, $auction_owner);
-                    event(new AuctionWin($auction, $highest_bid));
                     DB::table('users')->where('id', $auction_owner->id)->increment('credit_balance', $highest_bid->amount);
-                    
+                    event(new AuctionWin($auction, $highest_bid));
                 }
                 event(new AuctionEnded( $auction));
             });

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\MoneyManager;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -131,8 +132,23 @@ class UserController extends Controller
   public function showFinancial()
   {
     $user = auth()->user();
+    $transactions = $user->allTransactions()
+        ->orderBy('operation_date', 'desc')
+        ->limit(10)
+        ->get();
     $balance = $user->credit_balance;
-    return view('pages.user.dashboard.financial', compact('balance'));
+
+    return view('pages.user.dashboard.financial', compact('balance','transactions'));
+  }
+
+  public function getTransactions() {
+    $user = auth()->user();
+    $transactions = $user->allTransactions()
+        ->orderBy('operation_date', 'desc')
+        ->limit(10)
+        ->get();
+
+    return response()->json($transactions);
   }
 
   public function showBids()
