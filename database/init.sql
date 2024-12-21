@@ -127,7 +127,7 @@ CREATE TABLE users (
     state user_state NOT NULL DEFAULT 'Active',
     rating FLOAT CHECK (rating >= 1 AND rating <= 5) DEFAULT NULL,
     remember_token VARCHAR(255) DEFAULT NULL, -- Column for storing the remember token
-    description TEXT DEFAULT NULL -- Added description column
+    description TEXT DEFAULT NULL
 );
 
 -- Address Table
