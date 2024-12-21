@@ -49,6 +49,39 @@
 
         {{-- Message --}}
         <p id="message"></p>
+
+ 
+        <h3 class="text-2xl font-semibold text-gray-800">Your Transactions</h3>
+
+        <div class="overflow-y-auto max-h-80 border rounded-lg" id="transaction-table">
+            <table class="w-full text-left">
+                <thead class="bg-gray-200">    
+                    <tr>
+                        <th class="py-2 px-4">Type</th>
+                        <th class="py-2 px-4">Amount</th>
+                        <th class="py-2 px-4">Status</th>
+                        <th class="py-2 px-4">Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @if($transactions->isEmpty())
+                    <tr class="border-t">
+                        <td class="py-2 px-4" colspan="4">No transactions to show</td>
+                    </tr>
+                @else
+                    @foreach($transactions as $transaction)
+                        <tr class="border-t">
+                            <td class="py-2 px-4">{{ $transaction->type }}</td>
+                            <td class="py-2 px-4">${{ number_format($transaction->amount, 2) }}</td>
+                            <td class="py-2 px-4">{{ $transaction->state }}</td>
+                            <td class="py-2 px-4">{{ $transaction->operation_date }}</td>
+                        </tr>
+                    @endforeach
+                @endif
+                </tbody>
+            </table>
+        </div>
+
     </div>
 
     <!-- Full-width notification bar -->
@@ -138,6 +171,7 @@
                     messageElement.style.color = 'red';
                 } else {
                     showNotification(data.message);
+                    fetchTransactions();
                     form.reset();
                 }
             })
@@ -181,6 +215,7 @@
                     messageElement.style.color = 'red';
                 } else {
                     showNotification(data.message);
+                    fetchTransactions();
                     form.reset();
                 }
             })
@@ -256,6 +291,41 @@
                 errorMessageElement.classList.add('hidden');
                 return true; 
             }
-}
+        }
+        function fetchTransactions() {
+            fetch('/user/transactions')
+                .then(response => response.json())
+                .then(data => {
+                    const tbody = document.querySelector('#transaction-table tbody');
+                    tbody.innerHTML = '';  // Clear existing rows
+
+                    data.forEach(transaction => {
+                        const formattedDate = formatDate(transaction.operation_date);
+                        tbody.innerHTML += `
+                            <tr>
+                                <td class="py-2 px-4">${transaction.type}</td>
+                                <td class="py-2 px-4">$${transaction.amount}</td>
+                                <td class="py-2 px-4">${transaction.state}</td>
+                                <td class="py-2 px-4">${formattedDate}</td>
+                            </tr>
+                        `;
+                    });
+                })
+                .catch(error => console.error('Error fetching transactions:', error));
+        }
+
+        // Helper function to format the date
+        function formatDate(isoDateString) {
+            const date = new Date(isoDateString);
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            const seconds = String(date.getSeconds()).padStart(2, '0');
+
+            return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+        }
+
     </script>
 @endsection

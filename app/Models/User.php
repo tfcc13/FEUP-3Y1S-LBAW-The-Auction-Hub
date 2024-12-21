@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Auction;
+use App\Models\MoneyManager;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -77,7 +78,22 @@ class User extends Authenticatable
     {
         return $this->hasMany(Bid::class, 'user_id');
     }
+    
+    public function transactions()
+    {
+        return $this->hasMany(MoneyManager::class, 'user_id');
+    }
 
+    public function receivedTransactions()
+    {
+        return $this->hasMany(MoneyManager::class, 'recipient_user_id');
+    }
+
+    public function allTransactions()
+    {
+        return MoneyManager::where('user_id', $this->id)
+            ->orWhere('recipient_user_id', $this->id);
+    }
     public function activeBids()
     {
         return $this

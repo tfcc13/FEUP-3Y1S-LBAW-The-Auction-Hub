@@ -23,16 +23,20 @@ class MoneyManager extends Model
         'operation_date',
     ];
 
+    protected $casts = [
+        'operation_date' => 'datetime',
+      ];
+
     // Relationships
 
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function recipientUser()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'recipient_user_id');
     }
 
     public function isDeposit()

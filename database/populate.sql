@@ -55,7 +55,7 @@ INSERT INTO category (name) VALUES
 
 -- Populate Auctions
 INSERT INTO auction (title, description, start_price, current_bid, start_date, end_date, state, owner_id, category_id) VALUES
-('Vintage Car Auction', 'Auction for a vintage car', 5000, NULL, '2024-10-30 10:00:00', '2024-12-21 02:54:00', 'Ongoing', 1,1),
+('Vintage Car Auction', 'Auction for a vintage car', 5000, NULL, '2024-10-30 10:00:00', '2024-12-21 13:47:00', 'Ongoing', 1,1),
 ('Antique Painting Auction', 'Rare antique painting', 2000, NULL, '2024-10-15 12:00:00', NULL, 'Closed', 2,1),
 ('Rare Comic Book Collection', 'Collection of rare comic books', 3000, NULL, '2024-10-20 09:00:00', NULL, 'Closed', 4,1),
 ('Diamond Necklace', 'Exquisite diamond necklace', 10000, NULL, '2024-10-25 14:00:00', NULL, 'Closed', 5,1),
@@ -187,7 +187,7 @@ INSERT INTO notification (content, notification_date, type, view_status, user_id
 
 -- Populate Money Manager
 INSERT INTO money_manager (amount, operation_date, state, type, user_id) VALUES
-(1000, '2024-10-01 09:00:00', 'Approved', 'Deposit', 1),
+--(1000, '2024-10-01 09:00:00', 'Approved', 'Deposit', 1),
 (500, '2024-10-05 14:30:00', 'Approved', 'Deposit', 2),
 (750, '2024-10-15 11:45:00', 'Approved', 'Deposit', 4),
 (1200, '2024-10-20 16:20:00', 'Approved', 'Deposit', 5),
@@ -205,8 +205,8 @@ INSERT INTO money_manager (amount, operation_date, state, type, user_id) VALUES
 (1800, '2024-12-25 12:30:00', 'Approved', 'Deposit', 16),
 (700, '2024-12-30 10:45:00', 'Approved', 'Deposit', 17),
 (1200, '2025-01-05 09:15:00', 'Approved', 'Withdraw', 18),
-(900, '2025-01-15 11:00:00', 'Approved', 'Deposit', 20);
-
+(900, '2025-01-15 11:00:00', 'Approved', 'Deposit', 20),
+(10000, '2024-12-15 11:00:00', 'Approved', 'Deposit', 22);
 INSERT INTO money_manager (reference, amount, operation_date, state, type, user_id) VALUES
 ('notPeter', 2200, '2025-01-10 15:30:00', 'Pending', 'Deposit', 19);
 
