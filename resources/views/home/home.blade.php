@@ -21,3 +21,4 @@
 
     @include('layouts.footer')
 @endsection
+
