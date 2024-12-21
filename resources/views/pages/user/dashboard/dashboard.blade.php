@@ -2,6 +2,12 @@
 
 @section('inner_content')
 
+@if(session('success'))
+        <div class="p-4 bg-green-500 text-white rounded-md">
+            {{ session('success') }}
+        </div>
+@endif
+
 @if(session('error'))
 <div class="alert alert-danger text-red-500 bg-red-100 border border-red-400 rounded p-4">
   {{ session('error') }}
