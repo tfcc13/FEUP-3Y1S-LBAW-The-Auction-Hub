@@ -143,18 +143,79 @@ class AdminController extends Controller
 
     try {
       DB::beginTransaction();
-      $user->ownAuctions()->delete();
+      $hasActiveAuctions = Auction::where('owner_id', $user->id)
+        ->where('state', 'Ongoing')
+        ->exists();
+
+      if ($hasActiveAuctions) {
+        // Get all ongoing auctions where the user is the owner
+        $auctions = Auction::where('owner_id', $user->id)
+          ->where('state', 'Ongoing')
+          ->get();
+
+        // Check if the user has active auctions
+        if ($auctions->isNotEmpty()) {
+          foreach ($auctions as $auction) {
+            // Find the top bid for the ongoing auction
+            $topBid = Bid::where('auction_id', $auction->id)
+              ->orderByDesc('amount')  // Order bids by the highest amount
+              ->first();  // Get the highest bid
+
+            // If there is a top bid, add money to the top bidder's balance
+            if ($topBid) {
+              // Get the user who placed the top bid
+              $topBidder = $topBid->user;
+
+              // Add the amount of the top bid to the bidder's balance
+              $topBidder->credit_balance += $topBid->amount;  // Assuming `amount` is the bid value
+              $topBidder->save();
+            }
+
+            // Delete the auction
+            $auction->delete();
+          }
+        }
+      }
+
+      $hasActiveBids = Auction::where('state', 'Ongoing')
+        ->join('bid', 'auction.id', '=', 'bid.auction_id')
+        ->where('bid.user_id', $user->id)
+        ->exists();
+
+      if ($hasActiveBids) {
+        $auctions = Auction::where('state', 'Ongoing')
+          ->join('bid', 'auction.id', '=', 'bid.auction_id')
+          ->where('bid.user_id', $user->id)
+          ->get();
+
+        foreach ($auctions as $auction) {
+          // Find the top bid for the ongoing auction
+          $topBid = Bid::where('auction_id', $auction->id)
+            ->orderByDesc('amount')  // Order bids by the highest amount
+            ->first();  // Get the highest bid
+
+$auctionBids = Bid::withoutGlobalScopes()->where('auction_id', $auction->id)->count();
+          dd($auctionBids);
+          if ($topBid->user_id == $user->id) {
+            $auction->current_bid = $auction->start_price;
+            $user->credit_balance += $topBid->amount;
+            Bid::where('auction_id', $auction->id)->delete();
+            $auction->save();
+            $user->save();
+          }
+        }
+      }
+
       $user->ownsBids()->delete();
       $user->state = 'Banned';
       $user->save();
       DB::commit();
 
-      // dd($user->state);
-
       return redirect()->route('admin.dashboard')->with('success', 'User deleted successfully.');
     } catch (\Exception $e) {
       DB::rollBack();
-      return redirect()->back()->with('error', 'Failed to ban the user. Please try again.');
+
+      return redirect()->back()->with('error', 'Failed to ban the user. Please try again.'. $e);
     }
   }
 
