@@ -5,57 +5,66 @@
         <h3 class="text-2xl font-semibold text-gray-800">Your Finances</h3>
 
         {{-- Current Balance --}}
-        <div class="flex flex-col sm:flex-row items-baseline space-x-8">
+        <div class="flex items-baseline space-x-4 sm:space-x-8">
             <span class="text-gray-600 text-lg font-medium">Current Balance: </span>
             <span id="balance-display" class="text-gray-800 text-lg font-semibold">
                 ${{ number_format(auth()->user()->credit_balance, 2, '.', ' ') }}
             </span>
         </div>
 
-        {{-- Deposit Form --}}
-        <form id="deposit-form" action="/user/{{ auth()->user()->id }}/deposit-money" method="POST" class="flex flex-col space-y-4 w-min">
-            @csrf
-            <input type="hidden" id="user-id" value="{{ auth()->user()->id }}">
+        <div class="flex flex-col sm:flex-row sm:space-x-16">
+            {{-- Deposit Form --}}
+            <form id="deposit-form" action="/user/{{ auth()->user()->id }}/deposit-money" method="POST"
+                class="flex flex-col space-y-4 w-full sm:w-72">
+                @csrf
+                <input type="hidden" id="user-id" value="{{ auth()->user()->id }}">
 
-            <div id="deposit-section" class="flex flex-col space-y-4 w-min">
-                <input id="deposit-amount" type="number" name="amount" min="1" placeholder="Enter amount" required autofocus class="form-input">
-                <input id="deposit-reference" type="text" name="reference" placeholder="Enter reference" required class="form-input">
-                <button type="submit" id="deposit-button" class="bg-[#135d3b] text-white rounded-lg py-2 active:scale-95 hover:bg-[#135d3b]/85 transition-all duration-150 ease-out">
-                    Deposit
-                </button>
-                <p id="deposit-error-message" class="text-red-500 text-sm hidden">Deposit amount cannot exceed $100,000</p>
-             </div>
-        </form>
-
-        {{-- Withdraw Form --}}
-        <form id="withdraw-form" action="/user/{{ auth()->user()->id }}/withdraw-money" method="POST" class="flex flex-col space-y-4 w-min">
-            @csrf
-            <input type="hidden" id="user-id" value="{{ auth()->user()->id }}">
-
-            <div id="withdraw-section" class="flex flex-col space-y-4 w-min">
-                <input id="withdraw-amount" type="number" name="amount" min="1" placeholder="Enter amount" required class="form-input">
-                <div id="iban-container">
-                    <input id="iban" type="text" name="iban" placeholder="Enter IBAN" class="form-input" pattern="^[A-Za-z]{2}\d{21}$" title="IBAN should be two letters followed by 21 digits" required>
-                    <p id="iban-error-message" class="text-red-500 text-sm hidden">IBAN is invalid.</p>
+                <div id="deposit-section" class="flex flex-col space-y-4 w-full sm:w-72">
+                    <input id="deposit-amount" type="number" name="amount" min="1" placeholder="Enter amount"
+                        required autofocus class="form-input">
+                    <input id="deposit-reference" type="text" name="reference" placeholder="Enter reference" required
+                        class="form-input">
+                    <button type="submit" id="deposit-button"
+                        class="bg-[#135d3b] text-white rounded-lg py-2 active:scale-95 hover:bg-[#135d3b]/85 transition-all duration-150 ease-out">
+                        Deposit
+                    </button>
+                    <p id="deposit-error-message" class="text-red-500 text-sm hidden">Deposit amount cannot exceed $100,000
+                    </p>
                 </div>
-                <button type="submit" id="withdraw-button" class="bg-[#b1353b] text-white rounded-lg py-2 active:scale-95 hover:bg-[#b1353b]/85 transition-all duration-150 ease-out">
-                    Withdraw
-                </button>
-                <p id="withdraw-error-message" class="text-red-500 text-sm hidden">Withdraw amount cannot exceed $100,000</p>
-            </div>
-        </form>
+            </form>
 
-       
+            {{-- Withdraw Form --}}
+            <form id="withdraw-form" action="/user/{{ auth()->user()->id }}/withdraw-money" method="POST"
+                class="flex flex-col space-y-4 w-full sm:w-72">
+                @csrf
+                <input type="hidden" id="user-id" value="{{ auth()->user()->id }}">
+
+                <div id="withdraw-section" class="flex flex-col space-y-4 w-full sm:w-72">
+                    <input id="withdraw-amount" type="number" name="amount" min="1" placeholder="Enter amount"
+                        required class="form-input">
+                    <div id="iban-container">
+                        <input id="iban" type="text" name="iban" placeholder="Enter IBAN"
+                            class="form-input w-full sm:w-72" pattern="^[A-Za-z]{2}\d{21}$"
+                            title="IBAN should be two letters followed by 21 digits" required>
+                        <p id="iban-error-message" class="text-red-500 text-sm hidden">IBAN is invalid.</p>
+                    </div>
+                    <button type="submit" id="withdraw-button"
+                        class="bg-[#b1353b] text-white rounded-lg py-2 active:scale-95 hover:bg-[#b1353b]/85 transition-all duration-150 ease-out">
+                        Withdraw
+                    </button>
+                    <p id="withdraw-error-message" class="text-red-500 text-sm hidden">Withdraw amount cannot exceed
+                        $100,000
+                    </p>
+                </div>
+            </form>
+        </div>
 
         {{-- Message --}}
         <p id="message"></p>
-
- 
         <h3 class="text-2xl font-semibold text-gray-800">Your Transactions</h3>
-
         <div class="overflow-y-auto max-h-80 border rounded-lg" id="transaction-table">
             <table class="w-full text-left">
-                <thead class="bg-gray-200">    
+                <thead class="bg-gray-200">
                     <tr>
                         <th class="py-2 px-4">Type</th>
                         <th class="py-2 px-4">Amount</th>
@@ -64,20 +73,20 @@
                     </tr>
                 </thead>
                 <tbody>
-                @if($transactions->isEmpty())
-                    <tr class="border-t">
-                        <td class="py-2 px-4" colspan="4">No transactions to show</td>
-                    </tr>
-                @else
-                    @foreach($transactions as $transaction)
+                    @if ($transactions->isEmpty())
                         <tr class="border-t">
-                            <td class="py-2 px-4">{{ $transaction->type }}</td>
-                            <td class="py-2 px-4">${{ number_format($transaction->amount, 2) }}</td>
-                            <td class="py-2 px-4">{{ $transaction->state }}</td>
-                            <td class="py-2 px-4">{{ $transaction->operation_date }}</td>
+                            <td class="py-2 px-4" colspan="4">No transactions to show</td>
                         </tr>
-                    @endforeach
-                @endif
+                    @else
+                        @foreach ($transactions as $transaction)
+                            <tr class="border-t">
+                                <td class="py-2 px-4">{{ $transaction->type }}</td>
+                                <td class="py-2 px-4">${{ number_format($transaction->amount, 2) }}</td>
+                                <td class="py-2 px-4">{{ $transaction->state }}</td>
+                                <td class="py-2 px-4">{{ $transaction->operation_date }}</td>
+                            </tr>
+                        @endforeach
+                    @endif
                 </tbody>
             </table>
         </div>
@@ -133,7 +142,7 @@
             // Reset financial content margin
             financialContent.style.marginTop = '0';
         }
-        
+
         let operationType = '';
 
         // Handle Deposit Form Submit
@@ -151,35 +160,35 @@
             const depositAmount = parseFloat(document.getElementById('deposit-amount').value);
 
             if (!checkAmountLimit(depositAmount, 'Deposit')) {
-                return;  
+                return;
             }
 
             // Fetch URL for Deposit
             const url = '/user/' + userId + '/deposit-money';
 
             fetch(url, {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                },
-                body: formData,
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.error) {
-                    messageElement.textContent = data.error;
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    },
+                    body: formData,
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        messageElement.textContent = data.error;
+                        messageElement.style.color = 'red';
+                    } else {
+                        showNotification(data.message);
+                        fetchTransactions();
+                        form.reset();
+                    }
+                })
+                .catch(error => {
+                    messageElement.textContent = 'An error occurred. Please try again.';
                     messageElement.style.color = 'red';
-                } else {
-                    showNotification(data.message);
-                    fetchTransactions();
-                    form.reset();
-                }
-            })
-            .catch(error => {
-                messageElement.textContent = 'An error occurred. Please try again.';
-                messageElement.style.color = 'red';
-                console.error('Error:', error);
-            });
+                    console.error('Error:', error);
+                });
         });
 
         // Handle Withdraw Form Submit
@@ -195,35 +204,35 @@
             const amount = parseFloat(document.getElementById('withdraw-amount').value);
 
             if (!checkAmountLimit(amount, 'Withdraw')) {
-                return;  
+                return;
             }
 
             // Fetch URL for Withdraw
             const url = '/user/' + userId + '/withdraw-money';
 
             fetch(url, {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                },
-                body: formData,
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.error) {
-                    messageElement.textContent = data.error;
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    },
+                    body: formData,
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        messageElement.textContent = data.error;
+                        messageElement.style.color = 'red';
+                    } else {
+                        showNotification(data.message);
+                        fetchTransactions();
+                        form.reset();
+                    }
+                })
+                .catch(error => {
+                    messageElement.textContent = 'An error occurred. Please try again.';
                     messageElement.style.color = 'red';
-                } else {
-                    showNotification(data.message);
-                    fetchTransactions();
-                    form.reset();
-                }
-            })
-            .catch(error => {
-                messageElement.textContent = 'An error occurred. Please try again.';
-                messageElement.style.color = 'red';
-                console.error('Error:', error);
-            });
+                    console.error('Error:', error);
+                });
         });
 
 
@@ -259,10 +268,10 @@
             const ibanErrorMessage = document.getElementById('iban-error-message');
 
             if (ibanPattern.test(ibanValue)) {
-                withdrawButton.disabled = false; 
+                withdrawButton.disabled = false;
                 ibanErrorMessage.classList.add('hidden'); // Hide error message
             } else {
-                withdrawButton.disabled = true; 
+                withdrawButton.disabled = true;
                 ibanErrorMessage.classList.remove('hidden'); // Show error message
             }
         });
@@ -271,33 +280,34 @@
 
             let current = 'withdraw';
 
-            if(operationType === 'Deposit' ){
+            if (operationType === 'Deposit') {
                 current = 'deposit';
             }
 
 
-            const errorMessageElement = document.getElementById(current+'-error-message');
+            const errorMessageElement = document.getElementById(current + '-error-message');
 
-           
+
             if (amount > 100000) {
                 errorMessageElement.classList.remove('hidden');
-                
+
                 setTimeout(() => {
                     errorMessageElement.classList.add('hidden');
                 }, 3000);
-                
-                return false;  
+
+                return false;
             } else {
                 errorMessageElement.classList.add('hidden');
-                return true; 
+                return true;
             }
         }
+
         function fetchTransactions() {
             fetch('/user/transactions')
                 .then(response => response.json())
                 .then(data => {
                     const tbody = document.querySelector('#transaction-table tbody');
-                    tbody.innerHTML = '';  // Clear existing rows
+                    tbody.innerHTML = ''; // Clear existing rows
 
                     data.forEach(transaction => {
                         const formattedDate = formatDate(transaction.operation_date);
@@ -326,6 +336,5 @@
 
             return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
         }
-
     </script>
 @endsection
