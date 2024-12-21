@@ -231,4 +231,14 @@ class FileController extends Controller
         return self::defaultAsset($type);
     }
 
+    static function getUserImage($fileName) {
+        
+        if ($fileName) {
+            $filePath = "images/user/{$fileName}";
+            return asset($filePath); // Return full URL to the file
+        }
+    
+        return null;
+    }
+
 }

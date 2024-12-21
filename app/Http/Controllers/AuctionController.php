@@ -183,7 +183,7 @@ class AuctionController extends Controller
         'required',
         'image',
         'mimes:jpeg,png,jpg,webp',
-        'max:10240',  // maximum file size in kilobytes
+        'max:2048',  // maximum file size in kilobytes
       ],
     ]);
 

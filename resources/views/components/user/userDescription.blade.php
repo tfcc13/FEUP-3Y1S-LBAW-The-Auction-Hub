@@ -5,24 +5,27 @@
         <div class="w-48 h-48 flex-shrink-0 items-center justify-center">
             <x-user.image class="w-full h-full object-cover rounded-full" />
         </div>
-        <form action="{{ route('user.profile.picture.update') }}" method="POST" enctype="multipart/form-data">
-            @csrf
-            <div class="form-group">
-                <label for="user">Choose Profile Picture</label>
-                <input type="file" name="file" id="file" class="form-control" required>
-                <input name="type" type="text" value="user" hidden>
-                @error('user')
-                    <small class="text-danger">{{ $message }}</small>
-                @enderror
-            </div>
-            <button type="submit" class="btn btn-primary mt-2">Upload</button>
-        </form>
-
         <!-- User Details and Rating -->
         <x-user.user-details :name="auth()->user()->name" :username="auth()->user()->username" :email="auth()->user()->email"
             :rating="auth()->user()->rating"></x-user.user-details>
     </div>
+    
 
+    <button id="changeProfilePicBtn" type="button" class="w-min sm:w-min px-2 py-1 rounded-md text-white border border-gray-300 bg-[#135d3b] hover:bg-[#135d3b]/85 focus:ring-2 focus:ring-gray-300 transition-colors text-nowrap">
+                Change  Picture
+        </button> 
+    <form id="profilePicForm" action="{{ route('user.profile.picture.update') }}" method="POST" enctype="multipart/form-data" hidden>
+        @csrf
+        <div class="form-group">
+            <input type="file" name="file" id="file" class="form-control" required >
+            <input name="type" type="text" value="user" hidden>
+            @error('user')
+                <small class="text-danger">{{ $message }}</small>
+            @enderror
+        </div>
+        <button type="submit" class="w-min sm:w-auto px-2 py-1 rounded-md text-white border border-gray-300 bg-[#135d3b] hover:bg-[#135d3b]/85 focus:ring-2 focus:ring-gray-300 transition-colors text-nowrap">Upload</button>
+    </form>
+    <div id="fileSizeError" class="text-red-600 text-sm mt-1 hidden"></div>
     <!-- Description Section -->
     <div class="border-t pt-6">
         <div class="flex flex-col space-y-4">
@@ -91,5 +94,34 @@
     // Add event listener to the button
     document.querySelector('[data-modal-toggle="edit-description-modal"]').addEventListener('click', () => {
         toggleModal(true);
+    });
+
+
+    document.getElementById('file').addEventListener('change', function(event) {
+        const maxSizeInBytes = 1024 * 1024 *2; 
+        const errorContainer = document.getElementById('fileSizeError');
+        const files = event.target.files;
+        let fileTooLarge = false;
+
+        for (let i = 0; i < files.length; i++) {
+            if (files[i].size > maxSizeInBytes) {
+                fileTooLarge = true;
+                break;
+            }
+        }
+
+        if (fileTooLarge) {
+            errorContainer.textContent = 'One or more files exceed the 2MB size limit. Please select smaller files.';
+            errorContainer.classList.remove('hidden');
+            event.target.value = ''; 
+        } else {
+            errorContainer.classList.add('hidden');
+        }
+    });
+
+    document.getElementById('changeProfilePicBtn').addEventListener('click', function() {
+        const form = document.getElementById('profilePicForm');
+        form.hidden = !form.hidden;
+
     });
 </script>
