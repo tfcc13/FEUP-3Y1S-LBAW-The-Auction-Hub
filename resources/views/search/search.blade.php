@@ -1,9 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
-    <main class="flex flex-col sm:flex-row w-full h-screen overflow-hidden">
+    <main class="flex flex-row w-full min-h-screen">
         <aside id="categories-container"
-            class="bg-gray-100 w-full sm:w-64 h-full p-6 overflow-y-auto space-y-6 transition-all duration-300">
+            class="bg-gray-100 w-full sm:w-64 min-h-full p-6 space-y-6 transition-all duration-300 sticky top-0">
             <div class="flex items-center space-x-4">
                 <button id="collapse-filter"
                     class="flex p-2 font-semibold text-gray-600 hover:bg-gray-200 rounded-full items-center 
@@ -55,7 +55,8 @@
             </div>
 
             <!-- Results Container -->
-            <div id="results-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div id="results-container" class="grid gap-8 transition-all duration-300"
+                style="grid-template-columns: repeat(1, minmax(0, 1fr));">
                 @if (isset($error) || isset($message))
                     <script>
                         document.addEventListener('DOMContentLoaded', () => {
@@ -86,53 +87,72 @@
         const categoriesContainer = document.getElementById('categories-container');
         const collapseButton = document.getElementById('collapse-filter');
         const menuIcon = collapseButton.querySelector('.material-symbols-outlined');
-        let isCollapsed = window.innerWidth < 768; // Initialize based on screen size
+        let isCollapsed = window.innerWidth < 768;
         const resultsContainer = document.getElementById('results-container');
+
+        function updateGridColumns() {
+            const width = window.innerWidth;
+            let columns;
+
+            if (width < 768) { // md
+                columns = 1;
+            } else if (width < 1024) { // lg
+                columns = 2;
+            } else if (width < 1280) { // xl
+                columns = isCollapsed ? 3 : 2;
+            } else { // 2xl and up
+                columns = isCollapsed ? 4 : 3;
+            }
+
+            resultsContainer.style.gridTemplateColumns = `repeat(${columns}, minmax(0, 1fr))`;
+        }
 
         // Function to toggle sidebar
         function toggleSidebar() {
             isCollapsed = !isCollapsed;
             updateSidebarState();
+            updateGridColumns();
         }
 
         // Function to update sidebar state
         function updateSidebarState() {
             if (isCollapsed) {
-                categoriesContainer.classList.remove('sm:w-64', 'w-full', 'p-6');
-                categoriesContainer.classList.add('sm:w-20', 'w-20', 'px-2', 'py-6');
+                // Collapse sidebar
+                categoriesContainer.classList.remove('w-full', 'sm:w-64', 'p-6');
+                categoriesContainer.classList.add('w-20', 'px-2', 'py-6');
                 menuIcon.style.transform = 'rotate(180deg)';
-                resultsContainer.classList.remove('xl:grid-cols-3');
-                resultsContainer.classList.add('xl:grid-cols-4');
-                // Hide everything except the button
-                const elementsToHide = categoriesContainer.querySelectorAll('h2, nav');
-                elementsToHide.forEach(el => el.classList.add('hidden'));
+
+                // Hide elements
+                categoriesContainer.querySelectorAll('h2, nav').forEach(el => el.classList.add('hidden'));
             } else {
-                categoriesContainer.classList.remove('sm:w-20', 'w-20', 'px-2', 'py-6');
-                categoriesContainer.classList.add('sm:w-64', 'w-full', 'p-6');
+                // Expand sidebar
+                categoriesContainer.classList.remove('w-20', 'px-2', 'py-6');
+                categoriesContainer.classList.add('w-full', 'sm:w-64', 'p-6');
                 menuIcon.style.transform = 'rotate(0deg)';
-                resultsContainer.classList.remove('xl:grid-cols-4');
-                resultsContainer.classList.add('xl:grid-cols-3');
-                // Show everything back
-                const elementsToShow = categoriesContainer.querySelectorAll('h2, nav');
-                elementsToShow.forEach(el => el.classList.remove('hidden'));
+
+                // Show elements
+                categoriesContainer.querySelectorAll('h2, nav').forEach(el => el.classList.remove('hidden'));
             }
         }
+
+        // Initial setup
+        document.addEventListener('DOMContentLoaded', () => {
+            updateSidebarState();
+            updateGridColumns();
+            fetchResults('auctions');
+        });
 
         // Toggle sidebar when collapse button is clicked
         collapseButton.addEventListener('click', toggleSidebar);
 
         // Handle window resize
         window.addEventListener('resize', () => {
-            const shouldBeCollapsed = window.innerWidth < 768;
+            const shouldBeCollapsed = window.innerWidth < 1024;
             if (shouldBeCollapsed !== isCollapsed) {
                 isCollapsed = shouldBeCollapsed;
                 updateSidebarState();
             }
-        });
-
-        // Initial setup
-        document.addEventListener('DOMContentLoaded', () => {
-            updateSidebarState();
+            updateGridColumns();
         });
 
         document.querySelectorAll('[data-category]').forEach(button => {
