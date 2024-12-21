@@ -789,7 +789,7 @@ BEGIN
 
     NEW.username := 'anonymous' || OLD.id;
     NEW.name := 'Anonymous';
-    NEW.email := 'anonymous';
+    NEW.email := 'anonymous' || OLD.id;
     NEW.password := 'anonymous';
     NEW.birth_date := '1900-01-01';
     NEW.credit_balance := 0.00;
