@@ -3,7 +3,7 @@
 @section('content')
     <main class="flex flex-row w-full min-h-screen">
         <aside id="categories-container"
-            class="bg-gray-100 w-full sm:w-64 min-h-full p-4 space-y-6 transition-all duration-300 sticky top-0">
+            class="bg-gray-100 min-h-full p-4 space-y-6 transition-all duration-300 sticky top-0">
             <div class="flex items-center space-x-4">
                 <button id="collapse-filter"
                     class="flex p-2 font-semibold text-gray-600 hover:bg-gray-200 rounded-full items-center 
@@ -29,7 +29,7 @@
             </nav>
         </aside>
 
-        <div class="flex-1 flex flex-col items-center py-4 px-6 space-y-8 overflow-y-auto">
+        <div class="flex-1 flex flex-col items-center py-4 sm:px-6 space-y-8 overflow-y-auto">
 
             <!-- Header Section -->
             <div
@@ -121,7 +121,7 @@
         function updateSidebarState() {
             if (isCollapsed) {
                 // Collapse sidebar
-                categoriesContainer.classList.remove('w-full', 'sm:w-64', 'p-4');
+                categoriesContainer.classList.remove('w-64', 'p-4');
                 categoriesContainer.classList.add('px-2', 'py-4');
                 menuIcon.style.transform = 'rotate(180deg)';
 
@@ -130,7 +130,7 @@
             } else {
                 // Expand sidebar
                 categoriesContainer.classList.remove('px-2', 'py-4');
-                categoriesContainer.classList.add('w-full', 'sm:w-64', 'p-4');
+                categoriesContainer.classList.add('w-64', 'p-4');
                 menuIcon.style.transform = 'rotate(0deg)';
 
                 // Show elements
