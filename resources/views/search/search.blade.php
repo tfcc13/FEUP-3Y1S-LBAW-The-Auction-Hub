@@ -3,7 +3,7 @@
 @section('content')
     <main class="flex flex-row w-full min-h-screen">
         <aside id="categories-container"
-            class="bg-gray-100 w-full sm:w-64 min-h-full p-6 space-y-6 transition-all duration-300 sticky top-0">
+            class="bg-gray-100 w-full sm:w-64 min-h-full p-4 space-y-6 transition-all duration-300 sticky top-0">
             <div class="flex items-center space-x-4">
                 <button id="collapse-filter"
                     class="flex p-2 font-semibold text-gray-600 hover:bg-gray-200 rounded-full items-center 
@@ -15,11 +15,15 @@
             </div>
             <nav aria-label="Product Categories" class="space-y-2" role="list">
                 @foreach ($categories as $category)
-                    <div id="{{ $category->id }}" class="flex flex-col items-start" role="listitem">
-                        <button class="w-full text-left p-2 rounded bg-transparent hover:bg-gray-200"
+                    <div id="{{ $category->id }}" class="flex items-start justify-between" role="listitem">
+                        <button
+                            class="w-full text-left p-2 rounded-2xl bg-transparent hover:bg-gray-200 flex items-center justify-between"
                             aria-label="{{ $category->name }}" title="{{ $category->name }}" id="{{ $category->id }}"
                             data-category="{{ $category->id }}">
-                            {{ $category->name }}
+                            <span>{{ $category->name }}</span>
+                            <span
+                                class="material-symbols-outlined text-white bg-[#135d3b] rounded-full hidden check-icon"
+                                style="font-size: 1.2rem;">done</span>
                         </button>
                     </div>
                 @endforeach
@@ -118,16 +122,16 @@
         function updateSidebarState() {
             if (isCollapsed) {
                 // Collapse sidebar
-                categoriesContainer.classList.remove('w-full', 'sm:w-64', 'p-6');
-                categoriesContainer.classList.add('w-20', 'px-2', 'py-6');
+                categoriesContainer.classList.remove('w-full', 'sm:w-64', 'p-4');
+                categoriesContainer.classList.add('w-20', 'px-2', 'py-4');
                 menuIcon.style.transform = 'rotate(180deg)';
 
                 // Hide elements
                 categoriesContainer.querySelectorAll('h2, nav').forEach(el => el.classList.add('hidden'));
             } else {
                 // Expand sidebar
-                categoriesContainer.classList.remove('w-20', 'px-2', 'py-6');
-                categoriesContainer.classList.add('w-full', 'sm:w-64', 'p-6');
+                categoriesContainer.classList.remove('w-20', 'px-2', 'py-4');
+                categoriesContainer.classList.add('w-full', 'sm:w-64', 'p-4');
                 menuIcon.style.transform = 'rotate(0deg)';
 
                 // Show elements
@@ -158,15 +162,17 @@
         document.querySelectorAll('[data-category]').forEach(button => {
             button.addEventListener('click', () => {
                 const categoryId = button.getAttribute('data-category');
+                const checkIcon = button.querySelector('.check-icon');
 
                 // Toggle the selection
                 if (selectedCategories.includes(categoryId)) {
-                    selectedCategories = selectedCategories.filter(id => id !==
-                        categoryId); // Remove if already selected
-                    button.classList.remove('bg-gray-200', 'font-semibold'); // Reset style
+                    selectedCategories = selectedCategories.filter(id => id !== categoryId);
+                    button.classList.remove('bg-gray-200', 'font-semibold');
+                    checkIcon.classList.add('hidden');
                 } else {
-                    selectedCategories.push(categoryId); // Add to selected categories
-                    button.classList.add('bg-gray-200', 'font-semibold'); // Apply "pressed" style
+                    selectedCategories.push(categoryId);
+                    button.classList.add('bg-gray-200', 'font-semibold');
+                    checkIcon.classList.remove('hidden');
                 }
 
                 // Fetch results with the updated category disjunction
