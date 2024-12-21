@@ -15,7 +15,7 @@ class Auction extends Model
   protected $table = 'auction';
 
   const STATE_ONGOING = 'Ongoing';
-  const STATE_RESUMED = 'Resumed';
+  const STATE_RESUMED = 'Closed';
   const STATE_CANCELED = 'Canceled';
 
   protected $fillable = [

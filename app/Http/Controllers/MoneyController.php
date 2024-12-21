@@ -7,6 +7,8 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Models\Notification;
+use App\Events\TransactionUpdate;
 
 class MoneyController extends Controller
 {
@@ -52,7 +54,6 @@ class MoneyController extends Controller
             
 
             DB::commit();
-
             return response()->json(['message' => $operationType . ' request created successfully. Awaiting admin approval.']);
         } catch (\Exception $e) {
             DB::rollBack();
@@ -81,9 +82,19 @@ class MoneyController extends Controller
                 $user->credit_balance += $transaction->amount;
             }
             $user->save();
+            
+            Notification::create([
+                'user_id' => $transaction->user_id, 
+                'content' => "Your {$transaction->type} of {$transaction->amount}$ with ID {$transaction->id} has been approved.",
+                'type' => 'TransactionUpdate',
+                'view_status' => false,
+                'bid_id' => null,
+                'auction_id' => null,
+                'notification_date' => now(),
+            ]);
 
             DB::commit();
-
+            event(new TransactionUpdate($transaction));
             return redirect()->back()->with('success', 'Transaction approved successfully.');
         } catch (\Exception $e) {
             DB::rollBack();
@@ -102,9 +113,22 @@ class MoneyController extends Controller
 
             $transaction->state = 'Denied';
             $transaction->save();
+            
+            
+            Notification::create([
+                'user_id' => $transaction->user_id,
+                'content' => "Your {$transaction->type} of {$transaction->amount}$ with ID {$transaction->id} has been rejected.",
+                'type' => 'TransactionUpdate',
+                'view_status' => false,
+                'bid_id' => null,
+                'auction_id' => null,
+                'report_user_id' => null,
+            ]);
 
+
+    
             DB::commit();
-
+            event(new TransactionUpdate($transaction));
             return redirect()->back()->with('success', 'Transaction rejected successfully.');
         } catch (\Exception $e) {
             DB::rollBack();

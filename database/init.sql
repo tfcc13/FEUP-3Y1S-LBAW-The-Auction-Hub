@@ -99,7 +99,7 @@ CREATE TYPE auction_state AS ENUM ('Ongoing', 'Closed', 'Canceled');
 CREATE TYPE user_state AS ENUM ('Active', 'Deleted', 'Banned');
 
 -- NotificationType Enum
-CREATE TYPE notification_type AS ENUM ('BidUpdate', 'AuctionUpdate', 'UserUpdate', 'RatingUpdate');
+CREATE TYPE notification_type AS ENUM ('BidUpdate', 'AuctionUpdate', 'UserUpdate', 'RatingUpdate', 'TransactionUpdate');
 
 -- MoneyState Enum
 CREATE TYPE money_state AS ENUM ('Pending', 'Approved', 'Denied');
@@ -233,7 +233,7 @@ CREATE TABLE notification (
     CONSTRAINT only_one_reference CHECK (
         ((bid_id IS NOT NULL)::int + 
          (report_user_id IS NOT NULL AND auction_id IS NOT NULL)::int + 
-         (auction_id IS NOT NULL AND bid_id IS NULL AND report_user_id IS NULL)::int) = 1
+         (auction_id IS NOT NULL AND bid_id IS NULL AND report_user_id IS NULL)::int) <= 1
     )
 );
 

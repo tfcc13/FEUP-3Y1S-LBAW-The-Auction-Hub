@@ -2,6 +2,11 @@
 
 
 @section('Display')
+@if (session('success'))
+        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
+            {{ session('success') }}
+        </div>
+@endif
 @if(session('error'))
 <div class="alert alert-danger text-red-500 bg-red-100 border border-red-400 rounded p-4">
   {{ session('error') }}
@@ -36,7 +41,7 @@
                 <form action="{{ route('admin.transactions.approve', $transaction->id) }}" method="POST" class="inline-block approve-form">
                     @csrf
                     @method('PATCH')
-                    @if($transaction->user->username !== $transaction->reference)
+                    @if($transaction->user->username !== $transaction->reference && $transaction->type === 'Deposit')
                     <x-toast.confirm
                       :buttonText="'Approve'"
                       :route="'admin.transactions.approve'"

@@ -2,9 +2,12 @@
 
 namespace App\Console;
 
+use App\Events\AuctionWin;
+use App\Http\Controllers\AuctionController;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use App\Models\Auction;
+use App\Models\User;
 use App\Models\AuctionWinner;
 use App\Models\Bid;
 use Illuminate\Support\Facades\DB;
@@ -40,10 +43,6 @@ class Kernel extends ConsoleKernel
                 Auction::where('id', $id)->update(['state' => 'Closed']);
                 
                 $auction = Auction::find($id);
-                if ($auction) {
-                    Log::error("Auction found: ID $id");
-                    //return; // Skip if auction is not found
-                }
                 if(Bid::where('auction_id', $id)->exists()) {
                     
                     $highest_bid = Bid::where('auction_id', $id)->orderBy('amount', 'desc')->first(); 
@@ -55,15 +54,32 @@ class Kernel extends ConsoleKernel
                     ]);
                     
                     //$auction = Auction::findOrFail($id);
-                    $auction_owner = $auction->owner_id; 
+                    $auction_owner = User::findOrFail($auction->owner_id); 
+                    $winner = User::findOrFail($highest_bid->user_id);
+
+                    $winner->notifications()->create([
+                        'content' => "You have won auction {$auction->title} and paid {$highest_bid->amount}$.",
+                        'type' => 'AuctionUpdate',
+                        'user_id' => $winner->id,
+                        'auction_id' => $auction->id,
+                        'view_status' => false,
+                    ]);
+
+                    $auction_owner->notifications()->create([
+                        'content' => "You have received {$highest_bid->amount}$ from {$winner->username} on {$auction->title}.",
+                        'type' => 'AuctionUpdate',
+                        'user_id' => $auction_owner->id,
+                        'auction_id' => $auction->id,
+                        'view_status' => false,
+                    ]);
+
                     
                     //dd($auction, $auction_owner);
-
-                    DB::table('users')->where('id', $auction_owner)->increment('credit_balance', $highest_bid->amount);
-                    event(new AuctionEnded( $auction));
-
+                    event(new AuctionWin($auction, $highest_bid));
+                    DB::table('users')->where('id', $auction_owner->id)->increment('credit_balance', $highest_bid->amount);
+                    
                 }
-
+                event(new AuctionEnded( $auction));
             });
         }
     })->everyMinute();    
