@@ -122,14 +122,14 @@
             if (isCollapsed) {
                 // Collapse sidebar
                 categoriesContainer.classList.remove('w-full', 'sm:w-64', 'p-4');
-                categoriesContainer.classList.add('w-20', 'px-2', 'py-4');
+                categoriesContainer.classList.add('px-2', 'py-4');
                 menuIcon.style.transform = 'rotate(180deg)';
 
                 // Hide elements
                 categoriesContainer.querySelectorAll('h2, nav').forEach(el => el.classList.add('hidden'));
             } else {
                 // Expand sidebar
-                categoriesContainer.classList.remove('w-20', 'px-2', 'py-4');
+                categoriesContainer.classList.remove('px-2', 'py-4');
                 categoriesContainer.classList.add('w-full', 'sm:w-64', 'p-4');
                 menuIcon.style.transform = 'rotate(0deg)';
 
