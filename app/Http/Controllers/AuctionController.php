@@ -418,7 +418,23 @@ class AuctionController extends Controller
               'view_status' => false,
           ]);
       }
-}
+  }
+
+
+  public function sendWinnerNotification($auction, $bid)
+  {
+    $highest_bid = Bid::where('auction_id', $auction->id)->orderBy('amount', 'desc')->first(); 
+    $winner = User::findOrFail($highest_bid->user_id);
+      if ($winner) {
+          $winner->notifications()->create([
+              'content' => "You have won auction {$auction->title}.",
+              'type' => 'BidUpdate',
+              'user_id' => $winner->id,
+              'auction_id' => $auction->id,
+              'view_status' => false,
+          ]);
+      }
+  }
 
 
 

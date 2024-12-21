@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Events\AuctionWin;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use App\Models\Auction;
@@ -40,10 +41,6 @@ class Kernel extends ConsoleKernel
                 Auction::where('id', $id)->update(['state' => 'Closed']);
                 
                 $auction = Auction::find($id);
-                if ($auction) {
-                    Log::error("Auction found: ID $id");
-                    //return; // Skip if auction is not found
-                }
                 if(Bid::where('auction_id', $id)->exists()) {
                     
                     $highest_bid = Bid::where('auction_id', $id)->orderBy('amount', 'desc')->first(); 
@@ -58,12 +55,11 @@ class Kernel extends ConsoleKernel
                     $auction_owner = $auction->owner_id; 
                     
                     //dd($auction, $auction_owner);
-
+                    event(new AuctionWin($auction, $highest_bid));
                     DB::table('users')->where('id', $auction_owner)->increment('credit_balance', $highest_bid->amount);
-                    event(new AuctionEnded( $auction));
-
+                    
                 }
-
+                event(new AuctionEnded( $auction));
             });
         }
     })->everyMinute();    
