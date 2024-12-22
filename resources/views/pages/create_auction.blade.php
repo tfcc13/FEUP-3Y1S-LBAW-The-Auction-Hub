@@ -46,7 +46,7 @@
                 <div class="flex flex-col justify-start space-y-1 w-full">
                     <label for="start_price" class="block text-gray-700 font-semibold">Start Price</label>
                     <input type="number" id="start_price" name="start_price" value="{{ old('start_price') }}"
-                        min="0" max="99999999" step="0.01" class="form-input" required>
+                        min="0" step="0.01" class="form-input" required>
                         <div id="startPriceError" class="text-red-600 text-sm mt-1 hidden"></div>
                     @error('start_price')
                         <div class="text-red-600 text-sm mt-1">{{ $message }}</div>

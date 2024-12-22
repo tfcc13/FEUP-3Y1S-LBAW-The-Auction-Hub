@@ -39,7 +39,7 @@ class Kernel extends ConsoleKernel
             ->where('state', 'Ongoing')
             ->pluck('id');
 
-        foreach ($auction_ids as $id) {
+        foreach ($auction_ids as $id) { 
             DB::transaction(function () use ($id) {
                 Auction::where('id', $id)->update(['state' => 'Closed']);
                 
