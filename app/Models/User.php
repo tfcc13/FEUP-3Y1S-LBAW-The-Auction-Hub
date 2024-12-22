@@ -28,13 +28,15 @@ class User extends Authenticatable
         'name',
         'username',
         'email',
+        'state',
         'password',
         'birth_date',
         'rating',
         'description',
         'birth_date',
         'credit_balance',
-        'is_admin'
+        'is_admin',
+        'google_id',
     ];
 
     /**

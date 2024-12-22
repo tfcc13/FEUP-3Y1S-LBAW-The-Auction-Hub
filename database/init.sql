@@ -120,13 +120,14 @@ CREATE TABLE users (
     email VARCHAR(255) UNIQUE NOT NULL,
     username VARCHAR(255) UNIQUE NOT NULL,
     name VARCHAR(255) NOT NULL,
-    password VARCHAR(255) NOT NULL,
+    password VARCHAR(255), -- it can be null now
     birth_date DATE NOT NULL CHECK (birth_date < CURRENT_DATE - INTERVAL '18 years'),
     credit_balance DECIMAL(12, 2) DEFAULT 0.00 NOT NULL,
     is_admin BOOLEAN DEFAULT FALSE,
     state user_state NOT NULL DEFAULT 'Active',
     rating FLOAT CHECK (rating >= 1 AND rating <= 5) DEFAULT NULL,
     remember_token VARCHAR(255) DEFAULT NULL, -- Column for storing the remember token
+    google_id VARCHAR,
     description TEXT DEFAULT NULL -- Added description column
 );
 
