@@ -58,7 +58,7 @@ return [
 
         'Auctions' => [
             'driver' => 'local',
-            'root' => public_path('images/auction'),
+            'root' => public_path('images/'),
             'url' => env('APP_URL'),
             'visibility' => 'public',
         ],        

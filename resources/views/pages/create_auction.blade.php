@@ -47,6 +47,7 @@
                     <label for="start_price" class="block text-gray-700 font-semibold">Start Price</label>
                     <input type="number" id="start_price" name="start_price" value="{{ old('start_price') }}"
                         min="0" step="0.01" class="form-input" required>
+                        <div id="startPriceError" class="text-red-600 text-sm mt-1 hidden"></div>
                     @error('start_price')
                         <div class="text-red-600 text-sm mt-1">{{ $message }}</div>
                     @enderror
@@ -86,11 +87,12 @@
                 @error('files')
                     <div class="text-red-600 text-sm mt-1">{{ $message }}</div>
                 @enderror
+                <div id="fileSizeError" class="text-red-600 text-sm mt-1 hidden"></div>
             </div>
         </div>
 
         {{-- Submit Button --}}
-        <button type="submit" class="bg-[#135d3b] text-white px-4 py-2 rounded-lg hover:bg-[#135d3b]/85">
+        <button type="submit" id="submit_button" class="bg-[#135d3b] text-white px-4 py-2 rounded-lg hover:bg-[#135d3b]/85">
             Create Auction
         </button>
     </form>
@@ -126,5 +128,47 @@
                 img.style.objectFit = 'cover';
             }
         }
+
+        document.getElementById('files').addEventListener('change', function(event) {
+        const maxSizeInBytes = 1024 * 1024 *2; 
+        const errorContainer = document.getElementById('fileSizeError');
+        const files = event.target.files;
+        let fileTooLarge = false;
+
+        for (let i = 0; i < files.length; i++) {
+            if (files[i].size > maxSizeInBytes) {
+                fileTooLarge = true;
+                break;
+            }
+        }
+
+        if (fileTooLarge) {
+            errorContainer.textContent = 'One or more files exceed the 2MB size limit. Please select smaller files.';
+            errorContainer.classList.remove('hidden');
+            event.target.value = ''; 
+        } else {
+            errorContainer.classList.add('hidden');
+        }
+    });
+    document.getElementById('start_price').addEventListener('input', function(event) {
+        const startPriceInput = event.target;
+        const submitButton = document.getElementById('submit_button');
+        const errorContainer = document.getElementById('startPriceError');
+        const maxDigits = 12;
+
+        // Remove non-digit characters and count digits
+        const digitCount = startPriceInput.value.replace(/\D/g, '').length;
+
+        if (digitCount > maxDigits) {
+
+            submitButton.disabled = true;
+            errorContainer.textContent = 'Start Price cannot exceed 12 digits.';
+            errorContainer.classList.remove('hidden');
+        } else {
+
+            submitButton.disabled = false;
+            errorContainer.classList.add('hidden');
+        }
+    });
     </script>
 @endsection

@@ -171,7 +171,8 @@ class AuctionController extends Controller
   }
 
   public function submitAuction(Request $request)
-  {
+  { 
+    
     // Validate the form data
     $validatedData = $request->validate([
       'title' => 'required|string|max:255',
@@ -199,7 +200,7 @@ class AuctionController extends Controller
       $auction->owner_id = Auth::id();
       $auction->save();
       DB::commit();
-
+      
       if ($request->hasFile('files')) {
         // dd($request);
         // dd($fileRequest, $request);

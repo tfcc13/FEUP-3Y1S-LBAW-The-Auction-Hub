@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Auction;
 use App\Models\MoneyManager;
+use App\Http\Controllers\FileController;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -27,13 +28,15 @@ class User extends Authenticatable
         'name',
         'username',
         'email',
+        'state',
         'password',
         'birth_date',
         'rating',
         'description',
         'birth_date',
         'credit_balance',
-        'is_admin'
+        'is_admin',
+        'google_id',
     ];
 
     /**
@@ -73,7 +76,11 @@ class User extends Authenticatable
     {
         return $this->hasOne(UserImage::class);  // Use hasMany() if a user can have multiple images
     }
-
+    public function userFileImage($fileName)
+    { 
+      $type = 'auction';
+      return FileController::getUserImage($fileName);
+    }
     public function ownsBids()
     {
         return $this->hasMany(Bid::class, 'user_id');

@@ -10,6 +10,8 @@ export default defineConfig({
                 'resources/js/auction.js',
                 'resources/js/components/bid_card.js',
                 'resources/js/components/info_card.js',
+                'resources/js/components/slider.js',
+                'resources/js/components/carousel.js',
             ],
             refresh: true,
         }),
