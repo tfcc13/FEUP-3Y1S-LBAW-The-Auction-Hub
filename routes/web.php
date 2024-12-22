@@ -112,6 +112,7 @@ Route::middleware(['not.banned', 'not.deleted'])->group(function () {
         Route::prefix('admin')->group(function () {
             Route::middleware(['admin'])->name('admin.')->group(function () {
                 Route::post('/categories', [CategoryController::class, 'store'])->name('category.store');
+                Route::get('/statistics', [AdminController::class, 'statistics'])->name('dashboard.statistics');
                 Route::delete('/categories/{id}', [CategoryController::class, 'destroy'])->name('category.destroy');
                 Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
                 Route::get('/dashboard/users', [AdminController::class, 'dashboardUsers'])->name('dashboard.users');
