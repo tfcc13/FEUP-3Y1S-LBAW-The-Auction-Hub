@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Auction;
 use App\Models\Bid;
+use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -54,10 +55,11 @@ class DeleteController extends Controller
             }
 
             if ($user->credit_balance > 0) {
-                return redirect()->back()->with('error', 'Cannot delete account with money remaining.');
+        
+                if(!Auth::user()->is_admin)return redirect()->back()->with('error', 'Cannot delete account with money remaining.');
             }
             if ($user->activeBids()) {
-                return redirect()->back()->with('error', 'Cannot delete account having bids in other auctions.');
+                if(!Auth::user()->is_admin)return redirect()->back()->with('error', 'Cannot delete account having bids in other auctions.');
             }
 
             $user->state = 'Deleted';

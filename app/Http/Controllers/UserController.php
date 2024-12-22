@@ -69,7 +69,6 @@ class UserController extends Controller
       $searchTerm = $request->input('search');
 
       $users = User::search($searchTerm)->where('state', '!=', 'Banned')->get();
-
       // Check if results are empty
       if ($users->isEmpty()) {
         return response()->json([

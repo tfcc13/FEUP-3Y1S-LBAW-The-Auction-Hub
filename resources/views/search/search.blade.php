@@ -180,20 +180,29 @@
         });
         document.getElementById('toggle-auctions').addEventListener('click', () => {
             setActiveButton('toggle-auctions');
-
+            if (!isCollapsed && window.innerWidth >= 768) {
+                // Restore previous sidebar state for auctions
+                isCollapsed = false;
+                updateSidebarState();
+                updateGridColumns();
+            }
             resultsContainer.classList.remove('hidden'); // Show categories
             fetchResults('auctions');
         });
 
         document.getElementById('toggle-users').addEventListener('click', () => {
             setActiveButton('toggle-users');
+            if (!isCollapsed && window.innerWidth >= 768) {
+                // Force collapse sidebar for users
+                isCollapsed = true;
+                updateSidebarState();
+                updateGridColumns();
+            }
             resultsContainer.classList.add('hidden'); // Hide categories
             fetchResults('users');
         });
 
         async function fetchResults(type, categoryId = '') {
-            const errorMessage = document.getElementById('error-message');
-
             try {
                 const searchTerm = '{{ $searchTerm }}';
                 let url = `/api/${type}/search?search=${encodeURIComponent(searchTerm)}`;
@@ -205,12 +214,12 @@
 
                 const response = await fetch(url);
 
+                console.log(url);
                 if (!response.ok) {
                     const errorData = await response.json();
                     console.error('Error:', errorData.error || 'Something went wrong');
-                    errorMessage.style.display = 'flex';
-                    errorMessage.querySelector('p').textContent = errorData.error || 'Failed to reach the server';
-                    resultsContainer.style.display = 'none';
+                    document.getElementById('results-container').innerHTML =
+                        `<p class="text-red-500">${errorData.error || 'Failed to reach the server'}</p>`;
                     return;
                 }
 
@@ -218,24 +227,29 @@
                     data,
                     message
                 } = await response.json();
+                if (type === 'auctions') {
+                    const now = new Date();
+                    const validData = data.filter(auction => {
+                        const endDate = new Date(auction.end_date);
+                        return endDate > now; // Only keep auctions that haven't ended
+                    });
 
-                if (!data || data.length === 0) {
-                    errorMessage.style.display = 'flex';
-                    errorMessage.querySelector('p').textContent = message || `No ${type} results found.`;
-                    resultsContainer.style.display = 'none';
-                    return;
+                    if (validData.length === 0) {
+                        document.getElementById('results-container').innerHTML =
+                            `<p class="text-gray-600">${message || `No ${type} results found.`}</p>`;
+                        return;
+                    }
+                    displayResults(validData, type);
+                } else {
+                    console.log("yuio");
+                    displayResults(data, type);
                 }
 
-                // Hide error message and show results if we have data
-                errorMessage.style.display = 'none';
-                resultsContainer.style.display = 'grid';
-                displayResults(data, type);
-
             } catch (error) {
+                // Catch unexpected errors, such as network issues
                 console.error('Unexpected error:', error);
-                errorMessage.style.display = 'flex';
-                errorMessage.querySelector('p').textContent = 'An unexpected error occurred.';
-                resultsContainer.style.display = 'none';
+                document.getElementById('results-container').innerHTML =
+                    `<p class="text-red-500">An unexpected error occurred.</p>`;
             }
         }
 

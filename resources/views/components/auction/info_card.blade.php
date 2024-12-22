@@ -49,7 +49,7 @@
         @if (Auth::id() !== $auction->owner_id)
             <form class="flex items-center w-full" action="{{ route('auctions.follow', $auction) }}" method="POST">
                 @csrf
-                <button type="submit"
+                <button type="submit" label="{{ Auth::user()->followsAuction()->where('auction_id', $auction->id)->exists()? 'Unfollow' : 'Follow' }}"
                     class="w-full flex items-center justify-center space-x-4 py-1 text-gray-800 hover:bg-[#135d3b]/15 rounded-lg focus:outline-none active:scale-95 transition-all duration-150 ease-out
                     {{ Auth::user()->followsAuction()->where('auction_id', $auction->id)->exists()? 'border border-[#135d3b]': '' }}">
                     <span class="text-lg">{{ Auth::user()->followsAuction()->where('auction_id', $auction->id)->exists() ? 'Unfollow' : 'Follow' }}</span>

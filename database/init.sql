@@ -376,7 +376,7 @@ CREATE INDEX idx_category_ts_vectors ON category USING GIN(ts_vectors);
 -- TRIGGER01
 CREATE FUNCTION ensure_valid_bid() RETURNS TRIGGER AS $$
 BEGIN
-    IF NEW.amount <= (SELECT current_bid FROM auction WHERE id = NEW.auction_id) THEN
+    IF NEW.amount < (SELECT current_bid FROM auction WHERE id = NEW.auction_id) THEN
         RAISE EXCEPTION 'Bid must be higher than the current bid';
     END IF;
     RETURN NEW;
@@ -790,7 +790,7 @@ BEGIN
 
     NEW.username := 'anonymous' || OLD.id;
     NEW.name := 'Anonymous';
-    NEW.email := 'anonymous';
+    NEW.email := 'anonymous' || OLD.id;
     NEW.password := 'anonymous';
     NEW.birth_date := '1900-01-01';
     NEW.credit_balance := 0.00;

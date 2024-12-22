@@ -9,21 +9,24 @@
         <x-user.user-details :name="auth()->user()->name" :username="auth()->user()->username" :email="auth()->user()->email"
             :rating="auth()->user()->rating"></x-user.user-details>
     </div>
-    
 
-    <button id="changeProfilePicBtn" type="button" class="w-min sm:w-min px-2 py-1 rounded-md text-white border border-gray-300 bg-[#135d3b] hover:bg-[#135d3b]/85 focus:ring-2 focus:ring-gray-300 transition-colors text-nowrap">
-                Change  Picture
-        </button> 
-    <form id="profilePicForm" action="{{ route('user.profile.picture.update') }}" method="POST" enctype="multipart/form-data" hidden>
+
+    <button id="changeProfilePicBtn" type="button"
+        class="w-min sm:w-min px-2 py-1 rounded-md text-white border border-gray-300 bg-[#135d3b] hover:bg-[#135d3b]/85 focus:ring-2 focus:ring-gray-300 transition-colors text-nowrap">
+        Change Picture
+    </button>
+    <form id="profilePicForm" action="{{ route('user.profile.picture.update') }}" method="POST"
+        enctype="multipart/form-data" hidden>
         @csrf
         <div class="form-group">
-            <input type="file" name="file" id="file" class="form-control" required >
-            <input name="type" type="text" value="user" hidden>
+            <input type="file" name="file" id="file" class="form-control" required label="Profile Picture">
+            <input name="type" type="text" value="user" hidden label="Type">
             @error('user')
                 <small class="text-danger">{{ $message }}</small>
             @enderror
         </div>
-        <button type="submit" class="w-min sm:w-auto px-2 py-1 rounded-md text-white border border-gray-300 bg-[#135d3b] hover:bg-[#135d3b]/85 focus:ring-2 focus:ring-gray-300 transition-colors text-nowrap">Upload</button>
+        <button type="submit"
+            class="w-min sm:w-auto px-2 py-1 rounded-md text-white border border-gray-300 bg-[#135d3b] hover:bg-[#135d3b]/85 focus:ring-2 focus:ring-gray-300 transition-colors text-nowrap">Upload</button>
     </form>
     <div id="fileSizeError" class="text-red-600 text-sm mt-1 hidden"></div>
     <!-- Description Section -->
@@ -51,7 +54,7 @@
                     @method('PUT')
 
                     <div class="mb-4">
-                        <textarea name="description"
+                        <textarea name="description" label="Description"
                             class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                             rows="4">{{ auth()->user()->description ?? '' }}</textarea>
                     </div>
@@ -74,7 +77,7 @@
 
     {{-- Delete Account --}}
     <x-toast.confirm :buttonText="'Delete Account'" :route="'user.deleteUser'" :method="'DELETE'" :id="auth()->user()->id" :modalTitle="'Delete Account'"
-        :modalMessage="'Are you sure you want to delete your account? This action is irreversible.'"  :object="auth()->user()"
+        :modalMessage="'Are you sure you want to delete your account? This action is irreversible.'" :object="auth()->user()"
         class="flex items-center justify-center py-1 px-3 text-red-500 bg-white border border-red-500 hover:bg-red-500/15 
             rounded-lg active:scale-95 transition-all duration-150 ease-out w-min sm:w-auto mt-10 text-nowrap" />
 </div>
@@ -98,7 +101,7 @@
 
 
     document.getElementById('file').addEventListener('change', function(event) {
-        const maxSizeInBytes = 1024 * 1024 *2; 
+        const maxSizeInBytes = 1024 * 1024 * 2;
         const errorContainer = document.getElementById('fileSizeError');
         const files = event.target.files;
         let fileTooLarge = false;
@@ -111,9 +114,10 @@
         }
 
         if (fileTooLarge) {
-            errorContainer.textContent = 'One or more files exceed the 2MB size limit. Please select smaller files.';
+            errorContainer.textContent =
+                'One or more files exceed the 2MB size limit. Please select smaller files.';
             errorContainer.classList.remove('hidden');
-            event.target.value = ''; 
+            event.target.value = '';
         } else {
             errorContainer.classList.add('hidden');
         }

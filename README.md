@@ -1,12 +1,5 @@
 # lbaw24136
 
-## Windows Admin CMD - Find and kill process in port 8000
-
-```bash
-netstat -aof | findstr :8000
-taskkill /F /PID {PID}
-```
-
 ## Getting started
 
 To make it easy for you to get started with GitLab, here's a list of recommended next steps.
