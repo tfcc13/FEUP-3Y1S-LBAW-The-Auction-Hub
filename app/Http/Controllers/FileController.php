@@ -211,7 +211,7 @@ class FileController extends Controller
             return in_array(strtolower($extension), ['jpg', 'jpeg', 'png', 'gif']);
         });
         
-        dd($imageFiles);
+        //dd($imageFiles);
 
         return $imageFiles;
     }

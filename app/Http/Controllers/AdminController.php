@@ -240,7 +240,7 @@ class AdminController extends Controller
 
             return redirect()->route('admin.dashboard')->with('success', 'User deleted successfully.');
         } catch (\Exception $e) {
-            dd($e);
+            //dd($e);
 
             DB::rollBack();
             return redirect()->back()->with('error', 'Failed to delete the user. Please try again.');
