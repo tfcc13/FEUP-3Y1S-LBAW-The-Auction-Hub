@@ -12,7 +12,7 @@
             <div class="flex flex-col justify-start space-y-4 w-full">
                 <div class="flex flex-col justify-start space-y-1 w-full">
                     <input id="name" type="text" name="name" value="{{ old('name') }}" placeholder="Name" required
-                        autofocus class="form-input">
+                        label="Name" autofocus class="form-input">
                     @if ($errors->has('name'))
                         <span class="text-red-500 pl-1">
                             {{ $errors->first('name') }}
@@ -21,7 +21,7 @@
                 </div>
 
                 <div class="flex flex-col justify-start space-y-1 w-full">
-                    <input id="username" type="text" name="username" value="{{ old('username') }}"
+                    <input id="username" type="text" name="username" value="{{ old('username') }}" label="Username"
                         placeholder="Username" required class="form-input">
                     @if ($errors->has('username'))
                         <span class="text-red-500 pl-1">
@@ -32,7 +32,7 @@
 
                 <div class="flex flex-col justify-start space-y-1 w-full">
                     <input id="email" type="email" name="email" value="{{ old('email') }}" placeholder="Email"
-                        required class="form-input lowercase">
+                        required class="form-input lowercase" label="Email">
                     @if ($errors->has('email'))
                         <span class="text-red-500 pl-1">
                             {{ $errors->first('email') }}
@@ -42,7 +42,7 @@
 
                 <div class="flex flex-col justify-start space-y-1 w-full">
                     <input id="birth_date" type="date" name="birth_date" value="{{ old('birth_date') }}" required
-                        class="form-input">
+                        class="form-input" label="Birth Date">
                     @if ($errors->has('birth_date'))
                         <span class="text-red-500 pl-1">
                             {{ $errors->first('birth_date') }}
@@ -51,8 +51,8 @@
                 </div>
 
                 <div class="flex flex-col justify-start space-y-1 w-full">
-                    <input id="password" type="password" name="password" placeholder="Password" required
-                        class="form-input">
+                    <input id="password" type="password" name="password" placeholder="Password" required class="form-input"
+                        label="Password">
                     @if ($errors->has('password'))
                         <span class="text-red-500 pl-1">
                             {{ $errors->first('password') }}
@@ -62,7 +62,7 @@
 
                 <div class="flex flex-col justify-start space-y-1 w-full">
                     <input id="password-confirm" type="password" name="password_confirmation" placeholder="Confirm Password"
-                        required class="form-input">
+                        required class="form-input" label="Confirm Password">
                 </div>
 
                 <button type="submit"

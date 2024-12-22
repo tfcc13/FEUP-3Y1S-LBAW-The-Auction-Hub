@@ -12,7 +12,7 @@
             <div class="flex flex-col justify-start space-y-4 w-full">
                 <div class="flex flex-col justify-start space-y-1 w-full">
                     <input id="email" type="email" name="email" value="{{ old('email') }}" placeholder="Email"
-                        required autofocus class="form-input lowercase">
+                        label="Email" required autofocus class="form-input lowercase">
                     @if ($errors->has('email'))
                         <span class="text-red-500 pl-1">
                             {{ $errors->first('email') }}
@@ -21,7 +21,7 @@
                 </div>
 
                 <div class="flex flex-col justify-start space-y-1 w-full">
-                    <input id="password" type="password" name="password" placeholder="Password" required
+                    <input id="password" type="password" name="password" placeholder="Password" required label="Password"
                         class="form-input">
                     @if ($errors->has('password'))
                         <span class="text-red-500 text-xs mt-1">
@@ -55,7 +55,8 @@
 
         <a href="{{ route('google-auth') }}">
             <button
-                class="flex w-full items-center justify-center bg-gray-200 text-gray-800 rounded-lg py-2 active:scale-95 hover:bg-gray-300 transition-all duration-150 ease-out relative">
+                class="flex w-full items-center justify-center bg-gray-200 text-gray-800 rounded-lg py-2 active:scale-95 hover:bg-gray-300 transition-all duration-150 ease-out relative"
+                label="Google Login">
                 <svg class="absolute left-4 h-6 w-6 mr-2" xmlns="http://www.w3.org/2000/svg"
                     xmlns:xlink="http://www.w3.org/1999/xlink" width="800px" height="800px" viewBox="-0.5 0 48 48"
                     version="1.1">

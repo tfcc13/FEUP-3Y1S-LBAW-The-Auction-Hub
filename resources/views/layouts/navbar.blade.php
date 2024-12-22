@@ -15,7 +15,7 @@
                 </svg>
             </span>
             <input id="search-navbar" type="text" name="search" placeholder="Search..."
-                class="form-input text-sm w-full !pl-10">
+                class="form-input text-sm w-full !pl-10" label="Search">
         </form>
     </div>
 

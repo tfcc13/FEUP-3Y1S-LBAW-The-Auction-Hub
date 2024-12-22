@@ -21,9 +21,9 @@
 
                 <div id="deposit-section" class="flex flex-col space-y-4 w-full sm:w-72">
                     <input id="deposit-amount" type="number" name="amount" min="1" placeholder="Enter amount"
-                        required autofocus class="form-input">
+                        required autofocus class="form-input" label="Deposit Amount">
                     <input id="deposit-reference" type="text" name="reference" placeholder="Enter reference" required
-                        class="form-input">
+                        class="form-input" label="Reference">
                     <button type="submit" id="deposit-button"
                         class="bg-[#135d3b] text-white rounded-lg py-2 active:scale-95 hover:bg-[#135d3b]/85 transition-all duration-150 ease-out">
                         Deposit
@@ -41,11 +41,11 @@
 
                 <div id="withdraw-section" class="flex flex-col space-y-4 w-full sm:w-72">
                     <input id="withdraw-amount" type="number" name="amount" min="1" placeholder="Enter amount"
-                        required class="form-input">
+                        required class="form-input" label="Withdraw Amount">
                     <div id="iban-container">
                         <input id="iban" type="text" name="iban" placeholder="Enter IBAN"
                             class="form-input w-full sm:w-72" pattern="^[A-Za-z]{2}\d{21}$"
-                            title="IBAN should be two letters followed by 21 digits" required>
+                            title="IBAN should be two letters followed by 21 digits" required label="IBAN">
                         <p id="iban-error-message" class="text-red-500 text-sm hidden">IBAN is invalid.</p>
                     </div>
                     <button type="submit" id="withdraw-button"
