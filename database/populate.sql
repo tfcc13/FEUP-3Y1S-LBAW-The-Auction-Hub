@@ -11,7 +11,8 @@ INSERT INTO users (email, username, name, password, birth_date, credit_balance, 
 ('frank.miller@example.com', 'frankm', 'Frank Miller', '$2y$10$sUY.kxsoyTrNZwLh6zrJn.HQ1ckKdnjbrngQvS3Z.65fxW/aYy8Yq', '1987-06-25', 95000, FALSE, 'Active', 3),
 ('grace.lee@example.com', 'gracel', 'Grace Lee', '$2y$10$sUY.kxsoyTrNZwLh6zrJn.HQ1ckKdnjbrngQvS3Z.65fxW/aYy8Yq', '1991-04-30', 60000, FALSE, 'Active', 5),
 ('henry.wang@example.com', 'henryw', 'Henry Wang', '$2y$10$sUY.kxsoyTrNZwLh6zrJn.HQ1ckKdnjbrngQvS3Z.65fxW/aYy8Yq', '1989-02-14', 100100, FALSE, 'Active', 4),
-('isabel.garcia@example.com', 'isabelg', 'Isabel Garcia', '$2y$10$sUY.kxsoyTrNZwLh6zrJn.HQ1ckKdnjbrngQvS3Z.65fxW/aYy8Yq', '1994-09-08', 70000, FALSE, 'Active', 3),
+('isabel.garcia@example.com', 'isabelg', 'Isabel Garcia', '$2y$10$sUY.kxsoyTrNZwLh6zrJn.HQ1ckKdnjaac13272958f4277febfc681e3  0.0s
+ => => exporting attestation manifest sha256:0718088ac0fd2215b7a4brngQvS3Z.65fxW/aYy8Yq', '1994-09-08', 70000, FALSE, 'Active', 3),
 ('jack.robinson@example.com', 'jackr', 'Jack Robinson', '$2y$10$sUY.kxsoyTrNZwLh6zrJn.HQ1ckKdnjbrngQvS3Z.65fxW/aYy8Yq', '1986-11-30', 85000, FALSE, 'Active', 5),
 ('karen.white@example.com', 'karenw', 'Karen White', '$2y$10$sUY.kxsoyTrNZwLh6zrJn.HQ1ckKdnjbrngQvS3Z.65fxW/aYy8Yq', '1993-07-22', 40000, FALSE, 'Active', 2),
 ('liam.taylor@example.com', 'liamt', 'Liam Taylor', '$2y$10$sUY.kxsoyTrNZwLh6zrJn.HQ1ckKdnjbrngQvS3Z.65fxW/aYy8Yq', '1990-12-05', 130000, FALSE, 'Active', 4),
@@ -54,7 +55,7 @@ INSERT INTO category (name) VALUES
 
 -- Populate Auctions
 INSERT INTO auction (title, description, start_price, current_bid, start_date, end_date, state, owner_id, category_id) VALUES
-('Vintage Car Auction', 'Auction for a vintage car', 5000, NULL, '2024-10-30 10:00:00', '2024-12-19 17:08:50', 'Ongoing', 1,1),
+('Vintage Car Auction', 'Auction for a vintage car', 5000, NULL, '2024-10-30 10:00:00', '2024-12-20 04:52:10', 'Ongoing', 1,1),
 ('Antique Painting Auction', 'Rare antique painting', 2000, NULL, '2024-10-15 12:00:00', NULL, 'Closed', 2,1),
 ('Rare Comic Book Collection', 'Collection of rare comic books', 3000, NULL, '2024-10-20 09:00:00', NULL, 'Closed', 4,1),
 ('Diamond Necklace', 'Exquisite diamond necklace', 10000, NULL, '2024-10-25 14:00:00', NULL, 'Closed', 5,1),

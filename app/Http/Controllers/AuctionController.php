@@ -52,8 +52,7 @@ class AuctionController extends Controller
       if (!empty($categories)) {
         $query->whereIn('category_id', $categories);
       }
-      if(!Auth::user()->is_admin)$query->where('end_date', '>', now());
-
+  
       $auctions = $query->get();
 
       $auctions = $auctions->map(function ($auction) {
@@ -95,7 +94,7 @@ class AuctionController extends Controller
     $auction = Auction::findOrFail($id);
 
     if ($auction->state !== 'Ongoing') {
-      return redirect()->back()->withErrors(['amount' => 'Bidding is closed for this auction.']);
+      return redirect()->back()->with('error', 'Bidding is closed for this auction.');
     }
 
     // Ensure the bid is higher than the current highest bid or the start price
@@ -103,18 +102,18 @@ class AuctionController extends Controller
     $minimumBid = $highestBid ? $highestBid + 1 : $auction->start_price;
     // Check if the bid amount is valid
     if ($validatedData['amount'] < $minimumBid) {
-      return redirect()->back()->withErrors(['amount' => 'Your bid must be at least $' . $minimumBid]);
+      return redirect()->back()->with('error', 'Your bid must be at least $' . $minimumBid);
     }
 
     // Ensure the user does not already have the highest bid
     $currentHighestBid = $auction->bids()->where('amount', $highestBid)->first();
     if ($currentHighestBid && $currentHighestBid->user_id == Auth::id()) {
-      return redirect()->back()->withErrors(['amount' => 'You already own the highest bid.']);
+      return redirect()->back()->with('error', 'You already own the highest bid.');
     }
 
     $currentUser = Auth::user();
     if ($currentUser->credit_balance < $validatedData['amount']) {
-      return redirect()->back()->withErrors(['amount' => 'Insufficient balance to place this bid.']);
+      return redirect()->back()->with('error', 'Insufficient balance to place this bid.');
     }
 
     try {
@@ -284,7 +283,7 @@ class AuctionController extends Controller
     $auction = Auction::findOrFail($auction_id);
     $this->authorize('delete', $auction);
 
-    if ($auction->bids()->count() > 0 && $auction->state==="Ongoing") {
+    if ($auction->bids()->count() > 0 && $auction->state === "Ongoing") {
       return redirect()->back()->with('error', 'Cannot delete an ongoing auction with bids.');
     }
 
@@ -364,17 +363,17 @@ class AuctionController extends Controller
   }
 
   public function relatedAuctions(Request $request)
-  { 
+  {
     $user = Auth::user();
     if (!$user) {
       return response()->json([], 200);
     }
-    
+
     $auctionIds = $user->ownsBids()->pluck('auction_id')
-                      ->merge($user->followsAuction()->pluck('auction_id'))
-                      ->merge($user->ownAuctions()->pluck('id')) 
-                      ->unique();
-    
+      ->merge($user->followsAuction()->pluck('auction_id'))
+      ->merge($user->ownAuctions()->pluck('id'))
+      ->unique();
+
     return response()->json($auctionIds->values());
   }
 }

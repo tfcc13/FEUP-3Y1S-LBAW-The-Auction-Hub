@@ -15,10 +15,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100..900&display=swap" rel="stylesheet">
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-    
-        <script>
-      const pusherAppKey = "{{ env('PUSHER_APP_KEY') }}";
-      const pusherCluster = "{{ env('PUSHER_APP_CLUSTER') }}";
+
+    <script>
+        const pusherAppKey = "{{ env('PUSHER_APP_KEY') }}";
+        const pusherCluster = "{{ env('PUSHER_APP_CLUSTER') }}";
     </script>
     <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
     <script type="text/javascript" src="{{ asset('js/app.js') }}" defer></script>

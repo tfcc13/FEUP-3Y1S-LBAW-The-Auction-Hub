@@ -16,4 +16,7 @@ npm install
 npm run build
 
 # docker buildx build --push --platform linux/amd64 -t $IMAGE_NAME .
-docker buildx build --push --platform linux/amd64,linux/arm64 -t $IMAGE_NAME .
+# docker buildx build --push --platform linux/amd64,linux/arm64 -t $IMAGE_NAME .
+
+docker build -t $IMAGE_NAME .
+docker push $IMAGE_NAME

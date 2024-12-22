@@ -14,7 +14,7 @@
         @else
             <div class="text-center py-8">
                 <p class="text-gray-600 text-lg">You haven't created any auctions yet.</p>
-                <a href="{{ route('auctions.create') }}" class="mt-4 inline-block text-[#135d3b] hover:text-[#135d3b]/85">
+                <a href="{{ route('auctions.create_auction') }}" class="mt-4 inline-block text-[#135d3b] hover:text-[#135d3b]/85">
                     Create Your First Auction
                 </a>
             </div>
