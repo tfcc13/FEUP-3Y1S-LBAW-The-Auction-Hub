@@ -3,7 +3,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build"
+    "build": "vite build",
+    "clean": "rm -rf build/"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.20",
