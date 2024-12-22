@@ -110,7 +110,7 @@
 
       const response = await fetch(url);
 
-
+      console.log(url);
       if (!response.ok) {
         const errorData = await response.json();
         console.error('Error:', errorData.error || 'Something went wrong');
@@ -123,19 +123,23 @@
         data,
         message
       } = await response.json();
-      const now = new Date();
-      const validData = data.filter(auction => {
-        const endDate = new Date(auction.end_date);
-        return endDate > now; // Only keep auctions that haven't ended
-      });
+      if (type === 'auctions') {
+        const now = new Date();
+        const validData = data.filter(auction => {
+          const endDate = new Date(auction.end_date);
+          return endDate > now; // Only keep auctions that haven't ended
+        });
 
-      if (validData.length === 0) {
-        document.getElementById('results-container').innerHTML =
-          `<p class="text-gray-600">${message || `No ${type} results found.`}</p>`;
-        return;
+        if (validData.length === 0) {
+          document.getElementById('results-container').innerHTML =
+            `<p class="text-gray-600">${message || `No ${type} results found.`}</p>`;
+          return;
+        }
+        displayResults(validData, type);
+      } else {
+        console.log("yuio");
+        displayResults(data, type);
       }
-
-      displayResults(validData, type);
 
     } catch (error) {
       // Catch unexpected errors, such as network issues
