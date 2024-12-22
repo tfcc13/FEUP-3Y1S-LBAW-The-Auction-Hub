@@ -180,13 +180,24 @@
         });
         document.getElementById('toggle-auctions').addEventListener('click', () => {
             setActiveButton('toggle-auctions');
-
+            if (!isCollapsed && window.innerWidth >= 768) {
+                // Restore previous sidebar state for auctions
+                isCollapsed = false;
+                updateSidebarState();
+                updateGridColumns();
+            }
             resultsContainer.classList.remove('hidden'); // Show categories
             fetchResults('auctions');
         });
 
         document.getElementById('toggle-users').addEventListener('click', () => {
             setActiveButton('toggle-users');
+            if (!isCollapsed && window.innerWidth >= 768) {
+                // Force collapse sidebar for users
+                isCollapsed = true;
+                updateSidebarState();
+                updateGridColumns();
+            }
             resultsContainer.classList.add('hidden'); // Hide categories
             fetchResults('users');
         });

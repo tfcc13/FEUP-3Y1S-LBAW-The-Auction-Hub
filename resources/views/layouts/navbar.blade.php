@@ -23,6 +23,7 @@
     <ul class="flex w-auto items-center space-x-4" id="navbar-default">
         @if (Auth::check())
             @if (!Auth::user()->is_admin)
+                {{-- Create Auction --}}
                 <li class="hidden md:flex items-center justify-center">
                     <a href="/auctions/create_auction"
                         class="px-2 py-[0.375rem] font-semibold text-[#135d3b] bg-white hover:bg-gray-300 rounded-lg w-36 
@@ -30,6 +31,8 @@
                         Create Auction
                     </a>
                 </li>
+
+                {{-- Following --}}
                 <li class="hidden md:flex items-center justify-center">
                     <a href="/user/follow"
                         class="px-2 py-[0.375rem] font-semibold text-white bg-[#135d3b] hover:bg-[#0f4a2f] rounded-lg w-36 
@@ -37,16 +40,17 @@
                         Following
                     </a>
                 </li>
-            @endif
 
-            <li class="hidden md:flex items-center justify-center">
-                <a href="{{ route('notifications.index') }}"
-                    class="flex p-2 font-semibold text-white bg-[#135d3b] hover:bg-[#0f4a2f] rounded-full items-center justify-center transition-all active:scale-95">
-                    <span class="material-symbols-outlined" style="font-size: 1.5rem;">
-                        notifications
-                    </span>
-                </a>
-            </li>
+                {{-- Notifications --}}
+                <li class="hidden md:flex items-center justify-center">
+                    <a href="{{ route('notifications.index') }}"
+                        class="flex p-2 font-semibold text-white bg-[#135d3b] hover:bg-[#0f4a2f] rounded-full items-center justify-center transition-all active:scale-95">
+                        <span class="material-symbols-outlined" style="font-size: 1.5rem;">
+                            notifications
+                        </span>
+                    </a>
+                </li>
+            @endif
 
             <li class="flex items-center justify-center list-none">
                 <x-popup.popup position="bottom-left" width="w-52">

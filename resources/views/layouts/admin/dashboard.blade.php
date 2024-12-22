@@ -42,13 +42,13 @@
                         </a>
                     </li>
 
-                    {{-- Analytics --}}
+                    {{-- Statistics --}}
                     <li class="w-full">
-                        <a href="{{ route('admin.dashboard.analytics') }}"
-                            class="tab-link {{ request()->routeIs('admin.dashboard.analytics') ? 'text-[#135d3b]' : 'text-gray-800' }}">
+                        <a href="{{ route('admin.dashboard.statistics') }}"
+                            class="tab-link {{ request()->routeIs('admin.dashboard.statistics') ? 'text-[#135d3b]' : 'text-gray-800' }}">
                             <span class="material-symbols-outlined">equalizer</span>
-                            <span class="hidden sm:inline">Analytics</span>
-                            @if (request()->routeIs('admin.dashboard.analytics'))
+                            <span class="hidden sm:inline">Statistics</span>
+                            @if (request()->routeIs('admin.dashboard.statistics'))
                                 <div class="absolute bottom-0 left-0 w-full h-1 bg-[#135d3b]"></div>
                             @endif
                         </a>
