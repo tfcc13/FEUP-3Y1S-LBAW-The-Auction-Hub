@@ -12,7 +12,7 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
-use App\Models\User;
+
 
 /*
  * |--------------------------------------------------------------------------

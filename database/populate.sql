@@ -21,7 +21,7 @@ INSERT INTO users (email, username, name, password, birth_date, credit_balance, 
 ('olivia.martinez@example.com', 'oliviam', 'Olivia Martinez', '$2y$10$RTQg99nD/kjmAI7b6l187.FLnoVh3uAT/m87ERCu0tT3TkgThesFm', '1987-03-25', 105000, FALSE, 'Active', 5),
 ('peter.brown@example.com', 'peterb', 'Peter Brown', '$2y$10$sUY.kxsoyTrNZwLh6zrJn.HQ1ckKdnjbrngQvS3Z.65fxW/aYy8Yq', '1994-01-20', 65000, FALSE, 'Active', 3),
 ('quinn.foster@example.com', 'quinnf', 'Quinn Foster', '$2y$10$sUY.kxsoyTrNZwLh6zrJn.HQ1ckKdnjbrngQvS3Z.65fxW/aYy8Yq', '1989-08-08', 75000, FALSE, 'Active', 4),
-('admin@lbaw24.com', 'admin', 'Admin', '$2y$10$sUY.kxsoyTrNZwLh6zrJn.HQ1ckKdnjbrngQvS3Z.65fxW/aYy8Yq','1989-04-10', 0, TRUE, 'Active', NULL),
+('admin@lbaw24.com', '  admin', 'Admin', '$2y$10$sUY.kxsoyTrNZwLh6zrJn.HQ1ckKdnjbrngQvS3Z.65fxW/aYy8Yq','1989-04-10', 0, TRUE, 'Active', NULL),
 ('lbaw@lbaw.com','lbaw','lbaw','$2y$10$RTQg99nD/kjmAI7b6l187.FLnoVh3uAT/m87ERCu0tT3TkgThesFm','1980-04-10',1000000,FALSE,'Active',1);
 
 
@@ -55,7 +55,7 @@ INSERT INTO category (name) VALUES
 
 -- Populate Auctions
 INSERT INTO auction (title, description, start_price, current_bid, start_date, end_date, state, owner_id, category_id) VALUES
-('Vintage Car Auction', 'Auction for a vintage car', 5000, NULL, '2024-10-30 10:00:00', '2025-01-21 21:22:00', 'Ongoing', 1,1),
+('Vintage Car Auction', 'Auction for a vintage car', 5000, NULL, '2024-12-21 10:00:00', '2025-01-21 21:22:00', 'Ongoing', 1,1),
 ('Antique Painting Auction', 'Rare antique painting', 2000, NULL, '2024-10-15 12:00:00', NULL, 'Closed', 2,1),
 ('Rare Comic Book Collection', 'Collection of rare comic books', 3000, NULL, '2024-10-20 09:00:00', NULL, 'Closed', 4,1),
 ('Diamond Necklace', 'Exquisite diamond necklace', 10000, NULL, '2024-10-25 14:00:00', NULL, 'Closed', 5,1),
@@ -64,25 +64,24 @@ INSERT INTO auction (title, description, start_price, current_bid, start_date, e
 ('Vintage Camera', 'Classic film camera from the 1960s', 1200, NULL, '2024-11-10 10:00:00', NULL, 'Closed', 8,1),
 ('First Edition Book', 'Rare first edition of a classic novel', 2500, NULL, '2024-11-15 15:00:00', NULL, 'Closed', 9,1),
 ('Designer Handbag', 'Limited edition designer handbag', 3500, NULL, '2024-11-20 12:00:00', NULL, 'Closed', 10,1),
-('Vintage Record Player', 'Fully restored vintage record player', 1800, NULL, '2024-11-25 14:00:00', NULL, 'Closed', 1,1),
-('Rare Stamp Collection', 'Comprehensive collection of rare stamps', 7500, NULL, '2024-12-01 09:00:00', NULL, 'Closed', 11,1),
-('Antique Furniture Set', 'Complete set of Victorian-era furniture', 15000, NULL, '2024-12-05 11:00:00', NULL, 'Closed', 12,1),
-('Vintage Guitar', 'Rare 1950s electric guitar', 8000, NULL, '2024-12-10 10:30:00', NULL, 'Ongoing', 13,1),
+('Vintage Record Player', 'Fully restored vintage record player', 1800, NULL, '2024-11-20 14:00:00', NULL, 'Closed', 1,1),
+('Rare Stamp Collection', 'Comprehensive collection of rare stamps', 7500, NULL, '2024-11-21 09:00:00', NULL, 'Closed', 11,1),
+('Antique Furniture Set', 'Complete set of Victorian-era furniture', 15000, NULL, '2024-11-21 09:00:00', NULL, 'Closed', 12,1),
+('Vintage Guitar', 'Rare 1950s electric guitar', 8000, NULL, '2024-12-21 10:30:00', NULL, 'Ongoing', 13,1),
 ('Rare Coin Collection', 'Collection of ancient and rare coins', 12000, NULL, '2024-12-15 13:00:00', NULL, 'Closed', 14,1),
-('Antique Pocket Watch', 'Gold pocket watch from the 1800s', 3500, NULL, '2024-12-20 14:30:00', NULL, 'Closed', 15,1),
-('Vintage Movie Poster Collection', 'Collection of classic movie posters', 2000, NULL, '2024-12-25 12:00:00', NULL, 'Ongoing', 16,1),
-('Rare Vinyl Records', 'Collection of rare and first press vinyl records', 5000, NULL, '2024-12-30 11:00:00', NULL, 'Ongoing', 17,1),
-('Antique Tea Set', 'Complete antique porcelain tea set', 1800, NULL, '2025-01-05 10:00:00', NULL, 'Ongoing', 18,1),
-('Vintage Typewriter', 'Fully functional vintage typewriter', 1000, NULL, '2025-01-10 15:00:00', NULL, 'Ongoing', 19,1),
-('Antique Map Collection', 'Collection of rare antique maps', 9000, NULL, '2025-01-15 14:00:00', NULL, 'Ongoing', 20,1);
+('Antique Pocket Watch', 'Gold pocket watch from the 1800s', 3500, NULL, '2024-11-20 14:30:00', NULL, 'Closed', 15,1),
+('Vintage Movie Poster Collection', 'Collection of classic movie posters', 2000, NULL, '2024-12-21 12:00:00', NULL, 'Ongoing', 16,1),
+('Rare Vinyl Records', 'Collection of rare and first press vinyl records', 5000, NULL, '2024-12-21 12:00:00', NULL, 'Ongoing', 17,1),
+('Antique Tea Set', 'Complete antique porcelain tea set', 1800, NULL, '2024-12-21 12:00:00', NULL, 'Ongoing', 18,1),
+('Vintage Typewriter', 'Fully functional vintage typewriter', 1000, NULL, '2024-12-21 12:00:00', NULL, 'Ongoing', 19,1),
+('Antique Map Collection', 'Collection of rare antique maps', 9000, NULL, '2024-12-21 12:00:00', NULL, 'Ongoing', 20,1);
 
 -- Populate user image
 
 INSERT INTO user_image (path, user_id)
 VALUES 
-('/images/user1_profile.jpg', 1),
-('/images/user2_profile.jpg', 2),
-('/images/user3_profile.jpg', 3);
+('lbawuser.jpeg', 22),
+('admin.jpg', 21);
 
 -- Populate auction Images 
 INSERT INTO auction_image (path, auction_id) VALUES
@@ -94,8 +93,8 @@ INSERT INTO auction_image (path, auction_id) VALUES
 ('antique_clock.jpg', 6),
 ('designer_handbag.jpg', 9),
 ('vintage_record_player.jpg', 10),
-('first_edition_book.jpg', 7),
-('limited_edition_sneakers.jpg', 8),
+('vintage_camera.jpg', 7),
+('first_edition_book.jpg', 8),
 ('rare_stamps.jpg', 11),
 ('antique_furniture.jpg', 12),
 ('vintage_guitar.jpg', 13),
@@ -125,15 +124,15 @@ INSERT INTO bid (amount, bid_date, auction_id, user_id) VALUES
 (3600, '2024-11-21 13:00:00', 9, 9),
 (7800, '2024-12-02 10:00:00', 11, 12),
 (15500, '2024-12-06 12:30:00', 12, 14),
-(8200, '2024-12-11 11:45:00', 13, 16),
+(8200, '2024-12-22 11:45:00', 13, 16),
 (12500, '2024-12-16 14:15:00', 14, 18),
-(3700, '2024-12-21 15:30:00', 15, 20),
-(2100, '2024-12-26 13:00:00', 16, 2),
-(5200, '2024-12-31 12:15:00', 17, 13),
-(1900, '2025-01-06 11:30:00', 18, 15),
-(1100, '2025-01-11 16:00:00', 19, 17),
-(9300, '2025-01-16 15:15:00', 20, 19),
-(5200, '2024-12-11 15:15:00', 1, 22);
+(3700, '2024-12-19 15:30:00', 15, 20),
+(2100, '2024-12-22 10:10:00', 16, 2),
+(5200, '2024-12-22 10:10:00', 17, 13),
+(1900, '2024-12-22 10:10:00', 18, 15),
+(1100, '2024-12-22 10:10:00', 19, 17),
+(9300, '2024-12-22 10:10:00', 20, 19),
+(5200, '2024-12-22 15:15:00', 1, 22);
 
 -- Populate Reports
 INSERT INTO report (description, view_status, state, user_id, auction_id) VALUES
