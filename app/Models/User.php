@@ -34,7 +34,8 @@ class User extends Authenticatable
         'description',
         'birth_date',
         'credit_balance',
-        'is_admin'
+        'is_admin',
+        'google_id'
     ];
 
     /**
